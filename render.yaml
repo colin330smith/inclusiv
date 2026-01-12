@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: inclusiv
+    runtime: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RESEND_API_KEY
+        sync: false
