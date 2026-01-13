@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { chromium, Browser } from "playwright-core";
-import AxeBuilder from "@axe-core/playwright";
+import axe from "axe-core";
 
 // Platform detection patterns
 const platformPatterns = {
@@ -178,9 +178,19 @@ export async function POST(request: Request) {
 
     const platform = detectPlatform(html, scripts);
 
-    const axeResults = await new AxeBuilder({ page })
-      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
-      .analyze();
+    // Inject axe-core directly (works better with remote browsers)
+    const axeSource = axe.source;
+    await page.evaluate(axeSource);
+
+    const axeResults = await page.evaluate(async () => {
+      // @ts-expect-error axe is injected
+      return await axe.run(document, {
+        runOnly: {
+          type: "tag",
+          values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
+        }
+      });
+    });
 
     const issueMap = new Map<string, { id: string; impact: string; description: string; count: number }>();
 
