@@ -178,9 +178,9 @@ export async function POST(request: Request) {
 
     const platform = detectPlatform(html, scripts);
 
-    // Inject axe-core directly (works better with remote browsers)
-    const axeSource = axe.source;
-    await page.evaluate(axeSource);
+    // Inject axe-core directly via addScriptTag (works better with remote browsers)
+    await page.addScriptTag({ content: axe.source });
+    await page.waitForFunction(() => typeof (window as unknown as { axe: unknown }).axe !== "undefined", { timeout: 5000 });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const axeResults = await page.evaluate(async () => {
