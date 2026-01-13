@@ -182,9 +182,10 @@ export async function POST(request: Request) {
     const axeSource = axe.source;
     await page.evaluate(axeSource);
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const axeResults = await page.evaluate(async () => {
-      // @ts-expect-error axe is injected
-      return await axe.run(document, {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return await (window as any).axe.run(document, {
         runOnly: {
           type: "tag",
           values: ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"]
