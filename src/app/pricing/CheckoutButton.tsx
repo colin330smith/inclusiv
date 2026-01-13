@@ -7,9 +7,10 @@ interface CheckoutButtonProps {
   plan: 'starter' | 'professional' | 'enterprise';
   label: string;
   highlight?: boolean;
+  billing?: 'monthly' | 'annual';
 }
 
-export default function CheckoutButton({ plan, label, highlight }: CheckoutButtonProps) {
+export default function CheckoutButton({ plan, label, highlight, billing = 'monthly' }: CheckoutButtonProps) {
   const [loading, setLoading] = useState(false);
 
   const handleCheckout = async () => {
@@ -20,6 +21,7 @@ export default function CheckoutButton({ plan, label, highlight }: CheckoutButto
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           plan,
+          billing,
           successUrl: `${window.location.origin}/success`,
           cancelUrl: `${window.location.origin}/pricing`,
         }),
