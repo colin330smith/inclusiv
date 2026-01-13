@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRight, CheckCircle, Globe, Mail, Sparkles, Shield, Loader2 } from "lucide-react";
+import { ArrowRight, CheckCircle, Globe, Mail, Loader2 } from "lucide-react";
 
 interface InlineLeadFormProps {
   variant?: "default" | "compact" | "dark" | "gradient";
@@ -16,8 +16,8 @@ interface InlineLeadFormProps {
 
 export default function InlineLeadForm({
   variant = "default",
-  headline = "Get Your Free Accessibility Audit",
-  subheadline = "Discover compliance issues and get AI-powered fixes delivered to your inbox.",
+  headline = "Get Your Free Accessibility Report",
+  subheadline = "Enter your details to receive a comprehensive compliance checklist.",
   buttonText = "Get Free Audit",
   showUrl = true,
   leadMagnet = "inline-audit",
@@ -67,12 +67,12 @@ export default function InlineLeadForm({
     }
   };
 
-  // Variant styles
+  // Variant styles - all clean, no gradients
   const containerStyles = {
-    default: "bg-zinc-900 border border-zinc-800 rounded-2xl p-8",
-    compact: "bg-zinc-900/50 border border-zinc-800 rounded-xl p-6",
-    dark: "bg-zinc-950 border border-zinc-800 rounded-2xl p-8",
-    gradient: "bg-gradient-to-br from-indigo-950/50 to-purple-950/50 border border-indigo-500/20 rounded-2xl p-8",
+    default: "bg-zinc-900 border border-zinc-800 rounded-xl p-6",
+    compact: "bg-zinc-900/50 border border-zinc-800 rounded-xl p-5",
+    dark: "bg-zinc-950 border border-zinc-800 rounded-xl p-6",
+    gradient: "bg-zinc-900 border border-zinc-800 rounded-xl p-6", // renamed but keeping clean
   };
 
   if (isSuccess) {
@@ -94,14 +94,8 @@ export default function InlineLeadForm({
   return (
     <div className={containerStyles[variant]}>
       {/* Header */}
-      <div className="mb-6">
-        {variant === "gradient" && (
-          <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-indigo-400 text-sm mb-4">
-            <Sparkles className="w-4 h-4" />
-            Free Resource
-          </div>
-        )}
-        <h3 className="text-xl font-bold text-white mb-2">{headline}</h3>
+      <div className="mb-5">
+        <h3 className="text-lg font-semibold text-white mb-1">{headline}</h3>
         <p className="text-zinc-400 text-sm">{subheadline}</p>
       </div>
 
@@ -145,7 +139,7 @@ export default function InlineLeadForm({
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:from-zinc-600 disabled:to-zinc-600 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
+          className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
         >
           {isSubmitting ? (
             <>
@@ -162,10 +156,9 @@ export default function InlineLeadForm({
       </form>
 
       {/* Trust indicator */}
-      <div className="mt-4 flex items-center justify-center gap-2 text-zinc-500 text-xs">
-        <Shield className="w-3.5 h-3.5" />
-        <span>We respect your privacy. Unsubscribe anytime.</span>
-      </div>
+      <p className="mt-4 text-center text-zinc-500 text-xs">
+        We respect your privacy. Unsubscribe anytime.
+      </p>
     </div>
   );
 }

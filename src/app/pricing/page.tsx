@@ -1,33 +1,25 @@
 import type { Metadata } from "next";
-import { Shield, Check, X, Clock, Zap, Award, Users, FileCheck, Headphones, Building2, Lock, ArrowRight, AlertTriangle } from "lucide-react";
+import { Shield, Check, X, Clock, Zap, Award, FileCheck, Headphones, Building2, Lock, ArrowRight, Globe } from "lucide-react";
 import Link from "next/link";
 import PricingTracker from "./PricingTracker";
 import CheckoutButton from "./CheckoutButton";
 
 export const metadata: Metadata = {
-  title: "Pricing | Inclusiv - EAA Compliance Before June 2025",
-  description: "Choose your accessibility compliance plan. From free single-page scans to enterprise solutions. Get EAA compliant before the June 28, 2025 deadline.",
-  keywords: ["accessibility pricing", "WCAG compliance cost", "EAA compliance pricing", "web accessibility plans", "accessibility audit pricing"],
+  title: "Pricing | Inclusiv - WCAG Accessibility Compliance",
+  description: "Choose your accessibility compliance plan. From free single-page scans to enterprise solutions. WCAG 2.1 AA compliant for EAA, ADA, and global accessibility standards.",
+  keywords: ["accessibility pricing", "WCAG compliance cost", "EAA compliance pricing", "ADA compliance pricing", "web accessibility plans", "accessibility audit pricing"],
   openGraph: {
-    title: "Pricing | Inclusiv - EAA Compliance Plans",
-    description: "Get EAA compliant before June 28, 2025. Plans starting from free. Avoid €100,000 fines.",
+    title: "Pricing | Inclusiv - WCAG Compliance Plans",
+    description: "Get WCAG 2.1 AA compliant. Plans starting from free. Works for EAA (EU) and ADA (US) requirements.",
     type: "website",
   },
-};
-
-// Calculate days until EAA deadline
-const getDeadlineInfo = () => {
-  const deadline = new Date("2025-06-28");
-  const today = new Date();
-  const diffTime = deadline.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return { days: diffDays, deadline };
 };
 
 const plans = [
   {
     name: "Free",
-    price: "€0",
+    priceEUR: "€0",
+    priceUSD: "$0",
     period: "",
     description: "Perfect for a quick compliance check",
     features: [
@@ -48,7 +40,8 @@ const plans = [
   },
   {
     name: "Starter",
-    price: "€49",
+    priceEUR: "€49",
+    priceUSD: "$54",
     period: "/month",
     description: "For small businesses getting compliant",
     features: [
@@ -69,7 +62,8 @@ const plans = [
   },
   {
     name: "Professional",
-    price: "€149",
+    priceEUR: "€149",
+    priceUSD: "$164",
     period: "/month",
     description: "Full compliance for growing companies",
     features: [
@@ -90,7 +84,8 @@ const plans = [
   },
   {
     name: "Enterprise",
-    price: "€499",
+    priceEUR: "€499",
+    priceUSD: "$549",
     period: "/month",
     description: "For organizations with complex needs",
     features: [
@@ -113,16 +108,24 @@ const plans = [
 
 const faqs = [
   {
+    question: "What accessibility laws does WCAG compliance cover?",
+    answer: "WCAG 2.1 AA is the global standard for web accessibility. It satisfies the requirements of the European Accessibility Act (EAA) in the EU, the Americans with Disabilities Act (ADA) in the US, and accessibility laws in Canada, UK, Australia, and most other countries. One standard covers you globally.",
+  },
+  {
     question: "What is the European Accessibility Act (EAA)?",
-    answer: "The EAA is EU legislation requiring digital products and services to be accessible to people with disabilities. It applies to websites, mobile apps, e-commerce, banking, and more. Non-compliance after June 28, 2025 can result in fines up to €100,000 and legal action.",
+    answer: "The EAA is EU legislation requiring digital products and services to be accessible. It applies to websites, mobile apps, e-commerce, banking, and more. The compliance deadline is June 28, 2025. It requires WCAG 2.1 Level AA compliance.",
   },
   {
-    question: "Does the EAA apply to my business?",
-    answer: "If you sell products or services to EU consumers online, the EAA likely applies to you. This includes e-commerce sites, SaaS platforms, booking systems, and any B2C digital service. Even US companies selling to EU customers must comply.",
+    question: "What about ADA compliance in the United States?",
+    answer: "The Americans with Disabilities Act (ADA) requires businesses to make their websites accessible to people with disabilities. Courts have consistently ruled that WCAG 2.1 AA is the standard for ADA web accessibility compliance. Unlike the EAA, ADA enforcement is ongoing through lawsuits.",
   },
   {
-    question: "What WCAG level do I need for EAA compliance?",
-    answer: "The EAA requires WCAG 2.1 Level AA compliance. Inclusiv scans for all Level A and AA success criteria, giving you a complete picture of your compliance status.",
+    question: "Does your service work for both US and EU businesses?",
+    answer: "Yes. Our scans check against WCAG 2.1 AA criteria, which is the standard required by both the EAA (Europe) and ADA (United States). Whether you're preparing for the EAA deadline or protecting against ADA lawsuits, the same compliance work applies.",
+  },
+  {
+    question: "What WCAG level do I need?",
+    answer: "WCAG 2.1 Level AA is required by both the EAA and ADA. Inclusiv scans for all Level A and AA success criteria, giving you a complete picture of your compliance status.",
   },
   {
     question: "How quickly can I become compliant?",
@@ -130,7 +133,7 @@ const faqs = [
   },
   {
     question: "What's included in the compliance certificate?",
-    answer: "Our compliance certificate documents your WCAG 2.1 AA conformance, includes a detailed accessibility statement, and provides evidence for regulators. It's updated automatically with each scan.",
+    answer: "Our compliance certificate documents your WCAG 2.1 AA conformance, includes a detailed accessibility statement, and provides documentation for regulators or legal proceedings. It's updated automatically with each scan.",
   },
   {
     question: "Can I cancel anytime?",
@@ -159,8 +162,6 @@ const comparisonFeatures = [
 ];
 
 export default function PricingPage() {
-  const deadlineInfo = getDeadlineInfo();
-
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       {/* Analytics Tracker */}
@@ -177,23 +178,23 @@ export default function PricingPage() {
             <Link href="/" className="text-zinc-400 hover:text-white transition-colors">
               Scanner
             </Link>
-            <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-sm text-red-400 animate-pulse">
-              <Clock className="w-4 h-4" />
-              <span className="font-semibold">{deadlineInfo.days} days until EAA deadline</span>
+            <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-sm text-indigo-400">
+              <Globe className="w-4 h-4" />
+              <span className="font-medium">WCAG 2.1 AA Compliant</span>
             </div>
           </div>
         </div>
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Urgency Banner */}
-        <div className="mb-12 p-4 bg-gradient-to-r from-red-500/20 via-orange-500/20 to-red-500/20 border border-red-500/30 rounded-2xl">
+        {/* Info Banner */}
+        <div className="mb-12 p-4 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-2xl">
           <div className="flex items-center justify-center gap-3 text-center">
-            <AlertTriangle className="w-6 h-6 text-red-400 flex-shrink-0" />
+            <Globe className="w-6 h-6 text-indigo-400 flex-shrink-0" />
             <p className="text-lg">
-              <span className="font-bold text-red-400">EAA Deadline: June 28, 2025</span>
+              <span className="font-semibold text-indigo-400">Works Globally</span>
               <span className="text-zinc-300 mx-2">|</span>
-              <span className="text-zinc-400">Non-compliant sites face fines up to €100,000. Only {deadlineInfo.days} days left.</span>
+              <span className="text-zinc-400">WCAG compliance meets EAA (Europe), ADA (US), and international accessibility standards</span>
             </p>
           </div>
         </div>
@@ -204,7 +205,7 @@ export default function PricingPage() {
             Simple, transparent <span className="gradient-text">pricing</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
-            Get compliant before the deadline. Start free, upgrade when you need more power.
+            WCAG 2.1 AA compliance for businesses of all sizes. Start free, upgrade when you need more power.
           </p>
         </div>
 
@@ -230,9 +231,15 @@ export default function PricingPage() {
               <div className="mb-6">
                 <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
                 <p className="text-zinc-400 text-sm mb-4">{plan.description}</p>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-bold text-white">{plan.price}</span>
-                  <span className="text-zinc-500">{plan.period}</span>
+                <div className="space-y-1">
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl font-bold text-white">{plan.priceEUR}</span>
+                    <span className="text-zinc-500">{plan.period}</span>
+                  </div>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-lg text-zinc-400">{plan.priceUSD}</span>
+                    <span className="text-zinc-600 text-sm">{plan.period} USD</span>
+                  </div>
                 </div>
               </div>
 
@@ -281,7 +288,7 @@ export default function PricingPage() {
           <div className="inline-flex items-center gap-3 px-6 py-3 bg-green-500/10 border border-green-500/30 rounded-full">
             <Lock className="w-5 h-5 text-green-500" />
             <span className="text-green-400 font-medium">30-Day Money-Back Guarantee</span>
-            <span className="text-zinc-400">• No questions asked</span>
+            <span className="text-zinc-400">- No questions asked</span>
           </div>
         </div>
 
@@ -317,26 +324,50 @@ export default function PricingPage() {
         </div>
 
         {/* Trust Indicators */}
-        <div className="grid md:grid-cols-4 gap-6 mb-20">
+        <div className="grid md:grid-cols-3 gap-6 mb-20">
           <div className="text-center p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
             <Zap className="w-10 h-10 text-indigo-500 mx-auto mb-3" />
             <h3 className="text-2xl font-bold text-white mb-1">30 sec</h3>
             <p className="text-zinc-400">Average scan time</p>
           </div>
           <div className="text-center p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
-            <Users className="w-10 h-10 text-indigo-500 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-white mb-1">2,847+</h3>
-            <p className="text-zinc-400">Sites scanned</p>
-          </div>
-          <div className="text-center p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
             <FileCheck className="w-10 h-10 text-indigo-500 mx-auto mb-3" />
-            <h3 className="text-2xl font-bold text-white mb-1">94%</h3>
-            <p className="text-zinc-400">Issues fixed with AI</p>
+            <h3 className="text-2xl font-bold text-white mb-1">100+</h3>
+            <p className="text-zinc-400">WCAG criteria checked</p>
           </div>
           <div className="text-center p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
             <Award className="w-10 h-10 text-indigo-500 mx-auto mb-3" />
             <h3 className="text-2xl font-bold text-white mb-1">WCAG 2.1</h3>
             <p className="text-zinc-400">Full AA coverage</p>
+          </div>
+        </div>
+
+        {/* Compliance Coverage */}
+        <div className="mb-20 p-8 bg-zinc-900 border border-zinc-800 rounded-2xl">
+          <h2 className="text-2xl font-bold text-white text-center mb-6">
+            One Standard, Global Compliance
+          </h2>
+          <p className="text-zinc-400 text-center mb-8 max-w-3xl mx-auto">
+            WCAG 2.1 AA is the internationally recognized standard for web accessibility.
+            Our scans help you comply with regulations worldwide.
+          </p>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="p-4 bg-zinc-800/50 rounded-xl text-center">
+              <p className="font-semibold text-white mb-1">European Union</p>
+              <p className="text-sm text-zinc-400">EAA - June 2025</p>
+            </div>
+            <div className="p-4 bg-zinc-800/50 rounded-xl text-center">
+              <p className="font-semibold text-white mb-1">United States</p>
+              <p className="text-sm text-zinc-400">ADA - Ongoing</p>
+            </div>
+            <div className="p-4 bg-zinc-800/50 rounded-xl text-center">
+              <p className="font-semibold text-white mb-1">United Kingdom</p>
+              <p className="text-sm text-zinc-400">Equality Act</p>
+            </div>
+            <div className="p-4 bg-zinc-800/50 rounded-xl text-center">
+              <p className="font-semibold text-white mb-1">Canada</p>
+              <p className="text-sm text-zinc-400">AODA</p>
+            </div>
           </div>
         </div>
 
@@ -346,7 +377,7 @@ export default function PricingPage() {
             Frequently Asked Questions
           </h2>
           <p className="text-zinc-400 text-center mb-10 max-w-2xl mx-auto">
-            Everything you need to know about EAA compliance and how Inclusiv helps you get there.
+            Everything you need to know about WCAG compliance and how Inclusiv helps you get there.
           </p>
           <div className="grid md:grid-cols-2 gap-6">
             {faqs.map((faq, i) => (
@@ -361,13 +392,11 @@ export default function PricingPage() {
         {/* Final CTA */}
         <div className="text-center p-10 bg-gradient-to-r from-indigo-500/20 via-purple-500/20 to-indigo-500/20 border border-indigo-500/30 rounded-3xl">
           <h2 className="text-3xl font-bold text-white mb-4">
-            Don't wait for the deadline
+            Make your website accessible to everyone
           </h2>
           <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-            Start your free scan today. Get compliant in weeks, not months.
-            <span className="block mt-2 text-red-400 font-medium">
-              Only {deadlineInfo.days} days until €100k fines become reality.
-            </span>
+            Start with a free scan today. Get compliant in weeks, not months.
+            WCAG 2.1 AA compliance that works for EAA, ADA, and beyond.
           </p>
           <Link
             href="/"
@@ -391,7 +420,7 @@ export default function PricingPage() {
             <div className="flex items-center gap-6 text-zinc-500 text-sm">
               <Link href="/eaa-compliance" className="hover:text-white transition-colors">EAA Guide</Link>
               <Link href="/wcag-checker" className="hover:text-white transition-colors">WCAG Checker</Link>
-              <span>Powered by axe-core • WCAG 2.1 AA</span>
+              <span>Powered by axe-core - WCAG 2.1 AA</span>
             </div>
           </div>
         </div>

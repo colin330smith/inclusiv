@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, Shield, ArrowRight, Zap } from "lucide-react";
+import { X, Shield, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface FloatingCTAProps {
@@ -89,24 +89,20 @@ export default function FloatingCTA({
         <div className="w-6 h-1 bg-zinc-600 rounded-full" />
       </button>
 
-      {/* Main bar */}
-      <div className="bg-gradient-to-r from-indigo-600 via-indigo-500 to-purple-600 border-t border-indigo-400/30 shadow-lg shadow-indigo-500/20">
+      {/* Main bar - clean, professional design */}
+      <div className="bg-zinc-900 border-t border-zinc-800">
         <div className="max-w-6xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Left content */}
             <div className="flex items-center gap-4">
-              <div className="hidden sm:flex items-center gap-2 px-3 py-1 bg-white/10 rounded-full">
-                <Zap className="w-4 h-4 text-yellow-300" />
-                <span className="text-white/90 text-sm font-medium">Free Tool</span>
-              </div>
               <div className="flex items-center gap-2">
-                <Shield className="w-5 h-5 text-white/90" />
-                <span className="text-white font-semibold">
-                  Get Your Free Accessibility Score
+                <Shield className="w-5 h-5 text-indigo-500" />
+                <span className="text-zinc-200 font-medium">
+                  Check your website&apos;s accessibility score
                 </span>
               </div>
-              <span className="hidden md:inline text-white/70 text-sm">
-                Check compliance before the EAA deadline
+              <span className="hidden md:inline text-zinc-500 text-sm">
+                Free WCAG 2.1 AA compliance check
               </span>
             </div>
 
@@ -114,17 +110,16 @@ export default function FloatingCTA({
             <div className="flex items-center gap-3">
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 px-5 py-2 bg-white hover:bg-zinc-100 text-indigo-600 font-semibold rounded-lg transition-colors shadow-md"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors text-sm"
               >
-                <span className="hidden sm:inline">Scan Now</span>
-                <span className="sm:hidden">Scan</span>
+                <span>Scan Now</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
 
               {/* Close button */}
               <button
                 onClick={handleDismiss}
-                className="p-2 text-white/70 hover:text-white hover:bg-white/10 rounded-lg transition-colors"
+                className="p-2 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 rounded-lg transition-colors"
                 aria-label="Dismiss"
               >
                 <X className="w-4 h-4" />

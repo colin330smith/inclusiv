@@ -270,17 +270,17 @@ export function welcomeDeadlineReminder(lead: Lead): string {
     </table>
 
     <h2 style="margin: 32px 0 16px; font-size: 18px; font-weight: 600; color: ${EMAIL_STYLES.colors.text};">
-      Success Story: E-Commerce Store Achieves 98/100
+      Why Early Action Matters
     </h2>
 
-    ${testimonialBox(
-      "We were at 43/100 with over 200 issues across our Shopify store. Inclusiv fixed everything in just 3 days. Now we're fully compliant and actually seeing better conversion rates from improved usability.",
-      "Sarah Chen",
-      "Fashion Forward Boutique"
+    ${infoBox(
+      'Industry Research',
+      'Studies show that accessible websites often see improved SEO rankings, better user experience, and up to 15% higher conversion rates due to improved usability for all users.',
+      'info'
     )}
 
     <p style="margin: 0 0 24px; color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; line-height: 1.6;">
-      <strong>Results:</strong> 43 → 98 score, 200+ issues fixed, 12% increase in conversions, full EAA compliance achieved in 72 hours.
+      <strong>Our Technology:</strong> Powered by axe-core (used by Microsoft, Google, Mozilla), we identify WCAG 2.1 AA issues and provide clear, actionable fixes you can implement immediately.
     </p>
 
     ${ctaButton('Start Your Remediation', 'https://inclusiv.app/pricing')}

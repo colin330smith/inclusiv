@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap, Star, Quote, BadgeCheck, TrendingUp, Users, Server, Eye } from "lucide-react";
+import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap } from "lucide-react";
 import {
   trackScanStarted,
   trackScanCompleted,
@@ -11,9 +11,6 @@ import {
   hashEmail,
   initAnalytics,
 } from "@/lib/analytics";
-import ExitIntent from "@/components/ExitIntent";
-import { LiveCounter, RecentScansNotification, HourlyActivityBadge } from "@/components/LiveActivityFeed";
-import { SecurityBadges, ScannerTrustBar, DataPrivacyAssurance, ComplianceBadges } from "@/components/TrustBadges";
 
 type ScanResult = {
   score: number;
@@ -29,70 +26,13 @@ type ScanResult = {
   scannedAt: string;
 };
 
-type CountdownTime = {
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-};
-
-// Calculate time until EAA deadline
-const getDeadlineCountdown = (): CountdownTime => {
-  const deadline = new Date("2025-06-28T00:00:00");
-  const now = new Date();
-  const diffTime = deadline.getTime() - now.getTime();
-
-  if (diffTime <= 0) {
-    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-  }
-
-  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diffTime % (1000 * 60)) / 1000);
-
-  return { days, hours, minutes, seconds };
-};
-
-// Calculate days until EAA deadline (simple version for header)
+// Calculate days until EAA deadline
 const getDeadlineInfo = () => {
   const deadline = new Date("2025-06-28");
   const today = new Date();
   const diffTime = deadline.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   return { days: diffDays, deadline };
-};
-
-// Risk calculator based on score
-const getRiskAssessment = (score: number) => {
-  if (score >= 80) {
-    return {
-      level: "Low Risk",
-      color: "text-green-500",
-      bgColor: "bg-green-500/10",
-      borderColor: "border-green-500/30",
-      message: "Your site has good accessibility. Minor fixes recommended.",
-      fineEstimate: "€0 - €5,000"
-    };
-  }
-  if (score >= 50) {
-    return {
-      level: "Medium Risk",
-      color: "text-yellow-500",
-      bgColor: "bg-yellow-500/10",
-      borderColor: "border-yellow-500/30",
-      message: "Significant issues found. Action required before deadline.",
-      fineEstimate: "€10,000 - €50,000"
-    };
-  }
-  return {
-    level: "High Risk",
-    color: "text-red-500",
-    bgColor: "bg-red-500/10",
-    borderColor: "border-red-500/30",
-    message: "Critical violations detected. Immediate action required.",
-    fineEstimate: "€50,000 - €100,000"
-  };
 };
 
 export default function Home() {
@@ -103,17 +43,8 @@ export default function Home() {
   const [showEmailCapture, setShowEmailCapture] = useState(false);
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [error, setError] = useState("");
-  const [countdown, setCountdown] = useState<CountdownTime>(getDeadlineCountdown());
   const [scanProgress, setScanProgress] = useState(0);
   const deadlineInfo = getDeadlineInfo();
-
-  // Live countdown timer
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown(getDeadlineCountdown());
-    }, 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   // Initialize analytics on mount
   useEffect(() => {
@@ -162,7 +93,7 @@ export default function Home() {
     // Track scan started
     const scanStartTime = Date.now();
     trackScanStarted(scanUrl);
-    trackCtaClick("scan_submit", "Check Before Its Too Late", "hero_scanner");
+    trackCtaClick("scan_submit", "Scan My Website", "hero_scanner");
 
     setScanning(true);
 
@@ -202,7 +133,6 @@ export default function Home() {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Track CTA click for email submit
     trackCtaClick("email_submit", "Get Full Report", "scan_results");
 
     try {
@@ -212,14 +142,12 @@ export default function Home() {
         body: JSON.stringify({ email, url, score: result?.score }),
       });
 
-      // Track email captured (hash email for privacy)
       const hashedEmail = await hashEmail(email);
       trackEmailCaptured("scan_results", hashedEmail);
 
       setEmailSubmitted(true);
       localStorage.setItem("emailCaptured", "true");
     } catch {
-      // Still show success and track - email might have been captured
       trackEmailCaptured("scan_results");
       setEmailSubmitted(true);
     }
@@ -229,6 +157,12 @@ export default function Home() {
     if (score >= 80) return "#22c55e";
     if (score >= 50) return "#f59e0b";
     return "#ef4444";
+  };
+
+  const getScoreLabel = (score: number) => {
+    if (score >= 80) return { text: "Good", color: "text-green-500" };
+    if (score >= 50) return { text: "Needs Improvement", color: "text-yellow-500" };
+    return { text: "Needs Attention", color: "text-red-500" };
   };
 
   const getImpactColor = (impact: string) => {
@@ -242,23 +176,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {/* Exit Intent Popup */}
-      <ExitIntent daysRemaining={countdown.days} />
-
-      {/* Recent Scans Notification */}
-      <RecentScansNotification />
-
-      {/* Announcement Bar */}
-      <div className="bg-gradient-to-r from-red-600 to-orange-600 text-white text-center py-2 px-4 text-sm">
-        <span className="font-semibold">Warning:</span> EAA deadline is {countdown.days} days away. Non-compliant sites face fines up to €100,000.
-        <button
-          className="ml-2 underline hover:no-underline"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        >
-          Check your site now
-        </button>
-      </div>
-
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -274,16 +191,9 @@ export default function Home() {
             >
               Pricing
             </a>
-            <LiveCounter
-              label="sites scanned"
-              baseCount={2847}
-              incrementRange={[1, 3]}
-              intervalMs={25000}
-              icon={<CheckCircle className="w-4 h-4" />}
-            />
-            <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-sm text-red-400">
+            <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-sm text-indigo-400">
               <Clock className="w-4 h-4" />
-              <span className="font-semibold">{deadlineInfo.days} days left</span>
+              <span className="font-medium">EAA Deadline: {deadlineInfo.days} days</span>
             </div>
           </div>
         </div>
@@ -291,70 +201,25 @@ export default function Home() {
 
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Countdown Timer */}
-        <div className="max-w-3xl mx-auto mb-10">
-          <div className="bg-gradient-to-r from-red-950/50 to-orange-950/50 border border-red-500/30 rounded-2xl p-6">
-            <div className="text-center mb-4">
-              <p className="text-red-400 font-semibold text-sm uppercase tracking-wide mb-1">EAA Compliance Deadline</p>
-              <p className="text-zinc-400 text-sm">June 28, 2025 - Non-compliant sites face fines up to €100,000</p>
-            </div>
-            <div className="flex items-center justify-center gap-4">
-              <div className="text-center">
-                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
-                  <span className="text-3xl font-bold text-white">{countdown.days}</span>
-                </div>
-                <p className="text-zinc-500 text-xs mt-1 uppercase">Days</p>
-              </div>
-              <span className="text-2xl text-zinc-600 font-bold">:</span>
-              <div className="text-center">
-                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
-                  <span className="text-3xl font-bold text-white">{countdown.hours.toString().padStart(2, '0')}</span>
-                </div>
-                <p className="text-zinc-500 text-xs mt-1 uppercase">Hours</p>
-              </div>
-              <span className="text-2xl text-zinc-600 font-bold">:</span>
-              <div className="text-center">
-                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
-                  <span className="text-3xl font-bold text-white">{countdown.minutes.toString().padStart(2, '0')}</span>
-                </div>
-                <p className="text-zinc-500 text-xs mt-1 uppercase">Minutes</p>
-              </div>
-              <span className="text-2xl text-zinc-600 font-bold">:</span>
-              <div className="text-center">
-                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
-                  <span className="text-3xl font-bold text-red-500 tabular-nums">{countdown.seconds.toString().padStart(2, '0')}</span>
-                </div>
-                <p className="text-zinc-500 text-xs mt-1 uppercase">Seconds</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Hourly Activity Badge */}
-        <div className="text-center mb-6">
-          <HourlyActivityBadge />
-        </div>
-
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 text-indigo-400 text-sm mb-6">
             <Zap className="w-4 h-4" />
-            Free accessibility scan - No signup required
+            Free accessibility scanner powered by axe-core
           </div>
-          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6">
-            Your website may be <span className="gradient-text">breaking EU law</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            Get Your Website&apos;s <span className="text-indigo-400">Accessibility Score</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
-            The European Accessibility Act deadline is <span className="text-red-400 font-semibold">{countdown.days} days away</span>.
-            Non-compliant sites face fines up to <span className="text-red-400 font-semibold">€100,000</span>.
+            Instant WCAG 2.1 AA compliance check. Works with any website - WordPress, Shopify, React, and more.
           </p>
-          <p className="text-zinc-500">
-            Scan your site in 30 seconds. Get instant compliance score + actionable fixes.
+          <p className="text-zinc-500 max-w-xl mx-auto">
+            Web accessibility is required by laws worldwide including the ADA (USA), EAA (Europe), and similar regulations in Canada, Australia, and beyond.
           </p>
         </div>
 
         {/* Scanner */}
         <div className="max-w-2xl mx-auto">
-          <form onSubmit={handleScan} className="relative mb-4">
+          <form onSubmit={handleScan} className="relative mb-6">
             <div className="flex gap-3">
               <div className="flex-1 relative">
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
@@ -370,7 +235,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={scanning || !url.trim()}
-                className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 disabled:from-zinc-700 disabled:to-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all shadow-lg shadow-red-500/25 flex items-center gap-2"
+                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all flex items-center gap-2"
               >
                 {scanning ? (
                   <>
@@ -379,7 +244,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    Check Before Its Too Late
+                    Scan My Website
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -393,8 +258,21 @@ export default function Home() {
             )}
           </form>
 
-          {/* Trust Bar Below Scanner */}
-          <ScannerTrustBar />
+          {/* Trust indicators */}
+          <div className="flex items-center justify-center gap-6 text-zinc-500 text-sm">
+            <div className="flex items-center gap-2">
+              <CheckCircle className="w-4 h-4 text-green-500" />
+              <span>No signup required</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Lock className="w-4 h-4 text-green-500" />
+              <span>Your data stays private</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Zap className="w-4 h-4 text-green-500" />
+              <span>Results in 30 seconds</span>
+            </div>
+          </div>
 
           {/* Scanning State */}
           {scanning && (
@@ -404,12 +282,12 @@ export default function Home() {
                 <div className="absolute inset-0 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2 text-center">Scanning your website...</h3>
-              <p className="text-zinc-400 text-center mb-4">Checking WCAG 2.1 AA compliance across all elements</p>
+              <p className="text-zinc-400 text-center mb-4">Checking WCAG 2.1 AA compliance</p>
 
               {/* Progress Bar */}
               <div className="w-full bg-zinc-800 rounded-full h-2 mb-2">
                 <div
-                  className="bg-gradient-to-r from-indigo-500 to-purple-500 h-2 rounded-full transition-all duration-500"
+                  className="bg-indigo-500 h-2 rounded-full transition-all duration-500"
                   style={{ width: `${scanProgress}%` }}
                 />
               </div>
@@ -440,28 +318,6 @@ export default function Home() {
           {/* Results */}
           {result && !scanning && (
             <div className="mt-8 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
-              {/* Risk Assessment Banner */}
-              {(() => {
-                const risk = getRiskAssessment(result.score);
-                return (
-                  <div className={`p-4 ${risk.bgColor} border-b ${risk.borderColor}`}>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <AlertTriangle className={`w-5 h-5 ${risk.color}`} />
-                        <div>
-                          <span className={`font-bold ${risk.color}`}>{risk.level}</span>
-                          <span className="text-zinc-400 text-sm ml-2">{risk.message}</span>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-zinc-500 text-xs">Potential Fine</p>
-                        <p className={`font-bold ${risk.color}`}>{risk.fineEstimate}</p>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })()}
-
               {/* Score Header */}
               <div className="p-8 border-b border-zinc-800 flex items-center gap-8">
                 <div className="relative w-32 h-32">
@@ -493,12 +349,12 @@ export default function Home() {
                 </div>
                 <div className="flex-1">
                   <h3 className="text-2xl font-bold text-white mb-2">
-                    {result.score >= 80 ? "Good Progress!" : result.score >= 50 ? "Needs Work" : "Critical Issues Found"}
+                    Accessibility Score: <span className={getScoreLabel(result.score).color}>{getScoreLabel(result.score).text}</span>
                   </h3>
                   <p className="text-zinc-400 mb-3">
                     {result.totalIssues} accessibility issues detected
                     {result.criticalIssues > 0 && (
-                      <span className="text-red-400"> - {result.criticalIssues} critical</span>
+                      <span className="text-red-400"> ({result.criticalIssues} critical)</span>
                     )}
                   </p>
                   <div className="flex items-center gap-3">
@@ -506,35 +362,32 @@ export default function Home() {
                       <Globe className="w-4 h-4" />
                       {result.platform}
                     </div>
-                    <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded-full text-sm text-zinc-300">
-                      <Clock className="w-4 h-4" />
-                      {countdown.days} days to fix
-                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Compliance Status Grid */}
               <div className="p-6 border-b border-zinc-800">
-                <h4 className="text-lg font-semibold text-white mb-4">Compliance Status</h4>
+                <h4 className="text-lg font-semibold text-white mb-4">Standards Checked</h4>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {[
-                    { label: "WCAG 2.1 AA", status: result.score >= 80 },
-                    { label: "EAA Ready", status: result.score >= 80 },
-                    { label: "ADA Compliant", status: result.score >= 70 },
-                    { label: "EN 301 549", status: result.score >= 75 },
+                    { label: "WCAG 2.1 AA", status: result.score >= 80, description: "Global standard" },
+                    { label: "EAA Ready", status: result.score >= 80, description: "Europe" },
+                    { label: "ADA Compliant", status: result.score >= 70, description: "USA" },
+                    { label: "EN 301 549", status: result.score >= 75, description: "EU Technical" },
                   ].map((item, i) => (
-                    <div key={i} className={`p-3 rounded-lg ${item.status ? "bg-green-500/10 border border-green-500/20" : "bg-red-500/10 border border-red-500/20"}`}>
+                    <div key={i} className={`p-3 rounded-lg ${item.status ? "bg-green-500/10 border border-green-500/20" : "bg-zinc-800 border border-zinc-700"}`}>
                       <div className="flex items-center gap-2">
                         {item.status ? (
                           <CheckCircle className="w-4 h-4 text-green-500" />
                         ) : (
-                          <AlertTriangle className="w-4 h-4 text-red-500" />
+                          <AlertTriangle className="w-4 h-4 text-zinc-500" />
                         )}
-                        <span className={`text-sm font-medium ${item.status ? "text-green-400" : "text-red-400"}`}>
+                        <span className={`text-sm font-medium ${item.status ? "text-green-400" : "text-zinc-400"}`}>
                           {item.label}
                         </span>
                       </div>
+                      <p className="text-xs text-zinc-500 mt-1 ml-6">{item.description}</p>
                     </div>
                   ))}
                 </div>
@@ -542,7 +395,7 @@ export default function Home() {
 
               {/* Top Issues Preview */}
               <div className="p-6">
-                <h4 className="text-lg font-semibold text-white mb-4">Top Issues Found</h4>
+                <h4 className="text-lg font-semibold text-white mb-4">Issues Found</h4>
                 <div className="space-y-3">
                   {result.topIssues.slice(0, 3).map((issue, i) => (
                     <div
@@ -560,7 +413,7 @@ export default function Home() {
                   ))}
                 </div>
 
-                {/* Blurred Issues */}
+                {/* More Issues */}
                 {result.topIssues.length > 3 && (
                   <div className="relative mt-3">
                     <div className="space-y-3 blur-sm pointer-events-none">
@@ -581,7 +434,7 @@ export default function Home() {
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800 rounded-full">
                         <Lock className="w-4 h-4 text-zinc-500" />
-                        <span className="text-zinc-400 text-sm">+{result.topIssues.length - 3} more issues</span>
+                        <span className="text-zinc-400 text-sm">+{result.topIssues.length - 3} more issues in full report</span>
                       </div>
                     </div>
                   </div>
@@ -590,27 +443,24 @@ export default function Home() {
 
               {/* Email Capture */}
               {showEmailCapture && !emailSubmitted && (
-                <div className="p-6 bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border-t border-indigo-500/20">
+                <div className="p-6 bg-indigo-600/10 border-t border-indigo-500/20">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 bg-indigo-500/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <BadgeCheck className="w-6 h-6 text-indigo-400" />
-                    </div>
                     <div className="flex-1">
                       <h4 className="text-lg font-semibold text-white mb-2">
-                        Get Your Full Compliance Report + AI-Generated Fixes
+                        Get Your Full Report
                       </h4>
                       <ul className="text-zinc-400 text-sm space-y-1 mb-4">
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
-                          All {result.totalIssues} issues with exact code fixes
+                          All {result.totalIssues} issues with code-level details
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
-                          Priority roadmap to fix critical issues first
+                          Suggested fixes for {result.platform}
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
-                          Platform-specific fixes for {result.platform}
+                          Priority ranking to fix critical issues first
                         </li>
                       </ul>
                       <form onSubmit={handleEmailSubmit} className="flex gap-3">
@@ -624,7 +474,7 @@ export default function Home() {
                         />
                         <button
                           type="submit"
-                          className="px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-colors"
+                          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors"
                         >
                           Get Full Report
                         </button>
@@ -640,9 +490,9 @@ export default function Home() {
                   <div className="flex items-center gap-3">
                     <CheckCircle className="w-6 h-6 text-green-500" />
                     <div>
-                      <h4 className="text-lg font-semibold text-white">Check your inbox!</h4>
+                      <h4 className="text-lg font-semibold text-white">Check your inbox</h4>
                       <p className="text-zinc-400">
-                        Full report with AI fixes sent to {email}
+                        Full report sent to {email}
                       </p>
                     </div>
                   </div>
@@ -652,240 +502,118 @@ export default function Home() {
           )}
         </div>
 
-        {/* Social Proof Section */}
-        <div className="mt-16">
-          <div className="bg-gradient-to-r from-indigo-950/30 to-purple-950/30 border border-indigo-500/20 rounded-2xl p-8 text-center">
-            <div className="flex items-center justify-center gap-2 mb-3">
-              <div className="flex -space-x-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 border-2 border-zinc-900 flex items-center justify-center">
-                    <span className="text-xs font-bold text-white">{String.fromCharCode(64 + i)}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-1 ml-2">
-                {[1, 2, 3, 4, 5].map((i) => (
-                  <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                ))}
-              </div>
-            </div>
-            <h3 className="text-2xl font-bold text-white mb-2">Trusted by 500+ EU E-commerce Sites</h3>
-            <p className="text-zinc-400 max-w-lg mx-auto">
-              Join hundreds of online stores across Europe already using Inclusiv to achieve EAA compliance before the deadline.
+        {/* Why Accessibility Matters */}
+        <div className="mt-20">
+          <div className="text-center mb-10">
+            <h2 className="text-2xl font-bold text-white mb-3">Why Web Accessibility Matters</h2>
+            <p className="text-zinc-400 max-w-xl mx-auto">
+              Accessibility laws are being enforced worldwide. Make your website usable by everyone.
             </p>
+          </div>
 
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 mt-8 max-w-2xl mx-auto">
-              <div>
-                <div className="text-3xl font-bold text-white">12,500+</div>
-                <div className="text-zinc-500 text-sm">Sites Scanned</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-white">94%</div>
-                <div className="text-zinc-500 text-sm">Compliance Rate</div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-white">€2.1M+</div>
-                <div className="text-zinc-500 text-sm">Fines Avoided</div>
-              </div>
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <h3 className="text-lg font-semibold text-white mb-3">Europe: EAA Deadline</h3>
+              <p className="text-zinc-400 text-sm mb-3">
+                The European Accessibility Act requires digital products and services to be accessible by June 28, 2025. This affects e-commerce sites, banking, and more.
+              </p>
+              <div className="text-indigo-400 text-sm font-medium">{deadlineInfo.days} days remaining</div>
+            </div>
+
+            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
+              <h3 className="text-lg font-semibold text-white mb-3">USA: ADA Lawsuits Rising</h3>
+              <p className="text-zinc-400 text-sm mb-3">
+                ADA web accessibility lawsuits continue to grow. Courts have ruled that websites are &quot;places of public accommodation&quot; under the ADA.
+              </p>
+              <div className="text-indigo-400 text-sm font-medium">4,000+ lawsuits filed annually</div>
             </div>
           </div>
         </div>
 
-        {/* Security Badges */}
-        <div className="mt-10">
-          <SecurityBadges />
-        </div>
-
-        {/* Platform Badges */}
-        <div className="mt-10 text-center">
-          <p className="text-zinc-500 text-sm mb-6">Works with your platform</p>
-          <div className="flex items-center justify-center gap-8 opacity-50">
-            {["Shopify", "WooCommerce", "Magento", "Webflow", "Custom"].map((name) => (
-              <div key={name} className="text-zinc-400 font-semibold">{name}</div>
+        {/* Platform Support */}
+        <div className="mt-16 text-center">
+          <p className="text-zinc-500 text-sm mb-6">Works with any website or platform</p>
+          <div className="flex items-center justify-center gap-8 flex-wrap">
+            {["WordPress", "Shopify", "WooCommerce", "Webflow", "Squarespace", "React", "Next.js", "Custom"].map((name) => (
+              <div key={name} className="text-zinc-500 hover:text-zinc-300 transition-colors font-medium">{name}</div>
             ))}
           </div>
         </div>
 
         {/* Features */}
-        <div className="mt-24 grid md:grid-cols-3 gap-8">
+        <div className="mt-20 grid md:grid-cols-3 gap-6">
           <div
-            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
-            onClick={() => trackFeatureClick("30-Second Scans", "features_section")}
-          >
-            <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
-              <Zap className="w-6 h-6 text-indigo-500" />
-            </div>
-            <h3 className="text-xl font-semibold text-white mb-2">30-Second Scans</h3>
-            <p className="text-zinc-400">
-              Get instant results. No waiting, no complex setup. Just enter your URL.
-            </p>
-          </div>
-          <div
-            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
-            onClick={() => trackFeatureClick("WCAG 2.1 AA Compliant", "features_section")}
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-colors"
+            onClick={() => trackFeatureClick("Powered by axe-core", "features_section")}
           >
             <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
               <Shield className="w-6 h-6 text-indigo-500" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">WCAG 2.1 AA Compliant</h3>
-            <p className="text-zinc-400">
-              Full coverage of EAA requirements. Stay ahead of the June 2025 deadline.
+            <h3 className="text-lg font-semibold text-white mb-2">Powered by axe-core</h3>
+            <p className="text-zinc-400 text-sm">
+              Industry-standard accessibility testing engine used by Microsoft, Google, and thousands of organizations.
             </p>
           </div>
           <div
-            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
-            onClick={() => trackFeatureClick("AI-Powered Fixes", "features_section")}
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-colors"
+            onClick={() => trackFeatureClick("WCAG 2.1 AA Coverage", "features_section")}
           >
             <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
               <CheckCircle className="w-6 h-6 text-indigo-500" />
             </div>
-            <h3 className="text-xl font-semibold text-white mb-2">AI-Powered Fixes</h3>
-            <p className="text-zinc-400">
-              Get exact code fixes for your platform. WordPress, Shopify, or custom code.
+            <h3 className="text-lg font-semibold text-white mb-2">WCAG 2.1 AA Coverage</h3>
+            <p className="text-zinc-400 text-sm">
+              The global accessibility standard. Meeting WCAG 2.1 AA helps you comply with accessibility laws worldwide.
+            </p>
+          </div>
+          <div
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl hover:border-zinc-700 transition-colors"
+            onClick={() => trackFeatureClick("Instant Results", "features_section")}
+          >
+            <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
+              <Zap className="w-6 h-6 text-indigo-500" />
+            </div>
+            <h3 className="text-lg font-semibold text-white mb-2">Instant Results</h3>
+            <p className="text-zinc-400 text-sm">
+              Get your accessibility score in under 30 seconds. No account required, no complex setup.
             </p>
           </div>
         </div>
 
-        {/* Data Privacy Assurance */}
-        <div className="mt-16">
-          <DataPrivacyAssurance />
-        </div>
-
-        {/* Compliance Badges */}
-        <div className="mt-10">
-          <ComplianceBadges />
-        </div>
-
-        {/* Testimonials Section */}
-        <div className="mt-24">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-white mb-4">What Our Customers Say</h2>
-            <p className="text-zinc-400">E-commerce leaders trust Inclusiv for EAA compliance</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {[
-              {
-                quote: "Inclusiv identified 47 critical issues we missed. We fixed them in a week and are now fully compliant.",
-                author: "Marie Schmidt",
-                role: "CTO, Fashion Outlet DE",
-                rating: 5
-              },
-              {
-                quote: "The AI-generated fixes saved our dev team hundreds of hours. Worth every cent before the deadline hits.",
-                author: "Johan van Berg",
-                role: "Head of Digital, NL Retail Group",
-                rating: 5
-              },
-              {
-                quote: "We scanned 12 storefronts in one afternoon. The detailed reports made prioritization simple.",
-                author: "Elena Rossi",
-                role: "Compliance Manager, IT Commerce",
-                rating: 5
-              }
-            ].map((testimonial, i) => (
-              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 relative">
-                <Quote className="w-8 h-8 text-indigo-500/30 absolute top-4 right-4" />
-                <div className="flex items-center gap-1 mb-4">
-                  {[...Array(testimonial.rating)].map((_, j) => (
-                    <Star key={j} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
-                  ))}
-                </div>
-                <p className="text-zinc-300 mb-6 leading-relaxed">&quot;{testimonial.quote}&quot;</p>
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center">
-                    <span className="text-sm font-bold text-white">{testimonial.author.split(' ').map(n => n[0]).join('')}</span>
-                  </div>
-                  <div>
-                    <p className="text-white font-medium">{testimonial.author}</p>
-                    <p className="text-zinc-500 text-sm">{testimonial.role}</p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Risk Calculator CTA */}
-        <div className="mt-24">
-          <div className="bg-gradient-to-r from-red-950/30 to-orange-950/30 border border-red-500/20 rounded-2xl p-10 text-center">
-            <div className="flex items-center justify-center gap-3 mb-4">
-              <AlertTriangle className="w-8 h-8 text-red-500" />
-              <h2 className="text-3xl font-bold text-white">
-                Calculate Your Risk
-              </h2>
-            </div>
-            <p className="text-zinc-400 max-w-xl mx-auto mb-6">
-              Based on current enforcement patterns, non-compliant e-commerce sites face an average fine of €35,000.
-              With only {countdown.days} days left, can you afford to wait?
-            </p>
-            <div className="grid grid-cols-3 gap-4 max-w-lg mx-auto mb-8">
-              <div className="p-4 bg-zinc-900/50 rounded-lg">
-                <div className="text-red-400 font-bold text-xl">€5K-€20K</div>
-                <div className="text-zinc-500 text-xs">Small Sites</div>
-              </div>
-              <div className="p-4 bg-zinc-900/50 rounded-lg">
-                <div className="text-orange-400 font-bold text-xl">€20K-€50K</div>
-                <div className="text-zinc-500 text-xs">Medium Sites</div>
-              </div>
-              <div className="p-4 bg-zinc-900/50 rounded-lg">
-                <div className="text-yellow-400 font-bold text-xl">€50K-€100K</div>
-                <div className="text-zinc-500 text-xs">Large Sites</div>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                trackCtaClick("risk_calculator_cta", "Check My Site Now", "risk_section");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-8 py-4 bg-gradient-to-r from-red-600 to-orange-500 hover:from-red-500 hover:to-orange-400 text-white font-semibold rounded-xl transition-all shadow-lg shadow-red-500/25 inline-flex items-center gap-2"
-            >
-              Check My Site Now - Its Free
-              <ArrowRight className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Final CTA */}
-        <div className="mt-24 text-center">
-          <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-10">
-            <h2 className="text-3xl font-bold text-white mb-4">
-              Only {countdown.days} Days Left to Comply
+        {/* CTA */}
+        <div className="mt-20 text-center">
+          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-10 max-w-2xl mx-auto">
+            <h2 className="text-2xl font-bold text-white mb-4">
+              Ready to check your website?
             </h2>
-            <p className="text-zinc-400 max-w-xl mx-auto mb-6">
-              Do not wait until it is too late. Scan your site now and get a clear roadmap to EAA compliance before the June 28, 2025 deadline.
+            <p className="text-zinc-400 mb-6">
+              Get your free accessibility score and see exactly what needs to be fixed.
             </p>
             <button
               onClick={() => {
-                trackCtaClick("final_cta", "Get Your Free Compliance Report", "footer_cta");
+                trackCtaClick("final_cta", "Scan My Website", "footer_cta");
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
-              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 inline-flex items-center gap-2"
+              className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors inline-flex items-center gap-2"
             >
-              Get Your Free Compliance Report
+              Scan My Website
               <ArrowRight className="w-5 h-5" />
             </button>
-            <p className="text-zinc-500 text-sm mt-4">
-              Join 500+ EU businesses already achieving compliance with Inclusiv
-            </p>
           </div>
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 mt-24">
+      <footer className="border-t border-zinc-800 mt-20">
         <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between text-zinc-500 text-sm mb-6">
+          <div className="flex items-center justify-between text-zinc-500 text-sm">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              <span>Inclusiv &copy; 2025</span>
+              <span>Inclusiv</span>
             </div>
             <div>
               Powered by axe-core - WCAG 2.1 AA
             </div>
-          </div>
-          <div className="pt-6 border-t border-zinc-800">
-            <SecurityBadges />
           </div>
         </div>
       </footer>

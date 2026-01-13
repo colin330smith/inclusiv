@@ -167,7 +167,7 @@ export default function EAAChecklistDownload() {
                   <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
                 ))}
               </div>
-              <span className="text-zinc-400 text-sm">Downloaded by 2,500+ businesses</span>
+              <span className="text-zinc-400 text-sm">Comprehensive WCAG 2.1 AA checklist</span>
             </div>
           </div>
 

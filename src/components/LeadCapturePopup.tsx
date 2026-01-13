@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { X, FileText, CheckCircle, Shield, ArrowRight, Sparkles } from "lucide-react";
+import { X, FileText, CheckCircle, ArrowRight } from "lucide-react";
 
 interface LeadCapturePopupProps {
   delay?: number; // Delay in milliseconds before showing popup
@@ -96,49 +96,42 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
       />
 
       {/* Popup */}
-      <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-700 rounded-2xl shadow-2xl shadow-indigo-500/10 overflow-hidden animate-in fade-in zoom-in duration-300">
+      <div className="relative w-full max-w-lg bg-zinc-900 border border-zinc-800 rounded-2xl shadow-xl overflow-hidden animate-in fade-in scale-in duration-200">
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white transition-colors z-10"
+          className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors z-10"
           aria-label="Close popup"
         >
           <X className="w-5 h-5" />
         </button>
 
-        {/* Gradient accent */}
-        <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500" />
-
         {!isSuccess ? (
           <div className="p-8">
             {/* Icon */}
-            <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-indigo-500/20 to-purple-500/20 rounded-2xl flex items-center justify-center">
-              <FileText className="w-8 h-8 text-indigo-400" />
+            <div className="w-14 h-14 mx-auto mb-6 bg-indigo-500/10 rounded-xl flex items-center justify-center">
+              <FileText className="w-7 h-7 text-indigo-500" />
             </div>
 
             {/* Header */}
             <div className="text-center mb-6">
-              <div className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-indigo-400 text-sm mb-4">
-                <Sparkles className="w-4 h-4" />
-                Free Download
-              </div>
-              <h2 className="text-2xl font-bold text-white mb-2">
-                Get Your Free Accessibility Report
+              <h2 className="text-xl font-semibold text-white mb-2">
+                Free Accessibility Guide
               </h2>
-              <p className="text-zinc-400">
-                Comprehensive guide to EAA compliance with actionable steps to fix the most common accessibility issues.
+              <p className="text-zinc-400 text-sm">
+                Get our comprehensive WCAG 2.1 AA checklist with actionable steps to fix common accessibility issues.
               </p>
             </div>
 
             {/* Benefits */}
-            <div className="space-y-3 mb-6">
+            <div className="space-y-2 mb-6">
               {[
                 "Complete WCAG 2.1 AA checklist",
-                "AI-powered fix suggestions",
+                "Step-by-step fix instructions",
                 "Priority roadmap to compliance",
               ].map((benefit, i) => (
-                <div key={i} className="flex items-center gap-3 text-zinc-300">
-                  <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
+                <div key={i} className="flex items-center gap-2 text-zinc-400 text-sm">
+                  <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
                   <span>{benefit}</span>
                 </div>
               ))}
@@ -164,7 +157,7 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:from-zinc-600 disabled:to-zinc-600 text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2"
+                className="w-full px-6 py-3 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
               >
                 {isSubmitting ? (
                   <>
@@ -181,14 +174,9 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
             </form>
 
             {/* Trust indicators */}
-            <div className="mt-6 flex items-center justify-center gap-4 text-zinc-500 text-sm">
-              <div className="flex items-center gap-1">
-                <Shield className="w-4 h-4" />
-                <span>No spam, ever</span>
-              </div>
-              <span className="text-zinc-700">|</span>
-              <span>2,500+ downloads</span>
-            </div>
+            <p className="mt-6 text-center text-zinc-500 text-xs">
+              We respect your privacy. Unsubscribe anytime.
+            </p>
           </div>
         ) : (
           <div className="p-8 text-center">

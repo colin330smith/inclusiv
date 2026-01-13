@@ -184,76 +184,65 @@ export function coldIssueDetail(lead: Lead): string {
 export function coldSocialProof(lead: Lead): string {
   const content = `
     <h1 style="margin: 0 0 16px; font-size: 28px; font-weight: 700; color: ${EMAIL_STYLES.colors.text};">
-      How Companies Like Yours Achieved Compliance
+      How We Help Companies Like Yours Achieve Compliance
     </h1>
 
     <p style="margin: 0 0 24px; color: ${EMAIL_STYLES.colors.textMuted}; font-size: 16px; line-height: 1.6;">
       Hi {firstName},<br><br>
-      I wanted to share some success stories from businesses similar to {companyName} that we've helped become EAA compliant.
+      I wanted to share how Inclusiv can help businesses like {companyName} become EAA compliant before the June 2025 deadline.
     </p>
 
-    <!-- Case Study 1 -->
+    <!-- What We Offer Section -->
     <div style="background-color: ${EMAIL_STYLES.colors.background}; border-radius: 12px; padding: 24px; margin: 24px 0;">
-      <div style="display: flex; align-items: center; margin-bottom: 16px;">
-        <span style="font-size: 14px; font-weight: 600; color: ${EMAIL_STYLES.colors.primary}; text-transform: uppercase; letter-spacing: 1px;">CASE STUDY</span>
-      </div>
-      <h3 style="margin: 0 0 8px; font-size: 18px; font-weight: 600; color: ${EMAIL_STYLES.colors.text};">
-        Fashion E-Commerce Store
+      <h3 style="margin: 0 0 16px; font-size: 18px; font-weight: 600; color: ${EMAIL_STYLES.colors.text};">
+        How We Help Businesses Become Compliant
       </h3>
       <p style="margin: 0 0 16px; color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; line-height: 1.6;">
-        A Shopify fashion retailer with €2M annual revenue was at risk of losing EU market access.
+        Our WCAG 2.1 AA scanner powered by axe-core (the same engine used by Microsoft, Google, and Mozilla) identifies accessibility issues and provides clear, actionable fixes.
       </p>
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="text-align: center; padding: 12px;">
-            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.danger};">43</span>
-            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">Before</span>
+            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.primary};">60s</span>
+            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">Scan Time</span>
           </td>
           <td style="text-align: center; padding: 12px;">
-            <span style="display: block; font-size: 24px; color: ${EMAIL_STYLES.colors.textMuted};">→</span>
+            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.secondary};">WCAG</span>
+            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">2.1 AA Standard</span>
           </td>
           <td style="text-align: center; padding: 12px;">
-            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.secondary};">98</span>
-            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">After</span>
-          </td>
-          <td style="text-align: center; padding: 12px; border-left: 1px solid ${EMAIL_STYLES.colors.border};">
-            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.primary};">72h</span>
-            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">Turnaround</span>
+            <span style="display: block; font-size: 24px; font-weight: 700; color: ${EMAIL_STYLES.colors.primary};">Free</span>
+            <span style="font-size: 12px; color: ${EMAIL_STYLES.colors.textMuted};">Initial Scan</span>
           </td>
         </tr>
       </table>
     </div>
 
-    ${testimonialBox(
-      "We had no idea our site was inaccessible until we got fined for non-compliance with a state accessibility law. Inclusiv fixed everything in 3 days and now we're ahead of the EAA deadline too.",
-      "Marcus Johnson",
-      "TechGear Direct"
+    <!-- Why Accessibility Matters -->
+    ${infoBox(
+      'Industry Context',
+      'ADA website lawsuits in the US exceeded 4,500 in 2024 alone. The EU EAA will bring similar enforcement to Europe starting June 2025.',
+      'info'
     )}
 
-    ${testimonialBox(
-      "As a small business owner, I couldn't afford a dedicated accessibility team. Inclusiv made it affordable and their team handled everything. Worth every penny for peace of mind.",
-      "Elena Rodriguez",
-      "Artisan Home Goods"
-    )}
-
-    <!-- Stats Section -->
+    <!-- Tech Stack Section -->
     <div style="background: linear-gradient(135deg, ${EMAIL_STYLES.colors.primary} 0%, #4F46E5 100%); border-radius: 12px; padding: 24px; margin: 24px 0;">
       <h3 style="margin: 0 0 16px; font-size: 16px; font-weight: 600; color: #ffffff; text-align: center;">
-        Our Track Record
+        Enterprise-Grade Technology
       </h3>
       <table role="presentation" cellpadding="0" cellspacing="0" width="100%">
         <tr>
           <td style="text-align: center; padding: 8px;">
-            <span style="display: block; font-size: 32px; font-weight: 700; color: #ffffff;">500+</span>
-            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Sites Fixed</span>
+            <span style="display: block; font-size: 18px; font-weight: 700; color: #ffffff;">axe-core</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Deque Systems</span>
           </td>
           <td style="text-align: center; padding: 8px;">
-            <span style="display: block; font-size: 32px; font-weight: 700; color: #ffffff;">98%</span>
-            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Satisfaction</span>
+            <span style="display: block; font-size: 18px; font-weight: 700; color: #ffffff;">WCAG 2.1</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Level AA</span>
           </td>
           <td style="text-align: center; padding: 8px;">
-            <span style="display: block; font-size: 32px; font-weight: 700; color: #ffffff;">48h</span>
-            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Avg. Fix Time</span>
+            <span style="display: block; font-size: 18px; font-weight: 700; color: #ffffff;">EAA + ADA</span>
+            <span style="font-size: 12px; color: rgba(255,255,255,0.8);">Global Coverage</span>
           </td>
         </tr>
       </table>
