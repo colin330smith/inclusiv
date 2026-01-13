@@ -12,54 +12,38 @@ const footerLinks = {
   ],
   guides: [
     { label: "EAA Compliance", href: "/eaa-compliance" },
-    { label: "WCAG Guidelines", href: "/wcag-guidelines" },
-    { label: "Accessibility 101", href: "/accessibility-guide" },
+    { label: "EAA Guide", href: "/eaa-guide" },
     { label: "ADA Compliance", href: "/ada-compliance" },
     { label: "EU Directive", href: "/eu-web-accessibility-directive" },
+    { label: "EU Accessibility", href: "/eu-accessibility" },
     { label: "Blog", href: "/blog" },
   ],
   platforms: [
     { label: "Shopify", href: "/shopify-accessibility" },
+    { label: "Shopify Audit", href: "/shopify-accessibility-audit" },
     { label: "WordPress", href: "/wordpress-accessibility" },
     { label: "WooCommerce", href: "/woocommerce-accessibility" },
     { label: "Magento", href: "/magento-accessibility" },
     { label: "BigCommerce", href: "/bigcommerce-accessibility" },
   ],
-  industries: [
-    { label: "Healthcare", href: "/healthcare" },
-    { label: "Finance", href: "/finance" },
-    { label: "SaaS", href: "/saas" },
-    { label: "Enterprise", href: "/enterprise" },
-    { label: "E-commerce", href: "/eu-ecommerce" },
-    { label: "Agencies", href: "/agency" },
-  ],
-  compare: [
-    { label: "vs accessiBe", href: "/compare/inclusiv-vs-accessibe" },
-    { label: "vs UserWay", href: "/compare/inclusiv-vs-userway" },
-    { label: "vs AudioEye", href: "/compare/inclusiv-vs-audioeye" },
-  ],
   resources: [
-    { label: "Documentation", href: "/docs" },
-    { label: "API Reference", href: "/docs/api" },
-    { label: "Knowledge Base", href: "/docs/knowledge-base" },
+    { label: "Help Center", href: "/help" },
+    { label: "Getting Started", href: "/help/getting-started" },
+    { label: "Understanding Results", href: "/help/understanding-results" },
+    { label: "Fixing Issues", href: "/help/fixing-issues" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
+  ],
+  blog: [
+    { label: "EAA Compliance Guide", href: "/blog/eaa-compliance-guide-2025" },
+    { label: "EAA vs ADA", href: "/blog/eaa-vs-ada-comparison" },
+    { label: "EU E-commerce Study", href: "/blog/eu-ecommerce-accessibility-study" },
+    { label: "Shopify WCAG Issues", href: "/blog/shopify-wcag-violations" },
+    { label: "Statement Guide", href: "/blog/accessibility-statement-guide" },
   ],
   legal: [
     { label: "Privacy Policy", href: "/privacy" },
     { label: "Terms of Service", href: "/terms" },
-    { label: "Accessibility Statement", href: "/accessibility-statement" },
-  ],
-  cities: [
-    { label: "Berlin", href: "/accessibility-checker/berlin" },
-    { label: "Paris", href: "/accessibility-checker/paris" },
-    { label: "Amsterdam", href: "/accessibility-checker/amsterdam" },
-    { label: "Madrid", href: "/accessibility-checker/madrid" },
-    { label: "Rome", href: "/accessibility-checker/rome" },
-    { label: "Milan", href: "/accessibility-checker/milan" },
-    { label: "Barcelona", href: "/accessibility-checker/barcelona" },
-    { label: "Vienna", href: "/accessibility-checker/vienna" },
-    { label: "All Cities", href: "/accessibility-checker" },
   ],
 };
 
@@ -122,11 +106,11 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          {/* Industries */}
+          {/* Resources */}
           <div>
-            <h3 className="text-white font-semibold mb-4">Industries</h3>
+            <h3 className="text-white font-semibold mb-4">Resources</h3>
             <ul className="space-y-3">
-              {footerLinks.industries.map((link) => (
+              {footerLinks.resources.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -139,41 +123,11 @@ export function SiteFooter() {
             </ul>
           </div>
 
-          {/* Compare */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">Compare</h3>
+          {/* Blog */}
+          <div className="col-span-2">
+            <h3 className="text-white font-semibold mb-4">Popular Articles</h3>
             <ul className="space-y-3">
-              {footerLinks.compare.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-zinc-400 hover:text-indigo-400 transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-            <h3 className="text-white font-semibold mt-6 mb-4">Resources</h3>
-            <ul className="space-y-3">
-              {footerLinks.resources.slice(0, 3).map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-zinc-400 hover:text-indigo-400 transition-colors text-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Cities */}
-          <div>
-            <h3 className="text-white font-semibold mb-4">EU Cities</h3>
-            <ul className="space-y-3">
-              {footerLinks.cities.map((link) => (
+              {footerLinks.blog.map((link) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
@@ -187,33 +141,30 @@ export function SiteFooter() {
           </div>
         </div>
 
-        {/* Popular Blog Posts - SEO Link Building */}
+        {/* Quick Links - SEO */}
         <div className="mt-12 pt-8 border-t border-zinc-800">
-          <h3 className="text-white font-semibold mb-4">Popular Resources</h3>
+          <h3 className="text-white font-semibold mb-4">Quick Links</h3>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
             <Link href="/blog/eaa-compliance-guide-2025" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              EAA Compliance Guide 2025
-            </Link>
-            <Link href="/blog/wcag-compliance-complete-guide" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              WCAG Compliance Guide
-            </Link>
-            <Link href="/blog/accessibility-testing-tools-2025" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Accessibility Testing Tools
-            </Link>
-            <Link href="/blog/alt-text-best-practices" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Alt Text Best Practices
-            </Link>
-            <Link href="/blog/keyboard-accessibility-guide" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Keyboard Accessibility
-            </Link>
-            <Link href="/blog/form-accessibility-guide" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Form Accessibility
+              EAA Compliance Guide
             </Link>
             <Link href="/blog/eaa-vs-ada-comparison" className="text-zinc-400 hover:text-indigo-400 transition-colors">
               EAA vs ADA
             </Link>
-            <Link href="/blog/accessibility-lawsuits-2025" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Accessibility Lawsuits
+            <Link href="/blog/eu-ecommerce-accessibility-study" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              EU E-commerce Study
+            </Link>
+            <Link href="/blog/shopify-wcag-violations" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Shopify WCAG Issues
+            </Link>
+            <Link href="/wcag-checker" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              WCAG Checker
+            </Link>
+            <Link href="/accessibility-statement-generator" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Statement Generator
+            </Link>
+            <Link href="/website-accessibility-audit" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Website Audit
             </Link>
           </div>
         </div>
