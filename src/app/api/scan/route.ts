@@ -96,6 +96,32 @@ async function connectWithTimeout(endpoint: string, timeoutMs: number): Promise<
   ]);
 }
 
+// Connect with retry logic - CRITICAL for uptime
+async function connectWithRetry(endpoint: string, maxRetries: number = 3): Promise<Browser> {
+  let lastError: Error | null = null;
+
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`Browserless connection attempt ${attempt}/${maxRetries}`);
+      const browser = await connectWithTimeout(endpoint, 15000);
+      console.log(`Browserless connected on attempt ${attempt}`);
+      return browser;
+    } catch (error) {
+      lastError = error instanceof Error ? error : new Error(String(error));
+      console.error(`Connection attempt ${attempt} failed:`, lastError.message);
+
+      if (attempt < maxRetries) {
+        // Exponential backoff: 1s, 2s, 4s
+        const delay = Math.pow(2, attempt - 1) * 1000;
+        console.log(`Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw lastError || new Error("Connection failed after retries");
+}
+
 export async function POST(request: Request) {
   let browser: Browser | null = null;
   const startTime = Date.now();
@@ -136,11 +162,11 @@ export async function POST(request: Request) {
     const browserlessEndpoint = `wss://production-sfo.browserless.io?token=${apiKey}`;
 
     try {
-      browser = await connectWithTimeout(browserlessEndpoint, 15000);
+      browser = await connectWithRetry(browserlessEndpoint, 3);
     } catch (connectError) {
-      console.error("Browserless connection failed:", connectError);
+      console.error("Browserless connection failed after retries:", connectError);
       return NextResponse.json(
-        { error: "Scanner temporarily unavailable. Please try again.", code: "CONNECTION_FAILED" },
+        { error: "Scanner temporarily unavailable. Please try again in a few minutes.", code: "CONNECTION_FAILED" },
         { status: 503 }
       );
     }
