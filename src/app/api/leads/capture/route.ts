@@ -63,6 +63,8 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
   const resend = getResend();
   if (!resend) return;
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://inclusiv-xi.vercel.app';
+
   // Different email templates based on lead magnet
   const templates: Record<string, { subject: string; content: string }> = {
     "accessibility-report": {
@@ -77,7 +79,7 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
         </ul>
         <p>The European Accessibility Act deadline is <strong>June 28, 2025</strong>. Non-compliant websites face fines up to €100,000.</p>
         <p style="text-align: center; margin: 30px 0;">
-          <a href="https://inclusiv.dev" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          <a href="${appUrl}" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
             Scan Your Website Free →
           </a>
         </p>
@@ -97,7 +99,7 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
         </ul>
         <p><strong>Remember:</strong> The EAA deadline is June 28, 2025. Start checking off these items today!</p>
         <p style="text-align: center; margin: 30px 0;">
-          <a href="https://inclusiv.dev/resources/eaa-checklist-download" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          <a href="${appUrl}/resources/eaa-checklist" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
             Download Your Checklist →
           </a>
         </p>
@@ -111,7 +113,7 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
         <p>Our team will review your website and send you a detailed report within 24 hours.</p>
         <p>In the meantime, try our instant scanner:</p>
         <p style="text-align: center; margin: 30px 0;">
-          <a href="https://inclusiv.dev" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          <a href="${appUrl}" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
             Get Instant Scan Results →
           </a>
         </p>
@@ -129,7 +131,7 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
           <li>Download our compliance resources</li>
         </ul>
         <p style="text-align: center; margin: 30px 0;">
-          <a href="https://inclusiv.dev" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
+          <a href="${appUrl}" style="display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600;">
             Start Your Free Scan →
           </a>
         </p>
@@ -162,8 +164,8 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
             <p>Questions? Just reply to this email.</p>
             <p>Inclusiv - Web Accessibility Made Simple</p>
             <p style="color: #999; font-size: 12px;">
-              You're receiving this because you signed up at inclusiv.dev.
-              <a href="https://inclusiv.dev/unsubscribe?email=${encodeURIComponent(email)}" style="color: #999;">Unsubscribe</a>
+              You're receiving this because you signed up at Inclusiv.
+              <a href="${appUrl}/unsubscribe?email=${encodeURIComponent(email)}" style="color: #999;">Unsubscribe</a>
             </p>
           </div>
         </body>
