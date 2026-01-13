@@ -244,10 +244,11 @@ export async function POST(request: Request) {
       }
     }
 
-    console.error("Scan error:", error);
+    const errorMessage = error instanceof Error ? error.message : String(error);
+    console.error("Scan error:", errorMessage);
 
     return NextResponse.json(
-      { error: "Unable to complete scan. Please try again.", code: "SCAN_FAILED" },
+      { error: "Unable to complete scan. Please try again.", code: "SCAN_FAILED", debug: errorMessage },
       { status: 500 }
     );
   }
