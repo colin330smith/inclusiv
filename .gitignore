@@ -42,3 +42,4 @@ next-env.d.ts
 
 # Lead data (contains PII)
 /data/leads.json
+.env*.local
