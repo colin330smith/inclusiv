@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { chromium, Browser } from "playwright-core";
-import axe from "axe-core";
 
 // Platform detection patterns
 const platformPatterns = {
@@ -178,9 +177,9 @@ export async function POST(request: Request) {
 
     const platform = detectPlatform(html, scripts);
 
-    // Inject axe-core directly via addScriptTag (works better with remote browsers)
-    await page.addScriptTag({ content: axe.source });
-    await page.waitForFunction(() => typeof (window as unknown as { axe: unknown }).axe !== "undefined", { timeout: 5000 });
+    // Inject axe-core from CDN (more reliable with remote browsers)
+    await page.addScriptTag({ url: "https://cdnjs.cloudflare.com/ajax/libs/axe-core/4.10.2/axe.min.js" });
+    await page.waitForFunction(() => typeof (window as unknown as { axe: unknown }).axe !== "undefined", { timeout: 10000 });
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const axeResults = await page.evaluate(async () => {
