@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'BigCommerce Accessibility Checker | WCAG Compliance for BigCommerce Stores',
@@ -244,6 +245,26 @@ export default function BigCommerceAccessibilityPage() {
           </Link>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="border-t border-slate-700 mt-24">
+        <div className="max-w-6xl mx-auto px-6 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 text-slate-400">
+              <Shield className="w-5 h-5" />
+              <span>Inclusiv © 2025</span>
+              <span className="text-slate-600">|</span>
+              <span>Powered by axe-core</span>
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-slate-400 text-sm">
+              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
+              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </main>
   );
 }
