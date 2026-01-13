@@ -18,13 +18,13 @@ const geistMono = Geist_Mono({
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXX";
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://inclusiv.app'),
+  metadataBase: new URL('https://tryinclusiv.com'),
   title: {
     default: "Inclusiv | Free EAA & WCAG Accessibility Scanner",
     template: "%s | Inclusiv"
   },
-  description: "Free accessibility scanner for EAA compliance. Check your website in 30 seconds before the June 2025 deadline. Avoid €100,000 fines.",
-  keywords: ["EAA compliance", "WCAG 2.1 AA", "accessibility scanner", "European Accessibility Act", "ADA compliance", "website accessibility checker", "accessibility audit", "free accessibility tool"],
+  description: "Free accessibility scanner for EAA compliance. Check your website in 30 seconds. The EAA deadline passed June 2025 - non-compliant sites now face €100,000 fines.",
+  keywords: ["EAA compliance", "WCAG 2.1 AA", "accessibility scanner", "European Accessibility Act", "ADA compliance", "website accessibility checker", "accessibility audit", "free accessibility tool", "EAA fines", "web accessibility law"],
   authors: [{ name: "Inclusiv" }],
   creator: "Inclusiv",
   publisher: "Inclusiv",
@@ -41,20 +41,20 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Free EAA Accessibility Scanner - Check Compliance in 30 Seconds",
-    description: "Is your website EAA compliant? Free instant scan. Avoid €100,000 fines after June 28, 2025.",
+    description: "Is your website EAA compliant? Free instant scan. Non-compliant sites now face €100,000 fines.",
     type: "website",
     siteName: "Inclusiv",
     locale: "en_US",
-    url: "https://inclusiv.app",
+    url: "https://tryinclusiv.com",
   },
   twitter: {
     card: "summary_large_image",
     title: "Free EAA Accessibility Scanner",
     description: "Check your website's EAA compliance in 30 seconds. Free scan, no signup required.",
-    creator: "@InclusivDev",
+    creator: "@inclusivapp",
   },
   alternates: {
-    canonical: "https://inclusiv.app",
+    canonical: "https://tryinclusiv.com",
   },
   verification: {
     google: process.env.GOOGLE_SITE_VERIFICATION,
@@ -107,7 +107,7 @@ export default function RootLayout({
         </Script>
 
         {/* Plausible Analytics - Privacy-friendly, no cookies */}
-        <script defer data-domain="inclusiv-xi.vercel.app" src="https://plausible.io/js/script.js"></script>
+        <script defer data-domain="inclusiv.app" src="https://plausible.io/js/script.js"></script>
 
         {/* Custom event tracking utilities */}
         <Script id="custom-analytics" strategy="afterInteractive">

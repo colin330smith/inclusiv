@@ -27,13 +27,13 @@ type ScanResult = {
   scannedAt: string;
 };
 
-// Calculate days until EAA deadline
+// Calculate days since EAA deadline (deadline has passed)
 const getDeadlineInfo = () => {
   const deadline = new Date("2025-06-28");
   const today = new Date();
-  const diffTime = deadline.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  return { days: diffDays, deadline };
+  const diffTime = today.getTime() - deadline.getTime();
+  const daysSince = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  return { daysSince, deadline, isPassed: daysSince > 0 };
 };
 
 export default function Home() {
@@ -192,9 +192,9 @@ export default function Home() {
             >
               Pricing
             </a>
-            <div className="flex items-center gap-2 px-3 py-1 bg-indigo-500/10 rounded-full text-sm text-indigo-400">
-              <Clock className="w-4 h-4" />
-              <span className="font-medium">EAA Deadline: {deadlineInfo.days} days</span>
+            <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-sm text-red-400">
+              <AlertTriangle className="w-4 h-4" />
+              <span className="font-medium">EAA Now Enforced • Fines Active</span>
             </div>
           </div>
         </div>
@@ -211,7 +211,7 @@ export default function Home() {
             Is Your Website <span className="text-indigo-400">EAA Compliant?</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
-            Check in 30 seconds. Non-compliant sites face fines up to <span className="text-red-400 font-semibold">€100,000</span> after June 28, 2025.
+            Check in 30 seconds. The EAA deadline passed {deadlineInfo.daysSince} days ago - non-compliant sites <span className="text-red-400 font-semibold">now face €100,000 fines</span>.
           </p>
           <p className="text-zinc-500 max-w-xl mx-auto">
             Free instant scan using axe-core - the same engine trusted by Microsoft, Google, and 10M+ developers.
@@ -532,12 +532,12 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
-              <h3 className="text-lg font-semibold text-white mb-3">Europe: EAA Deadline</h3>
+            <div className="p-6 bg-zinc-900 border border-red-500/30 rounded-xl">
+              <h3 className="text-lg font-semibold text-white mb-3">Europe: EAA Now Enforced</h3>
               <p className="text-zinc-400 text-sm mb-3">
-                The European Accessibility Act requires digital products and services to be accessible by June 28, 2025. This affects e-commerce sites, banking, and more.
+                The European Accessibility Act deadline passed June 28, 2025. Non-compliant e-commerce sites, banking apps, and digital services are now legally at risk for fines up to €100,000.
               </p>
-              <div className="text-indigo-400 text-sm font-medium">{deadlineInfo.days} days remaining</div>
+              <div className="text-red-400 text-sm font-medium">Enforcement active for {deadlineInfo.daysSince} days</div>
             </div>
 
             <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-xl">
@@ -610,13 +610,13 @@ export default function Home() {
             <div className="relative">
               <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-sm text-red-400 mb-4">
                 <AlertTriangle className="w-4 h-4" />
-                <span className="font-medium">{deadlineInfo.days} days until EAA deadline</span>
+                <span className="font-medium">EAA enforcement active since June 2025</span>
               </div>
               <h2 className="text-2xl font-bold text-white mb-4">
-                Check Your Website Now - Free
+                Are You At Risk? Check Free Now
               </h2>
               <p className="text-zinc-400 mb-6">
-                Find out if you&apos;re EAA compliant before the June 28, 2025 deadline. Takes 30 seconds.
+                78% of EU sites are still non-compliant. Find out your status in 30 seconds.
               </p>
               <button
                 onClick={() => {
