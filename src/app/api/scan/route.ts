@@ -152,7 +152,7 @@ export async function POST(request: Request) {
     try {
       // Connect to Browserless.io or fall back to local browser for development
       const browserlessEndpoint = process.env.BROWSERLESS_API_KEY
-        ? `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_KEY}`
+        ? `wss://production-sfo.browserless.io?token=${process.env.BROWSERLESS_API_KEY}`
         : null;
 
       if (browserlessEndpoint) {
