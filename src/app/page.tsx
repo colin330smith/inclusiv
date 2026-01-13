@@ -11,6 +11,7 @@ import {
   hashEmail,
   initAnalytics,
 } from "@/lib/analytics";
+import { SiteFooter } from "@/components/seo/SiteFooter";
 
 type ScanResult = {
   score: number;
@@ -633,24 +634,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 mt-20">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-sm">
-            <div className="flex items-center gap-2">
-              <Shield className="w-5 h-5" />
-              <span>Inclusiv</span>
-              <span className="text-zinc-600">|</span>
-              <span>Powered by axe-core</span>
-            </div>
-            <div className="flex items-center gap-6">
-              <a href="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</a>
-              <a href="/resources/eaa-checklist-download" className="hover:text-zinc-300 transition-colors">Free Checklist</a>
-              <a href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy</a>
-              <a href="/terms" className="hover:text-zinc-300 transition-colors">Terms</a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

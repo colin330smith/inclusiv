@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Shield, Clock, Mail, MessageSquare, Phone, MapPin, CheckCircle, AlertCircle, Zap } from "lucide-react";
 import Link from "next/link";
 import ContactForm from "./ContactForm";
+import { SiteFooter } from "@/components/seo/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Contact Us | Inclusiv - Web Accessibility Support",
@@ -213,24 +214,7 @@ export default function ContactPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 mt-24">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-zinc-500">
-              <Shield className="w-5 h-5" />
-              <span>Inclusiv © 2025</span>
-              <span className="text-zinc-600">|</span>
-              <span>Powered by axe-core</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-zinc-500 text-sm">
-              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
-              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

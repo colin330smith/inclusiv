@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Shield, Check, X, Clock, Zap, Award, FileCheck, Headphones, Building2, Lock, ArrowRight, Globe, AlertTriangle } from "lucide-react";
+import { Shield, Zap, Award, FileCheck, Lock, ArrowRight, Globe, AlertTriangle } from "lucide-react";
 import Link from "next/link";
 import PricingTracker from "./PricingTracker";
-import CheckoutButton from "./CheckoutButton";
+import PricingCards from "./PricingCards";
+import { SiteFooter } from "@/components/seo/SiteFooter";
 
 export const metadata: Metadata = {
   title: "Pricing | Inclusiv - WCAG Accessibility Compliance",
@@ -14,97 +15,6 @@ export const metadata: Metadata = {
     type: "website",
   },
 };
-
-const plans = [
-  {
-    name: "Free",
-    priceEUR: "€0",
-    priceUSD: "$0",
-    period: "",
-    description: "Perfect for a quick compliance check",
-    features: [
-      { text: "Single page scan", included: true },
-      { text: "Basic accessibility report", included: true },
-      { text: "WCAG 2.1 AA issues detected", included: true },
-      { text: "Email delivery", included: true },
-      { text: "Full site scan", included: false },
-      { text: "Weekly monitoring", included: false },
-      { text: "AI-powered fixes", included: false },
-      { text: "Compliance certificate", included: false },
-      { text: "Priority support", included: false },
-    ],
-    cta: "Start Free Scan",
-    ctaLink: "/",
-    popular: false,
-    highlight: false,
-  },
-  {
-    name: "Starter",
-    priceEUR: "€49",
-    priceUSD: "$54",
-    period: "/month",
-    description: "For small businesses getting compliant",
-    features: [
-      { text: "Full site scan", included: true },
-      { text: "Up to 100 pages", included: true },
-      { text: "Weekly monitoring", included: true },
-      { text: "Detailed issue reports", included: true },
-      { text: "Platform-specific fixes", included: true },
-      { text: "Email + Slack alerts", included: true },
-      { text: "AI-powered fixes", included: false },
-      { text: "Compliance certificate", included: false },
-      { text: "Priority support", included: false },
-    ],
-    cta: "Start 14-Day Trial",
-    ctaLink: "/#scanner",
-    popular: false,
-    highlight: false,
-  },
-  {
-    name: "Professional",
-    priceEUR: "€149",
-    priceUSD: "$164",
-    period: "/month",
-    description: "Full compliance for growing companies",
-    features: [
-      { text: "Unlimited pages", included: true },
-      { text: "Daily monitoring", included: true },
-      { text: "AI-powered code fixes", included: true },
-      { text: "1-click remediation", included: true },
-      { text: "Compliance certificate", included: true },
-      { text: "Priority email support", included: true },
-      { text: "VPAT/ACR documentation", included: true },
-      { text: "Multiple team members", included: true },
-      { text: "Custom integrations", included: false },
-    ],
-    cta: "Start 14-Day Trial",
-    ctaLink: "/#scanner",
-    popular: true,
-    highlight: true,
-  },
-  {
-    name: "Enterprise",
-    priceEUR: "€499",
-    priceUSD: "$549",
-    period: "/month",
-    description: "For organizations with complex needs",
-    features: [
-      { text: "Everything in Professional", included: true },
-      { text: "Custom integrations", included: true },
-      { text: "Dedicated account manager", included: true },
-      { text: "99.9% uptime SLA", included: true },
-      { text: "Full audit trail", included: true },
-      { text: "SSO/SAML authentication", included: true },
-      { text: "Custom reporting", included: true },
-      { text: "On-call support", included: true },
-      { text: "Legal compliance review", included: true },
-    ],
-    cta: "Contact Sales",
-    ctaLink: "mailto:enterprise@inclusiv.eu",
-    popular: false,
-    highlight: false,
-  },
-];
 
 const faqs = [
   {
@@ -138,6 +48,10 @@ const faqs = [
   {
     question: "Can I cancel anytime?",
     answer: "Yes, all plans are month-to-month with no long-term commitment. You can cancel anytime from your dashboard. We also offer a 30-day money-back guarantee on all paid plans.",
+  },
+  {
+    question: "What's the difference between monthly and annual billing?",
+    answer: "Annual billing saves you 20% - that's 2 months free compared to monthly billing. Monthly plans include a 14-day free trial, while annual plans are billed upfront for the full year. Both give you full access to all plan features. You can switch from monthly to annual at any time to lock in savings.",
   },
   {
     question: "Do you offer discounts for non-profits?",
@@ -221,78 +135,9 @@ export default function PricingPage() {
           </p>
         </div>
 
-        {/* Pricing Cards */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-20">
-          {plans.map((plan) => (
-            <div
-              key={plan.name}
-              className={`relative rounded-2xl p-6 ${
-                plan.highlight
-                  ? "bg-gradient-to-b from-indigo-500/20 to-indigo-500/5 border-2 border-indigo-500"
-                  : "bg-zinc-900 border border-zinc-800"
-              }`}
-            >
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                  <span className="px-4 py-1 bg-indigo-500 text-white text-sm font-semibold rounded-full">
-                    Most Popular
-                  </span>
-                </div>
-              )}
-
-              <div className="mb-6">
-                <h3 className="text-xl font-bold text-white mb-2">{plan.name}</h3>
-                <p className="text-zinc-400 text-sm mb-4">{plan.description}</p>
-                <div className="space-y-1">
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-white">{plan.priceEUR}</span>
-                    <span className="text-zinc-500">{plan.period}</span>
-                  </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-lg text-zinc-400">{plan.priceUSD}</span>
-                    <span className="text-zinc-600 text-sm">{plan.period} USD</span>
-                  </div>
-                </div>
-              </div>
-
-              <ul className="space-y-3 mb-8">
-                {plan.features.map((feature, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    {feature.included ? (
-                      <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
-                    ) : (
-                      <X className="w-5 h-5 text-zinc-600 flex-shrink-0 mt-0.5" />
-                    )}
-                    <span className={feature.included ? "text-zinc-300" : "text-zinc-600"}>
-                      {feature.text}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-
-              {plan.name === "Free" ? (
-                <Link
-                  href="/"
-                  className="block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors bg-zinc-800 hover:bg-zinc-700 text-white"
-                >
-                  {plan.cta}
-                </Link>
-              ) : plan.name === "Enterprise" ? (
-                <Link
-                  href="mailto:enterprise@inclusiv.eu"
-                  className="block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors bg-zinc-800 hover:bg-zinc-700 text-white"
-                >
-                  {plan.cta}
-                </Link>
-              ) : (
-                <CheckoutButton
-                  plan={plan.name.toLowerCase() as 'starter' | 'professional'}
-                  label={plan.cta}
-                  highlight={plan.highlight}
-                />
-              )}
-            </div>
-          ))}
+        {/* Pricing Cards with Billing Toggle */}
+        <div className="mb-20">
+          <PricingCards />
         </div>
 
         {/* Money-back Guarantee */}
@@ -422,24 +267,7 @@ export default function PricingPage() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-800 mt-24">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-zinc-500">
-              <Shield className="w-5 h-5" />
-              <span>Inclusiv © 2025</span>
-              <span className="text-zinc-600">|</span>
-              <span>Powered by axe-core</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-zinc-500 text-sm">
-              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
-              <Link href="/resources/eaa-checklist-download" className="hover:text-white transition-colors">Free Checklist</Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }
