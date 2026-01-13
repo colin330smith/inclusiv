@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -11,6 +12,9 @@ const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
 });
+
+// Google Analytics Measurement ID - Replace with your actual ID
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXX";
 
 export const metadata: Metadata = {
   title: "Inclusiv | Free Web Accessibility Scanner",
@@ -31,18 +35,87 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* Google Analytics 4 */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+          strategy="afterInteractive"
+        />
+        <Script id="google-analytics" strategy="afterInteractive">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_MEASUREMENT_ID}', {
+              page_title: document.title,
+              page_location: window.location.href,
+              send_page_view: true,
+              cookie_flags: 'SameSite=None;Secure',
+              // Enhanced measurement
+              enhanced_conversions: true,
+              // Custom dimensions
+              custom_map: {
+                'dimension1': 'user_type',
+                'dimension2': 'scan_score',
+                'dimension3': 'platform_detected'
+              }
+            });
+
+            // Track page visibility
+            document.addEventListener('visibilitychange', function() {
+              if (document.visibilityState === 'hidden') {
+                gtag('event', 'page_hidden', {
+                  page_title: document.title,
+                  time_on_page: Math.round(performance.now() / 1000)
+                });
+              }
+            });
+          `}
+        </Script>
+
         {/* Plausible Analytics - Privacy-friendly, no cookies */}
         <script defer data-domain="inclusiv-xi.vercel.app" src="https://plausible.io/js/script.js"></script>
-        {/* Custom event tracking */}
-        <script dangerouslySetInnerHTML={{
-          __html: `
-            window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
-            // Track scans
-            window.trackScan = (url, score) => plausible('Scan', {props: {url, score}});
-            // Track signups
-            window.trackSignup = (email) => plausible('Signup', {props: {email}});
-          `
-        }} />
+
+        {/* Custom event tracking utilities */}
+        <Script id="custom-analytics" strategy="afterInteractive">
+          {`
+            // Plausible helper
+            window.plausible = window.plausible || function() {
+              (window.plausible.q = window.plausible.q || []).push(arguments)
+            };
+
+            // Track scans (legacy support)
+            window.trackScan = function(url, score) {
+              plausible('Scan', {props: {url: url, score: score}});
+              if (window.gtag) {
+                gtag('event', 'scan_completed', {
+                  url: url,
+                  score: score,
+                  event_category: 'engagement',
+                  event_label: url
+                });
+              }
+            };
+
+            // Track signups (legacy support)
+            window.trackSignup = function(email) {
+              plausible('Signup', {props: {email: email}});
+              if (window.gtag) {
+                gtag('event', 'email_captured', {
+                  event_category: 'conversion',
+                  event_label: 'email_signup'
+                });
+              }
+            };
+
+            // Conversion tracking helper
+            window.trackConversion = function(eventName, properties) {
+              plausible(eventName, {props: properties || {}});
+              if (window.gtag) {
+                gtag('event', eventName, properties || {});
+              }
+            };
+          `}
+        </Script>
       </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}

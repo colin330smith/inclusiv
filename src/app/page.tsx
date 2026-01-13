@@ -1,7 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap, Star, Quote } from "lucide-react";
+import {
+  trackButtonClick,
+  trackScanStarted,
+  trackScanCompleted,
+  trackEmailCaptured,
+  trackCtaClick,
+  trackFeatureClick,
+  hashEmail,
+  initAnalytics,
+} from "@/lib/analytics";
 
 type ScanResult = {
   score: number;
@@ -71,6 +81,11 @@ export default function Home() {
     return () => clearInterval(timer);
   }, []);
 
+  // Initialize analytics on mount
+  useEffect(() => {
+    initAnalytics();
+  }, []);
+
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
@@ -88,6 +103,11 @@ export default function Home() {
       return;
     }
 
+    // Track scan started
+    const scanStartTime = Date.now();
+    trackScanStarted(scanUrl);
+    trackCtaClick("scan_submit", "Check Compliance Now", "hero_scanner");
+
     setScanning(true);
 
     try {
@@ -103,6 +123,17 @@ export default function Home() {
         throw new Error(data.error || "Scan failed");
       }
 
+      // Track scan completed with metrics
+      const scanDuration = Date.now() - scanStartTime;
+      trackScanCompleted(
+        scanUrl,
+        data.score,
+        data.totalIssues,
+        data.criticalIssues,
+        data.platform,
+        scanDuration
+      );
+
       setResult(data);
       setShowEmailCapture(true);
     } catch (err) {
@@ -115,15 +146,24 @@ export default function Home() {
   const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Track CTA click for email submit
+    trackCtaClick("email_submit", "Get Full Report", "scan_results");
+
     try {
       await fetch("/api/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, url, score: result?.score }),
       });
+
+      // Track email captured (hash email for privacy)
+      const hashedEmail = await hashEmail(email);
+      trackEmailCaptured("scan_results", hashedEmail);
+
       setEmailSubmitted(true);
     } catch {
-      // Still show success - email might have been captured
+      // Still show success and track - email might have been captured
+      trackEmailCaptured("scan_results");
       setEmailSubmitted(true);
     }
   };
@@ -153,7 +193,11 @@ export default function Home() {
             <span className="text-xl font-bold text-white">Inclusiv</span>
           </div>
           <div className="flex items-center gap-4">
-            <a href="/pricing" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+            <a
+              href="/pricing"
+              className="text-zinc-400 hover:text-white transition-colors text-sm font-medium"
+              onClick={() => trackCtaClick("pricing_nav", "Pricing", "header", "/pricing")}
+            >
               Pricing
             </a>
             <div className="flex items-center gap-2 text-sm text-green-400">
@@ -455,7 +499,10 @@ export default function Home() {
 
         {/* Features */}
         <div className="mt-24 grid md:grid-cols-3 gap-8">
-          <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+          <div
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
+            onClick={() => trackFeatureClick("30-Second Scans", "features_section")}
+          >
             <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
               <Zap className="w-6 h-6 text-indigo-500" />
             </div>
@@ -464,7 +511,10 @@ export default function Home() {
               Get instant results. No waiting, no complex setup. Just enter your URL.
             </p>
           </div>
-          <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+          <div
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
+            onClick={() => trackFeatureClick("WCAG 2.1 AA Compliant", "features_section")}
+          >
             <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
               <Shield className="w-6 h-6 text-indigo-500" />
             </div>
@@ -473,7 +523,10 @@ export default function Home() {
               Full coverage of EAA requirements. Stay ahead of the June 2025 deadline.
             </p>
           </div>
-          <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+          <div
+            className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl cursor-pointer hover:border-indigo-500/50 transition-colors"
+            onClick={() => trackFeatureClick("AI-Powered Fixes", "features_section")}
+          >
             <div className="w-12 h-12 bg-indigo-500/10 rounded-xl flex items-center justify-center mb-4">
               <CheckCircle className="w-6 h-6 text-indigo-500" />
             </div>
