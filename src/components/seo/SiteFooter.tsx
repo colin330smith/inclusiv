@@ -281,7 +281,7 @@ export function SiteFooter() {
                 <Github className="w-5 h-5" />
               </a>
               <a
-                href="mailto:hello@inclusiv.app"
+                href="mailto:colin330@me.com"
                 className="text-zinc-400 hover:text-white transition-colors"
                 aria-label="Email"
               >
@@ -318,7 +318,7 @@ export function SiteFooter() {
             },
             "contactPoint": {
               "@type": "ContactPoint",
-              "email": "hello@inclusiv.app",
+              "email": "colin330@me.com",
               "telephone": "+1-650-201-5786",
               "contactType": "customer support"
             }
