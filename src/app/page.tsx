@@ -207,20 +207,20 @@ export default function Home() {
             Free accessibility scanner powered by axe-core
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Get Your Website&apos;s <span className="text-indigo-400">Accessibility Score</span>
+            Is Your Website <span className="text-indigo-400">EAA Compliant?</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
-            Instant WCAG 2.1 AA compliance check. Works with any website - WordPress, Shopify, React, and more.
+            Check in 30 seconds. Non-compliant sites face fines up to <span className="text-red-400 font-semibold">€100,000</span> after June 28, 2025.
           </p>
           <p className="text-zinc-500 max-w-xl mx-auto">
-            Web accessibility is required by laws worldwide including the ADA (USA), EAA (Europe), and similar regulations in Canada, Australia, and beyond.
+            Free instant scan using axe-core - the same engine trusted by Microsoft, Google, and 10M+ developers.
           </p>
         </div>
 
         {/* Scanner */}
         <div className="max-w-2xl mx-auto">
           <form onSubmit={handleScan} className="relative mb-6">
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
                 <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
                 <input
@@ -228,14 +228,14 @@ export default function Home() {
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter your website URL"
-                  className="w-full pl-12 pr-4 py-4 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                  className="w-full pl-12 pr-4 py-4 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors text-base"
                   disabled={scanning}
                 />
               </div>
               <button
                 type="submit"
                 disabled={scanning || !url.trim()}
-                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all flex items-center gap-2"
+                className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:from-zinc-700 disabled:to-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
               >
                 {scanning ? (
                   <>
@@ -244,7 +244,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    Scan My Website
+                    Check My Website Free
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -259,17 +259,17 @@ export default function Home() {
           </form>
 
           {/* Trust indicators */}
-          <div className="flex items-center justify-center gap-6 text-zinc-500 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-zinc-500 text-sm">
             <div className="flex items-center gap-2">
-              <CheckCircle className="w-4 h-4 text-green-500" />
+              <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
               <span>No signup required</span>
             </div>
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-green-500" />
+              <Lock className="w-4 h-4 text-green-500 flex-shrink-0" />
               <span>Your data stays private</span>
             </div>
             <div className="flex items-center gap-2">
-              <Zap className="w-4 h-4 text-green-500" />
+              <Zap className="w-4 h-4 text-green-500 flex-shrink-0" />
               <span>Results in 30 seconds</span>
             </div>
           </div>
@@ -443,12 +443,15 @@ export default function Home() {
 
               {/* Email Capture */}
               {showEmailCapture && !emailSubmitted && (
-                <div className="p-6 bg-indigo-600/10 border-t border-indigo-500/20">
+                <div className="p-6 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-t border-indigo-500/30">
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
-                      <h4 className="text-lg font-semibold text-white mb-2">
-                        Get Your Full Report
-                      </h4>
+                      <div className="flex items-center gap-2 mb-2">
+                        <h4 className="text-lg font-semibold text-white">
+                          Get Your Full Report + Fix Guide
+                        </h4>
+                        <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded-full">FREE</span>
+                      </div>
                       <ul className="text-zinc-400 text-sm space-y-1 mb-4">
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
@@ -456,45 +459,61 @@ export default function Home() {
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
-                          Suggested fixes for {result.platform}
+                          Copy-paste fixes for {result.platform}
                         </li>
                         <li className="flex items-center gap-2">
                           <CheckCircle className="w-3 h-3 text-green-500" />
-                          Priority ranking to fix critical issues first
+                          EAA compliance checklist (PDF)
                         </li>
                       </ul>
-                      <form onSubmit={handleEmailSubmit} className="flex gap-3">
+                      <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3">
                         <input
                           type="email"
                           value={email}
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="you@company.com"
                           required
-                          className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500"
+                          className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 text-base"
                         />
                         <button
                           type="submit"
-                          className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors"
+                          className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-indigo-500/25"
                         >
-                          Get Full Report
+                          Send My Report
                         </button>
                       </form>
+                      <p className="text-zinc-500 text-xs mt-2">No spam. Unsubscribe anytime.</p>
                     </div>
                   </div>
                 </div>
               )}
 
-              {/* Email Success */}
+              {/* Email Success + Upgrade CTA */}
               {emailSubmitted && (
                 <div className="p-6 bg-green-600/10 border-t border-green-500/20">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-green-500" />
-                    <div>
-                      <h4 className="text-lg font-semibold text-white">Check your inbox</h4>
-                      <p className="text-zinc-400">
-                        Full report sent to {email}
-                      </p>
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                      <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0" />
+                      <div>
+                        <h4 className="text-lg font-semibold text-white">Check your inbox</h4>
+                        <p className="text-zinc-400">
+                          Full report sent to {email}
+                        </p>
+                      </div>
                     </div>
+                    <a
+                      href="/pricing"
+                      onClick={() => trackCtaClick("upgrade_cta", "Get Full Compliance", "scan_results")}
+                      className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 whitespace-nowrap"
+                    >
+                      <Zap className="w-4 h-4" />
+                      Get Full Compliance
+                    </a>
+                  </div>
+                  <div className="mt-4 pt-4 border-t border-green-500/20">
+                    <p className="text-zinc-400 text-sm">
+                      <span className="text-white font-medium">Want us to fix everything?</span> Our team handles full WCAG 2.1 AA compliance - audits, fixes, and ongoing monitoring.
+                    </p>
                   </div>
                 </div>
               )}
@@ -582,23 +601,33 @@ export default function Home() {
 
         {/* CTA */}
         <div className="mt-20 text-center">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-2xl p-10 max-w-2xl mx-auto">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              Ready to check your website?
-            </h2>
-            <p className="text-zinc-400 mb-6">
-              Get your free accessibility score and see exactly what needs to be fixed.
-            </p>
-            <button
-              onClick={() => {
-                trackCtaClick("final_cta", "Scan My Website", "footer_cta");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
-              className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors inline-flex items-center gap-2"
-            >
-              Scan My Website
-              <ArrowRight className="w-5 h-5" />
-            </button>
+          <div className="bg-gradient-to-br from-zinc-900 to-zinc-900/50 border border-zinc-800 rounded-2xl p-10 max-w-2xl mx-auto relative overflow-hidden">
+            {/* Background glow */}
+            <div className="absolute -top-24 -right-24 w-48 h-48 bg-indigo-500/20 rounded-full blur-3xl" />
+            <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-purple-500/20 rounded-full blur-3xl" />
+
+            <div className="relative">
+              <div className="inline-flex items-center gap-2 px-3 py-1 bg-red-500/10 rounded-full text-sm text-red-400 mb-4">
+                <AlertTriangle className="w-4 h-4" />
+                <span className="font-medium">{deadlineInfo.days} days until EAA deadline</span>
+              </div>
+              <h2 className="text-2xl font-bold text-white mb-4">
+                Check Your Website Now - Free
+              </h2>
+              <p className="text-zinc-400 mb-6">
+                Find out if you&apos;re EAA compliant before the June 28, 2025 deadline. Takes 30 seconds.
+              </p>
+              <button
+                onClick={() => {
+                  trackCtaClick("final_cta", "Check Compliance Free", "footer_cta");
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all inline-flex items-center gap-2 shadow-lg shadow-indigo-500/25"
+              >
+                Check Compliance Free
+                <ArrowRight className="w-5 h-5" />
+              </button>
+            </div>
           </div>
         </div>
       </main>
@@ -606,13 +635,18 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-zinc-800 mt-20">
         <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between text-zinc-500 text-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-sm">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5" />
               <span>Inclusiv</span>
+              <span className="text-zinc-600">|</span>
+              <span>Powered by axe-core</span>
             </div>
-            <div>
-              Powered by axe-core - WCAG 2.1 AA
+            <div className="flex items-center gap-6">
+              <a href="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</a>
+              <a href="/resources/eaa-checklist-download" className="hover:text-zinc-300 transition-colors">Free Checklist</a>
+              <a href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy</a>
+              <a href="/terms" className="hover:text-zinc-300 transition-colors">Terms</a>
             </div>
           </div>
         </div>

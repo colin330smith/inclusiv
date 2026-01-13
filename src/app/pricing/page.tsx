@@ -416,11 +416,14 @@ export default function PricingPage() {
             <div className="flex items-center gap-2 text-zinc-500">
               <Shield className="w-5 h-5" />
               <span>Inclusiv © 2025</span>
+              <span className="text-zinc-600">|</span>
+              <span>Powered by axe-core</span>
             </div>
-            <div className="flex items-center gap-6 text-zinc-500 text-sm">
-              <Link href="/eaa-compliance" className="hover:text-white transition-colors">EAA Guide</Link>
-              <Link href="/wcag-checker" className="hover:text-white transition-colors">WCAG Checker</Link>
-              <span>Powered by axe-core - WCAG 2.1 AA</span>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-zinc-500 text-sm">
+              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
+              <Link href="/resources/eaa-checklist-download" className="hover:text-white transition-colors">Free Checklist</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
             </div>
           </div>
         </div>

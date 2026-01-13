@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import { Shield, Clock, Mail, MessageSquare, Phone, MapPin, Send, CheckCircle, AlertCircle, Zap } from "lucide-react";
+import { Shield, Clock, Mail, MessageSquare, Phone, MapPin, CheckCircle, AlertCircle, Zap } from "lucide-react";
 import Link from "next/link";
+import ContactForm from "./ContactForm";
 
 export const metadata: Metadata = {
   title: "Contact Us | Inclusiv - Web Accessibility Support",
@@ -44,17 +45,6 @@ const contactMethods = [
     contact: "Professional & Enterprise plans",
     responseTime: "Book via email",
   },
-];
-
-const supportTopics = [
-  { label: "Technical Support", value: "technical" },
-  { label: "Billing & Pricing", value: "billing" },
-  { label: "Compliance Questions", value: "compliance" },
-  { label: "Enterprise Inquiry", value: "enterprise" },
-  { label: "Partnership Opportunity", value: "partnership" },
-  { label: "Bug Report", value: "bug" },
-  { label: "Feature Request", value: "feature" },
-  { label: "Other", value: "other" },
 ];
 
 const faqQuickLinks = [
@@ -132,125 +122,7 @@ export default function ContactPage() {
         <div className="grid lg:grid-cols-5 gap-12">
           {/* Contact Form */}
           <div className="lg:col-span-3">
-            <div className="p-8 bg-zinc-900 border border-zinc-800 rounded-2xl">
-              <h2 className="text-2xl font-bold text-white mb-6">Send us a message</h2>
-
-              <form className="space-y-6">
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-zinc-300 mb-2">
-                      Your Name *
-                    </label>
-                    <input
-                      type="text"
-                      id="name"
-                      name="name"
-                      required
-                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                      placeholder="John Doe"
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-zinc-300 mb-2">
-                      Email Address *
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      name="email"
-                      required
-                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                      placeholder="john@company.com"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <label htmlFor="company" className="block text-sm font-medium text-zinc-300 mb-2">
-                      Company Name
-                    </label>
-                    <input
-                      type="text"
-                      id="company"
-                      name="company"
-                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                      placeholder="Acme Inc."
-                    />
-                  </div>
-                  <div>
-                    <label htmlFor="website" className="block text-sm font-medium text-zinc-300 mb-2">
-                      Website URL
-                    </label>
-                    <input
-                      type="url"
-                      id="website"
-                      name="website"
-                      className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors"
-                      placeholder="https://example.com"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label htmlFor="topic" className="block text-sm font-medium text-zinc-300 mb-2">
-                    What can we help with? *
-                  </label>
-                  <select
-                    id="topic"
-                    name="topic"
-                    required
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                  >
-                    <option value="">Select a topic...</option>
-                    {supportTopics.map((topic) => (
-                      <option key={topic.value} value={topic.value}>
-                        {topic.label}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label htmlFor="message" className="block text-sm font-medium text-zinc-300 mb-2">
-                    Message *
-                  </label>
-                  <textarea
-                    id="message"
-                    name="message"
-                    required
-                    rows={6}
-                    className="w-full px-4 py-3 bg-zinc-800 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors resize-none"
-                    placeholder="Tell us more about how we can help..."
-                  />
-                </div>
-
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    id="privacy"
-                    name="privacy"
-                    required
-                    className="mt-1 w-4 h-4 rounded border-zinc-600 bg-zinc-800 text-indigo-500 focus:ring-indigo-500"
-                  />
-                  <label htmlFor="privacy" className="text-sm text-zinc-400">
-                    I agree to the processing of my personal data in accordance with the{" "}
-                    <Link href="/privacy" className="text-indigo-400 hover:underline">
-                      Privacy Policy
-                    </Link>
-                    . *
-                  </label>
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors"
-                >
-                  <Send className="w-5 h-5" />
-                  Send Message
-                </button>
-              </form>
-            </div>
+            <ContactForm />
           </div>
 
           {/* Sidebar */}
