@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Shield, Check, X, Clock, Zap, Award, Users, FileCheck, Headphones, Building2, Lock, ArrowRight, AlertTriangle } from "lucide-react";
 import Link from "next/link";
+import PricingTracker from "./PricingTracker";
+import CheckoutButton from "./CheckoutButton";
 
 export const metadata: Metadata = {
   title: "Pricing | Inclusiv - EAA Compliance Before June 2025",
@@ -161,6 +163,9 @@ export default function PricingPage() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Analytics Tracker */}
+      <PricingTracker />
+
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -246,17 +251,27 @@ export default function PricingPage() {
                 ))}
               </ul>
 
-              <Link
-                href={plan.ctaLink}
-                className={`block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors ${
-                  plan.highlight
-                    ? "bg-indigo-600 hover:bg-indigo-500 text-white"
-                    : "bg-zinc-800 hover:bg-zinc-700 text-white"
-                }`}
-              >
-                {plan.cta}
-                {plan.highlight && <ArrowRight className="inline w-4 h-4 ml-2" />}
-              </Link>
+              {plan.name === "Free" ? (
+                <Link
+                  href="/"
+                  className="block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors bg-zinc-800 hover:bg-zinc-700 text-white"
+                >
+                  {plan.cta}
+                </Link>
+              ) : plan.name === "Enterprise" ? (
+                <Link
+                  href="mailto:enterprise@inclusiv.eu"
+                  className="block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors bg-zinc-800 hover:bg-zinc-700 text-white"
+                >
+                  {plan.cta}
+                </Link>
+              ) : (
+                <CheckoutButton
+                  plan={plan.name.toLowerCase() as 'starter' | 'professional'}
+                  label={plan.cta}
+                  highlight={plan.highlight}
+                />
+              )}
             </div>
           ))}
         </div>

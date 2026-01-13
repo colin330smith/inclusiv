@@ -5,8 +5,19 @@
 
 import { Resend } from 'resend';
 
-// Initialize Resend client
-const resend = new Resend(process.env.RESEND_API_KEY);
+// Lazy-initialized Resend client (prevents build-time errors when API key is not set)
+let resendClient: Resend | null = null;
+
+function getResendClient(): Resend {
+  if (!resendClient) {
+    const apiKey = process.env.RESEND_API_KEY;
+    if (!apiKey) {
+      throw new Error('RESEND_API_KEY environment variable is not set');
+    }
+    resendClient = new Resend(apiKey);
+  }
+  return resendClient;
+}
 
 // Email sender configuration
 const FROM_EMAIL = process.env.FROM_EMAIL || 'Inclusiv <hello@inclusiv.app>';
@@ -232,6 +243,7 @@ export async function sendEmail(params: {
   tags?: Array<{ name: string; value: string }>;
 }): Promise<{ success: boolean; messageId?: string; error?: string }> {
   try {
+    const resend = getResendClient();
     const { data, error } = await resend.emails.send({
       from: FROM_EMAIL,
       to: params.to,
