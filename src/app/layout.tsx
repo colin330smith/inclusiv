@@ -30,6 +30,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        {/* Plausible Analytics - Privacy-friendly, no cookies */}
+        <script defer data-domain="inclusiv-xi.vercel.app" src="https://plausible.io/js/script.js"></script>
+        {/* Custom event tracking */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            window.plausible = window.plausible || function() { (window.plausible.q = window.plausible.q || []).push(arguments) };
+            // Track scans
+            window.trackScan = (url, score) => plausible('Scan', {props: {url, score}});
+            // Track signups
+            window.trackSignup = (email) => plausible('Signup', {props: {email}});
+          `
+        }} />
+      </head>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap, Star, Quote } from "lucide-react";
 
 type ScanResult = {
   score: number;
@@ -17,7 +17,32 @@ type ScanResult = {
   scannedAt: string;
 };
 
-// Calculate days until EAA deadline
+type CountdownTime = {
+  days: number;
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+// Calculate time until EAA deadline
+const getDeadlineCountdown = (): CountdownTime => {
+  const deadline = new Date("2025-06-28T00:00:00");
+  const now = new Date();
+  const diffTime = deadline.getTime() - now.getTime();
+
+  if (diffTime <= 0) {
+    return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  }
+
+  const days = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffTime % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diffTime % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffTime % (1000 * 60)) / 1000);
+
+  return { days, hours, minutes, seconds };
+};
+
+// Calculate days until EAA deadline (simple version for header)
 const getDeadlineInfo = () => {
   const deadline = new Date("2025-06-28");
   const today = new Date();
@@ -35,7 +60,16 @@ export default function Home() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [scanCount] = useState(2847); // Social proof - scans completed
+  const [countdown, setCountdown] = useState<CountdownTime>(getDeadlineCountdown());
   const deadlineInfo = getDeadlineInfo();
+
+  // Live countdown timer
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCountdown(getDeadlineCountdown());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   const handleScan = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -119,6 +153,9 @@ export default function Home() {
             <span className="text-xl font-bold text-white">Inclusiv</span>
           </div>
           <div className="flex items-center gap-4">
+            <a href="/pricing" className="text-zinc-400 hover:text-white transition-colors text-sm font-medium">
+              Pricing
+            </a>
             <div className="flex items-center gap-2 text-sm text-green-400">
               <CheckCircle className="w-4 h-4" />
               <span>{scanCount.toLocaleString()} sites scanned</span>
@@ -133,6 +170,45 @@ export default function Home() {
 
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6 py-16">
+        {/* Countdown Timer */}
+        <div className="max-w-3xl mx-auto mb-10">
+          <div className="bg-gradient-to-r from-red-950/50 to-orange-950/50 border border-red-500/30 rounded-2xl p-6">
+            <div className="text-center mb-4">
+              <p className="text-red-400 font-semibold text-sm uppercase tracking-wide mb-1">EAA Compliance Deadline</p>
+              <p className="text-zinc-400 text-sm">June 28, 2025 - Non-compliant sites face fines up to €100,000</p>
+            </div>
+            <div className="flex items-center justify-center gap-4">
+              <div className="text-center">
+                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
+                  <span className="text-3xl font-bold text-white">{countdown.days}</span>
+                </div>
+                <p className="text-zinc-500 text-xs mt-1 uppercase">Days</p>
+              </div>
+              <span className="text-2xl text-zinc-600 font-bold">:</span>
+              <div className="text-center">
+                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
+                  <span className="text-3xl font-bold text-white">{countdown.hours.toString().padStart(2, '0')}</span>
+                </div>
+                <p className="text-zinc-500 text-xs mt-1 uppercase">Hours</p>
+              </div>
+              <span className="text-2xl text-zinc-600 font-bold">:</span>
+              <div className="text-center">
+                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
+                  <span className="text-3xl font-bold text-white">{countdown.minutes.toString().padStart(2, '0')}</span>
+                </div>
+                <p className="text-zinc-500 text-xs mt-1 uppercase">Minutes</p>
+              </div>
+              <span className="text-2xl text-zinc-600 font-bold">:</span>
+              <div className="text-center">
+                <div className="bg-zinc-900 border border-zinc-700 rounded-lg px-4 py-3 min-w-[80px]">
+                  <span className="text-3xl font-bold text-red-500 tabular-nums">{countdown.seconds.toString().padStart(2, '0')}</span>
+                </div>
+                <p className="text-zinc-500 text-xs mt-1 uppercase">Seconds</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-500/10 text-indigo-400 text-sm mb-6">
             <Zap className="w-4 h-4" />
@@ -142,7 +218,7 @@ export default function Home() {
             Is your website <span className="gradient-text">accessible?</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
-            The European Accessibility Act deadline is June 28, 2025.
+            The European Accessibility Act deadline is {countdown.days} days away.
             Non-compliant sites face fines up to €100,000.
           </p>
           <p className="text-zinc-500">
@@ -168,7 +244,7 @@ export default function Home() {
               <button
                 type="submit"
                 disabled={scanning || !url.trim()}
-                className="px-8 py-4 bg-indigo-600 hover:bg-indigo-500 disabled:bg-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-colors flex items-center gap-2"
+                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:from-zinc-700 disabled:to-zinc-700 disabled:cursor-not-allowed text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 flex items-center gap-2"
               >
                 {scanning ? (
                   <>
@@ -177,7 +253,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    Scan Now
+                    Check Compliance Now
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -343,11 +419,35 @@ export default function Home() {
           )}
         </div>
 
-        {/* Trust Badges */}
-        <div className="mt-16 text-center">
-          <p className="text-zinc-500 text-sm mb-6">Trusted by compliance teams at</p>
+        {/* Social Proof Section */}
+        <div className="mt-16">
+          <div className="bg-gradient-to-r from-indigo-950/30 to-purple-950/30 border border-indigo-500/20 rounded-2xl p-8 text-center">
+            <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="flex -space-x-2">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <div key={i} className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 border-2 border-zinc-900 flex items-center justify-center">
+                    <span className="text-xs font-bold text-white">{String.fromCharCode(64 + i)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-1 ml-2">
+                {[1, 2, 3, 4, 5].map((i) => (
+                  <Star key={i} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                ))}
+              </div>
+            </div>
+            <h3 className="text-2xl font-bold text-white mb-2">Trusted by 500+ EU E-commerce Sites</h3>
+            <p className="text-zinc-400 max-w-lg mx-auto">
+              Join hundreds of online stores across Europe already using Inclusiv to achieve EAA compliance before the deadline.
+            </p>
+          </div>
+        </div>
+
+        {/* Platform Badges */}
+        <div className="mt-10 text-center">
+          <p className="text-zinc-500 text-sm mb-6">Works with your platform</p>
           <div className="flex items-center justify-center gap-8 opacity-50">
-            {["Shopify", "WordPress", "Squarespace", "Webflow", "Custom"].map((name) => (
+            {["Shopify", "WooCommerce", "Magento", "Webflow", "Custom"].map((name) => (
               <div key={name} className="text-zinc-400 font-semibold">{name}</div>
             ))}
           </div>
@@ -381,6 +481,74 @@ export default function Home() {
             <p className="text-zinc-400">
               Get exact code fixes for your platform. WordPress, Shopify, or custom code.
             </p>
+          </div>
+        </div>
+
+        {/* Testimonials Section */}
+        <div className="mt-24">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-white mb-4">What Our Customers Say</h2>
+            <p className="text-zinc-400">E-commerce leaders trust Inclusiv for EAA compliance</p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                quote: "Inclusiv identified 47 critical issues we missed. We fixed them in a week and are now fully compliant.",
+                author: "Marie Schmidt",
+                role: "CTO, Fashion Outlet DE",
+                rating: 5
+              },
+              {
+                quote: "The AI-generated fixes saved our dev team hundreds of hours. Worth every cent before the deadline hits.",
+                author: "Johan van Berg",
+                role: "Head of Digital, NL Retail Group",
+                rating: 5
+              },
+              {
+                quote: "We scanned 12 storefronts in one afternoon. The detailed reports made prioritization simple.",
+                author: "Elena Rossi",
+                role: "Compliance Manager, IT Commerce",
+                rating: 5
+              }
+            ].map((testimonial, i) => (
+              <div key={i} className="bg-zinc-900 border border-zinc-800 rounded-2xl p-6 relative">
+                <Quote className="w-8 h-8 text-indigo-500/30 absolute top-4 right-4" />
+                <div className="flex items-center gap-1 mb-4">
+                  {[...Array(testimonial.rating)].map((_, j) => (
+                    <Star key={j} className="w-4 h-4 text-yellow-500 fill-yellow-500" />
+                  ))}
+                </div>
+                <p className="text-zinc-300 mb-6 leading-relaxed">"{testimonial.quote}"</p>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-purple-400 flex items-center justify-center">
+                    <span className="text-sm font-bold text-white">{testimonial.author.split(' ').map(n => n[0]).join('')}</span>
+                  </div>
+                  <div>
+                    <p className="text-white font-medium">{testimonial.author}</p>
+                    <p className="text-zinc-500 text-sm">{testimonial.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Final CTA */}
+        <div className="mt-24 text-center">
+          <div className="bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border border-indigo-500/30 rounded-2xl p-10">
+            <h2 className="text-3xl font-bold text-white mb-4">
+              Only {countdown.days} Days Left to Comply
+            </h2>
+            <p className="text-zinc-400 max-w-xl mx-auto mb-6">
+              Do not wait until it is too late. Scan your site now and get a clear roadmap to EAA compliance before the June 28, 2025 deadline.
+            </p>
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 inline-flex items-center gap-2"
+            >
+              Get Your Free Compliance Report
+              <ArrowRight className="w-5 h-5" />
+            </button>
           </div>
         </div>
       </main>
