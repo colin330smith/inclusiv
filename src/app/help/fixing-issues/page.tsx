@@ -463,12 +463,14 @@ export default function FixingIssuesPage() {
             <div className="flex items-center gap-2 text-zinc-500">
               <Shield className="w-5 h-5" />
               <span>Inclusiv © 2025</span>
+              <span className="text-zinc-600">|</span>
+              <span>Powered by axe-core</span>
             </div>
-            <div className="flex items-center gap-6 text-zinc-500 text-sm">
-              <Link href="/faq" className="hover:text-white transition-colors">FAQ</Link>
-              <Link href="/help" className="hover:text-white transition-colors">Help Center</Link>
-              <Link href="/contact" className="hover:text-white transition-colors">Contact</Link>
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-zinc-500 text-sm">
+              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
               <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
+              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
             </div>
           </div>
         </div>

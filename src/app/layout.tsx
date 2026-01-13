@@ -18,13 +18,46 @@ const geistMono = Geist_Mono({
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXX";
 
 export const metadata: Metadata = {
-  title: "Inclusiv | Free Web Accessibility Scanner",
-  description: "Scan your website for accessibility issues before the EAA deadline. Get instant compliance score and actionable fixes.",
-  keywords: ["accessibility", "WCAG", "ADA", "EAA", "compliance", "web accessibility", "scanner"],
+  metadataBase: new URL('https://inclusiv.app'),
+  title: {
+    default: "Inclusiv | Free EAA & WCAG Accessibility Scanner",
+    template: "%s | Inclusiv"
+  },
+  description: "Free accessibility scanner for EAA compliance. Check your website in 30 seconds before the June 2025 deadline. Avoid €100,000 fines.",
+  keywords: ["EAA compliance", "WCAG 2.1 AA", "accessibility scanner", "European Accessibility Act", "ADA compliance", "website accessibility checker", "accessibility audit", "free accessibility tool"],
+  authors: [{ name: "Inclusiv" }],
+  creator: "Inclusiv",
+  publisher: "Inclusiv",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
   openGraph: {
-    title: "Inclusiv | Free Web Accessibility Scanner",
-    description: "Scan your website for accessibility issues. EAA deadline June 2025.",
+    title: "Free EAA Accessibility Scanner - Check Compliance in 30 Seconds",
+    description: "Is your website EAA compliant? Free instant scan. Avoid €100,000 fines after June 28, 2025.",
     type: "website",
+    siteName: "Inclusiv",
+    locale: "en_US",
+    url: "https://inclusiv.app",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Free EAA Accessibility Scanner",
+    description: "Check your website's EAA compliance in 30 seconds. Free scan, no signup required.",
+    creator: "@InclusivDev",
+  },
+  alternates: {
+    canonical: "https://inclusiv.app",
+  },
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION,
   },
 };
 

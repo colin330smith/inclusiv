@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Shield } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'ADA Website Compliance Checker | Free Accessibility Scan',

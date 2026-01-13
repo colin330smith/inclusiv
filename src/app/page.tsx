@@ -319,9 +319,9 @@ export default function Home() {
           {result && !scanning && (
             <div className="mt-8 bg-zinc-900 border border-zinc-800 rounded-2xl overflow-hidden">
               {/* Score Header */}
-              <div className="p-8 border-b border-zinc-800 flex items-center gap-8">
-                <div className="relative w-32 h-32">
-                  <svg className="w-32 h-32" viewBox="0 0 100 100">
+              <div className="p-6 sm:p-8 border-b border-zinc-800 flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
+                <div className="relative w-24 h-24 sm:w-32 sm:h-32 flex-shrink-0">
+                  <svg className="w-24 h-24 sm:w-32 sm:h-32" viewBox="0 0 100 100">
                     <circle
                       cx="50"
                       cy="50"
@@ -347,8 +347,8 @@ export default function Home() {
                     <span className="text-3xl font-bold text-white">{result.score}</span>
                   </div>
                 </div>
-                <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-white mb-2">
+                <div className="flex-1 text-center sm:text-left">
+                  <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">
                     Accessibility Score: <span className={getScoreLabel(result.score).color}>{getScoreLabel(result.score).text}</span>
                   </h3>
                   <p className="text-zinc-400 mb-3">
@@ -357,7 +357,7 @@ export default function Home() {
                       <span className="text-red-400"> ({result.criticalIssues} critical)</span>
                     )}
                   </p>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center justify-center sm:justify-start gap-3">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded-full text-sm text-zinc-300">
                       <Globe className="w-4 h-4" />
                       {result.platform}
@@ -446,8 +446,8 @@ export default function Home() {
                 <div className="p-6 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-t border-indigo-500/30">
                   <div className="flex items-start gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <h4 className="text-lg font-semibold text-white">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h4 className="text-base sm:text-lg font-semibold text-white">
                           Get Your Full Report + Fix Guide
                         </h4>
                         <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded-full">FREE</span>

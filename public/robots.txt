@@ -1,0 +1,26 @@
+# Inclusiv - Web Accessibility Scanner
+# https://inclusiv.app
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://inclusiv.app/sitemap.xml
+
+# Block API routes and internal paths
+Disallow: /api/
+Disallow: /_next/
+Disallow: /success
+
+# Allow all major crawlers
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+User-agent: DuckDuckBot
+Allow: /
