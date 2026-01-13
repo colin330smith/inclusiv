@@ -252,17 +252,28 @@ export default function PricingPage() {
             Make your website accessible to everyone
           </h2>
           <p className="text-xl text-zinc-400 mb-8 max-w-2xl mx-auto">
-            Start with a free scan today. Get compliant in weeks, not months.
+            Get compliant in weeks, not months.
             WCAG 2.1 AA compliance that works for EAA, ADA, and beyond.
           </p>
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors text-lg"
-          >
-            Start Free Scan Now
-            <ArrowRight className="w-5 h-5" />
-          </Link>
-          <p className="mt-4 text-zinc-500 text-sm">No credit card required</p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              href="/"
+              className="inline-flex items-center justify-center gap-2 px-6 py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-xl transition-colors"
+            >
+              Start Free Scan
+              <ArrowRight className="w-5 h-5" />
+            </Link>
+            <a
+              href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors text-lg shadow-lg shadow-indigo-500/25"
+            >
+              <Zap className="w-5 h-5" />
+              Get Full Service - €499/mo
+            </a>
+          </div>
+          <p className="mt-4 text-zinc-500 text-sm">Full done-for-you accessibility compliance</p>
         </div>
       </main>
 

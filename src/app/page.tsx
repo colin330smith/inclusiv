@@ -503,12 +503,14 @@ export default function Home() {
                       </div>
                     </div>
                     <a
-                      href="/pricing"
+                      href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
+                      target="_blank"
+                      rel="noopener noreferrer"
                       onClick={() => trackCtaClick("upgrade_cta", "Get Full Compliance", "scan_results")}
                       className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 whitespace-nowrap"
                     >
                       <Zap className="w-4 h-4" />
-                      Get Full Compliance
+                      Get Full Compliance - €499/mo
                     </a>
                   </div>
                   <div className="mt-4 pt-4 border-t border-green-500/20">
@@ -613,21 +615,33 @@ export default function Home() {
                 <span className="font-medium">EAA enforcement active since June 2025</span>
               </div>
               <h2 className="text-2xl font-bold text-white mb-4">
-                Are You At Risk? Check Free Now
+                Get Full WCAG Compliance Today
               </h2>
               <p className="text-zinc-400 mb-6">
-                78% of EU sites are still non-compliant. Find out your status in 30 seconds.
+                78% of EU sites are still non-compliant. Get compliant with our done-for-you service.
               </p>
-              <button
-                onClick={() => {
-                  trackCtaClick("final_cta", "Check Compliance Free", "footer_cta");
-                  window.scrollTo({ top: 0, behavior: 'smooth' });
-                }}
-                className="px-8 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all inline-flex items-center gap-2 shadow-lg shadow-indigo-500/25"
-              >
-                Check Compliance Free
-                <ArrowRight className="w-5 h-5" />
-              </button>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <button
+                  onClick={() => {
+                    trackCtaClick("final_cta", "Check Compliance Free", "footer_cta");
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className="px-6 py-4 bg-zinc-800 hover:bg-zinc-700 text-white font-semibold rounded-xl transition-all inline-flex items-center justify-center gap-2"
+                >
+                  Check Free First
+                  <ArrowRight className="w-5 h-5" />
+                </button>
+                <a
+                  href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackCtaClick("buy_now_cta", "Get Full Service", "footer_cta")}
+                  className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all inline-flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
+                >
+                  <Zap className="w-5 h-5" />
+                  Get Full Service - €499/mo
+                </a>
+              </div>
             </div>
           </div>
         </div>

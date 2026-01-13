@@ -212,18 +212,11 @@ export default function PricingCards() {
                 >
                   {plan.cta}
                 </Link>
-              ) : plan.isEnterprise ? (
-                <Link
-                  href="mailto:enterprise@inclusiv.eu"
-                  className="block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors bg-zinc-800 hover:bg-zinc-700 text-white"
-                >
-                  {plan.cta}
-                </Link>
               ) : (
                 <CheckoutButton
-                  plan={plan.key as 'starter' | 'professional'}
+                  plan={plan.key as 'starter' | 'professional' | 'enterprise'}
                   label={plan.highlight ? getTrialText() : plan.cta}
-                  highlight={plan.highlight}
+                  highlight={plan.highlight || plan.isEnterprise}
                   billing={billing}
                 />
               )}
