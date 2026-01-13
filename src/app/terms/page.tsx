@@ -100,14 +100,17 @@ export default function TermsPage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800 mt-20">
         <div className="max-w-4xl mx-auto px-6 py-8">
-          <div className="flex items-center justify-between text-zinc-500 text-sm">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-zinc-500 text-sm">
             <div className="flex items-center gap-2">
               <Shield className="w-5 h-5" />
-              <span>Inclusiv</span>
+              <span>Inclusiv © 2025</span>
+              <span className="text-zinc-600">|</span>
+              <span>Powered by axe-core</span>
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6">
+              <Link href="/" className="hover:text-zinc-300 transition-colors">Scanner</Link>
+              <Link href="/pricing" className="hover:text-zinc-300 transition-colors">Pricing</Link>
               <Link href="/privacy" className="hover:text-zinc-300 transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-zinc-300 transition-colors">Terms</Link>
             </div>
           </div>
         </div>
