@@ -101,7 +101,7 @@ export default function FloatingCTA({
                   Check your website&apos;s accessibility score
                 </span>
               </div>
-              <span className="hidden md:inline text-zinc-500 text-sm">
+              <span className="hidden md:inline text-zinc-400 text-sm">
                 Free WCAG 2.1 AA compliance check
               </span>
             </div>
@@ -119,7 +119,7 @@ export default function FloatingCTA({
               {/* Close button */}
               <button
                 onClick={handleDismiss}
-                className="p-2 text-zinc-500 hover:text-zinc-300 hover:bg-zinc-800 rounded-lg transition-colors"
+                className="p-2 text-zinc-400 hover:text-zinc-300 hover:bg-zinc-800 rounded-lg transition-colors"
                 aria-label="Dismiss"
               >
                 <X className="w-4 h-4" />

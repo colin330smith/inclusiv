@@ -30,19 +30,19 @@ export function ComplianceBadges() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">WCAG 2.1</div>
-          <div className="text-xs text-zinc-500">Level AA</div>
+          <div className="text-xs text-zinc-400">Level AA</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">EAA</div>
-          <div className="text-xs text-zinc-500">EU Directive</div>
+          <div className="text-xs text-zinc-400">EU Directive</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">ADA</div>
-          <div className="text-xs text-zinc-500">Title III</div>
+          <div className="text-xs text-zinc-400">Title III</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">EN 301 549</div>
-          <div className="text-xs text-zinc-500">EU Standard</div>
+          <div className="text-xs text-zinc-400">EU Standard</div>
         </div>
       </div>
     </div>
@@ -58,19 +58,19 @@ export function TechStackInfo() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">axe-core</div>
-          <div className="text-xs text-zinc-500">Deque Systems</div>
+          <div className="text-xs text-zinc-400">Deque Systems</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">Next.js</div>
-          <div className="text-xs text-zinc-500">React Framework</div>
+          <div className="text-xs text-zinc-400">React Framework</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">Vercel</div>
-          <div className="text-xs text-zinc-500">Edge Hosting</div>
+          <div className="text-xs text-zinc-400">Edge Hosting</div>
         </div>
         <div className="text-center p-3 bg-zinc-800/50 rounded-lg">
           <div className="text-lg font-bold text-white mb-1">Puppeteer</div>
-          <div className="text-xs text-zinc-500">Browser Testing</div>
+          <div className="text-xs text-zinc-400">Browser Testing</div>
         </div>
       </div>
     </div>
@@ -108,7 +108,7 @@ export function DataPrivacyAssurance() {
 
 export function ScannerTrustBar() {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-500">
+    <div className="flex flex-wrap items-center justify-center gap-6 text-xs text-zinc-400">
       <div className="flex items-center gap-1.5">
         <Lock className="w-3.5 h-3.5 text-green-500" />
         <span>HTTPS Only</span>
