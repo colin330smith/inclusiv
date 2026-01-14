@@ -180,13 +180,13 @@ export function SiteFooter() {
                 <Shield className="w-6 h-6 text-indigo-500" />
                 <span className="text-white font-semibold">Inclusiv</span>
               </div>
-              <span className="text-zinc-500 text-sm">
+              <span className="text-zinc-400 text-sm">
                 © {currentYear} Inclusiv. All rights reserved.
               </span>
-              <span className="hidden sm:inline text-zinc-600">|</span>
-              <span className="text-zinc-500 text-sm">423 April Ln, Apopka, FL 32712</span>
-              <span className="hidden sm:inline text-zinc-600">|</span>
-              <a href="tel:+16502015786" className="text-zinc-500 hover:text-white text-sm transition-colors">(650) 201-5786</a>
+              <span className="hidden sm:inline text-zinc-500">|</span>
+              <span className="text-zinc-400 text-sm">423 April Ln, Apopka, FL 32712</span>
+              <span className="hidden sm:inline text-zinc-500">|</span>
+              <a href="tel:+16502015786" className="text-zinc-400 hover:text-white text-sm transition-colors">(650) 201-5786</a>
             </div>
 
             {/* Legal Links */}
