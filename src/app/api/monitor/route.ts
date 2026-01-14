@@ -5,7 +5,14 @@ import { Resend } from "resend";
 // Set up in vercel.json: { "crons": [{ "path": "/api/monitor", "schedule": "*/5 * * * *" }] }
 
 const ALERT_EMAIL = "colin@tryinclusiv.com";
-const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Lazy initialize to avoid build-time errors when env var not available
+function getResendClient() {
+  if (!process.env.RESEND_API_KEY) {
+    throw new Error("RESEND_API_KEY environment variable is not set");
+  }
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 // Prevent alert spam - only alert once per hour for same issue
 let lastAlertTime = 0;
@@ -35,7 +42,7 @@ export async function GET(request: Request) {
       // Scanner is down - send alert
       const now = Date.now();
       if (now - lastAlertTime > ALERT_COOLDOWN) {
-        await resend.emails.send({
+        await getResendClient().emails.send({
           from: "Inclusiv Alerts <alerts@tryinclusiv.com>",
           to: ALERT_EMAIL,
           subject: "🚨 CRITICAL: Scanner Down",
