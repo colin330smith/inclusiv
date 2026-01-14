@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import LeadCaptureProvider from "@/components/LeadCaptureProvider";
+import SessionProvider from "@/components/providers/SessionProvider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -154,9 +155,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <LeadCaptureProvider>
-          {children}
-        </LeadCaptureProvider>
+        <SessionProvider>
+          <LeadCaptureProvider>
+            {children}
+          </LeadCaptureProvider>
+        </SessionProvider>
       </body>
     </html>
   );
