@@ -103,7 +103,7 @@ export default function InlineLeadForm({
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Email field */}
         <div className="relative">
-          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+          <Mail className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
           <input
             type="email"
             value={email}
@@ -117,7 +117,7 @@ export default function InlineLeadForm({
         {/* URL field (optional) */}
         {showUrl && (
           <div className="relative">
-            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
             <input
               type="url"
               value={url}
@@ -156,7 +156,7 @@ export default function InlineLeadForm({
       </form>
 
       {/* Trust indicator */}
-      <p className="mt-4 text-center text-zinc-500 text-xs">
+      <p className="mt-4 text-center text-zinc-400 text-xs">
         We respect your privacy. Unsubscribe anytime.
       </p>
     </div>

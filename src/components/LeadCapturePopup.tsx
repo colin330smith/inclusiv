@@ -100,7 +100,7 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
         {/* Close button */}
         <button
           onClick={handleDismiss}
-          className="absolute top-4 right-4 p-2 text-zinc-500 hover:text-white transition-colors z-10"
+          className="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white transition-colors z-10"
           aria-label="Close popup"
         >
           <X className="w-5 h-5" />
@@ -174,7 +174,7 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
             </form>
 
             {/* Trust indicators */}
-            <p className="mt-6 text-center text-zinc-500 text-xs">
+            <p className="mt-6 text-center text-zinc-400 text-xs">
               We respect your privacy. Unsubscribe anytime.
             </p>
           </div>
@@ -190,7 +190,7 @@ export default function LeadCapturePopup({ delay = 30000 }: LeadCapturePopupProp
             <p className="text-zinc-400 mb-4">
               Your accessibility report is on its way to {email}
             </p>
-            <p className="text-zinc-500 text-sm">
+            <p className="text-zinc-400 text-sm">
               This popup will close automatically...
             </p>
           </div>
