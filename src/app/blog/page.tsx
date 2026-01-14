@@ -1,8 +1,9 @@
 "use client";
 
 import Link from 'next/link';
-import { Shield, Clock, ArrowRight, BookOpen, Calendar, Tag, TrendingUp, FileText, Search } from 'lucide-react';
+import { Shield, Clock, ArrowRight, BookOpen, Calendar, TrendingUp, FileText, Search } from 'lucide-react';
 import { useState } from 'react';
+import { NewsletterSignup } from '@/components/NewsletterSignup';
 
 // Calculate days until EAA deadline
 const getDeadlineInfo = () => {
@@ -15,13 +16,23 @@ const getDeadlineInfo = () => {
 
 const blogPosts = [
   {
+    slug: 'eaa-enforcement-active-what-to-do',
+    title: 'EAA Enforcement Is Now Active: What E-commerce Businesses Need to Do',
+    excerpt: 'The European Accessibility Act deadline has passed. Learn what steps to take now, how enforcement works, and how to achieve compliance quickly to avoid fines.',
+    category: 'Compliance Guide',
+    readTime: '8 min read',
+    date: 'July 2025',
+    featured: true,
+    tags: ['EAA', 'Enforcement', 'Compliance', 'Urgent'],
+  },
+  {
     slug: 'eaa-compliance-guide-2025',
     title: 'The Complete Guide to EAA Compliance for E-commerce in 2025',
     excerpt: 'Everything you need to know about the European Accessibility Act requirements, deadlines, penalties, and step-by-step compliance strategies for your online store.',
     category: 'Compliance Guide',
     readTime: '15 min read',
     date: 'January 2025',
-    featured: true,
+    featured: false,
     tags: ['EAA', 'Compliance', 'E-commerce', 'WCAG'],
   },
   {
@@ -67,8 +78,8 @@ const blogPosts = [
 ];
 
 const categories = [
-  { name: 'All Posts', count: 5 },
-  { name: 'Compliance Guide', count: 1 },
+  { name: 'All Posts', count: 6 },
+  { name: 'Compliance Guide', count: 2 },
   { name: 'Research', count: 1 },
   { name: 'Tutorials', count: 1 },
   { name: 'Legal', count: 2 },
@@ -250,16 +261,7 @@ export default function BlogPage() {
             Get the latest insights on EAA compliance, WCAG updates, and accessibility
             best practices delivered to your inbox.
           </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              className="flex-1 px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-indigo-200 focus:outline-none focus:border-white/40"
-            />
-            <button className="px-6 py-3 bg-white text-indigo-600 font-semibold rounded-xl hover:bg-indigo-50 transition-colors">
-              Subscribe
-            </button>
-          </div>
+          <NewsletterSignup source="blog" />
         </div>
 
         {/* Scanner CTA */}

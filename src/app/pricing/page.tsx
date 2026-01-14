@@ -263,17 +263,8 @@ export default function PricingPage() {
               Start Free Scan
               <ArrowRight className="w-5 h-5" />
             </Link>
-            <a
-              href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl transition-colors text-lg shadow-lg shadow-indigo-500/25"
-            >
-              <Zap className="w-5 h-5" />
-              Get Full Service - €499/mo
-            </a>
           </div>
-          <p className="mt-4 text-zinc-500 text-sm">Full done-for-you accessibility compliance</p>
+          <p className="mt-4 text-zinc-500 text-sm">Choose a plan above to get started</p>
         </div>
       </main>
 

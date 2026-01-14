@@ -8,7 +8,8 @@ const getStripe = () => {
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 };
 
-const PLANS = {
+// Monthly pricing
+const MONTHLY_PLANS = {
   starter: {
     priceId: process.env.STRIPE_STARTER_PRICE_ID!,
     name: 'Starter',
@@ -26,17 +27,55 @@ const PLANS = {
   },
 };
 
+// Annual pricing (20% discount) - falls back to monthly if not configured
+const ANNUAL_PLANS = {
+  starter: {
+    priceId: process.env.STRIPE_STARTER_ANNUAL_PRICE_ID || process.env.STRIPE_STARTER_PRICE_ID!,
+    name: 'Starter Annual',
+    amount: 47000, // €470/year (~€39/mo)
+    fallback: !process.env.STRIPE_STARTER_ANNUAL_PRICE_ID,
+  },
+  professional: {
+    priceId: process.env.STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID || process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
+    name: 'Professional Annual',
+    amount: 143000, // €1,430/year (~€119/mo)
+    fallback: !process.env.STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID,
+  },
+  enterprise: {
+    priceId: process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID || process.env.STRIPE_ENTERPRISE_PRICE_ID!,
+    name: 'Enterprise Annual',
+    amount: 479000, // €4,790/year (~€399/mo)
+    fallback: !process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID,
+  },
+};
+
 export async function POST(request: NextRequest) {
   try {
-    const { plan, email, successUrl, cancelUrl } = await request.json();
+    const { plan, billing = 'monthly', email, successUrl, cancelUrl } = await request.json();
 
-    if (!plan || !PLANS[plan as keyof typeof PLANS]) {
+    const plans = billing === 'annual' ? ANNUAL_PLANS : MONTHLY_PLANS;
+
+    if (!plan || !plans[plan as keyof typeof plans]) {
       return NextResponse.json({ error: 'Invalid plan' }, { status: 400 });
     }
 
-    const selectedPlan = PLANS[plan as keyof typeof PLANS];
+    const selectedPlan = plans[plan as keyof typeof plans];
 
     const stripe = getStripe();
+
+    // Build subscription data - only include trial for monthly plans
+    const subscriptionData: Stripe.Checkout.SessionCreateParams['subscription_data'] = {
+      metadata: {
+        plan: plan,
+        billing: billing,
+      },
+    };
+
+    // 14-day trial for monthly plans only
+    if (billing === 'monthly') {
+      subscriptionData.trial_period_days = 14;
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: 'subscription',
       payment_method_types: ['card'],
@@ -51,13 +90,9 @@ export async function POST(request: NextRequest) {
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL}/pricing`,
       metadata: {
         plan: plan,
+        billing: billing,
       },
-      subscription_data: {
-        trial_period_days: 14,
-        metadata: {
-          plan: plan,
-        },
-      },
+      subscription_data: subscriptionData,
     });
 
     return NextResponse.json({

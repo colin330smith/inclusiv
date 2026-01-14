@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import LeadCapturePopup from "./LeadCapturePopup";
 import FloatingCTA from "./FloatingCTA";
+import ExitIntentPopup from "./ExitIntentPopup";
 
 interface LeadCaptureProviderProps {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ const EXCLUDED_PAGES = [
   "/unsubscribe",
   "/privacy",
   "/terms",
+  "/success", // Don't show on checkout success
 ];
 
 export default function LeadCaptureProvider({ children }: LeadCaptureProviderProps) {
@@ -29,8 +31,11 @@ export default function LeadCaptureProvider({ children }: LeadCaptureProviderPro
       {/* Lead Capture Components - only show on non-excluded pages */}
       {!isExcludedPage && (
         <>
-          {/* Popup appears after 30 seconds */}
+          {/* Timed popup appears after 30 seconds */}
           <LeadCapturePopup delay={30000} />
+
+          {/* Exit intent popup when user tries to leave */}
+          <ExitIntentPopup />
 
           {/* Floating CTA bar appears after 5 seconds and scroll */}
           <FloatingCTA showDelay={5000} scrollThreshold={300} />
