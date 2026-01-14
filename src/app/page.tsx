@@ -187,7 +187,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <a
               href="/pricing"
-              className="text-zinc-400 hover:text-white transition-colors text-sm font-medium"
+              className="text-zinc-300 hover:text-white transition-colors text-sm font-medium"
               onClick={() => trackCtaClick("pricing_nav", "Pricing", "header", "/pricing")}
             >
               Pricing
@@ -213,7 +213,7 @@ export default function Home() {
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
             Check in 30 seconds. The EAA deadline passed {deadlineInfo.daysSince} days ago - non-compliant sites <span className="text-red-400 font-semibold">now face €100,000 fines</span>.
           </p>
-          <p className="text-zinc-500 max-w-xl mx-auto">
+          <p className="text-zinc-300 max-w-xl mx-auto">
             Free instant scan using axe-core - the same engine trusted by Microsoft, Google, and 10M+ developers.
           </p>
         </div>
@@ -223,13 +223,13 @@ export default function Home() {
           <form onSubmit={handleScan} className="relative mb-6">
             <div className="flex flex-col sm:flex-row gap-3">
               <div className="flex-1 relative">
-                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-500" />
+                <Globe className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-zinc-400" />
                 <input
                   type="text"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   placeholder="Enter your website URL"
-                  className="w-full pl-12 pr-4 py-4 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 transition-colors text-base"
+                  className="w-full pl-12 pr-4 py-4 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 transition-colors text-base"
                   disabled={scanning}
                 />
               </div>
@@ -260,7 +260,7 @@ export default function Home() {
           </form>
 
           {/* Trust indicators */}
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-zinc-500 text-sm">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-zinc-300 text-sm">
             <div className="flex items-center gap-2">
               <CheckCircle className="w-4 h-4 text-green-500 flex-shrink-0" />
               <span>No signup required</span>
@@ -283,7 +283,7 @@ export default function Home() {
                 <div className="absolute inset-0 rounded-full border-4 border-indigo-500 border-t-transparent animate-spin" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2 text-center">Scanning your website...</h3>
-              <p className="text-zinc-400 text-center mb-4">Checking WCAG 2.1 AA compliance</p>
+              <p className="text-zinc-300 text-center mb-4">Checking WCAG 2.1 AA compliance</p>
 
               {/* Progress Bar */}
               <div className="w-full bg-zinc-800 rounded-full h-2 mb-2">
@@ -292,7 +292,7 @@ export default function Home() {
                   style={{ width: `${scanProgress}%` }}
                 />
               </div>
-              <p className="text-zinc-500 text-sm text-center">{scanProgress}% complete</p>
+              <p className="text-zinc-300 text-sm text-center">{scanProgress}% complete</p>
 
               {/* Scanning Steps */}
               <div className="mt-6 space-y-2">
@@ -309,7 +309,7 @@ export default function Home() {
                     ) : (
                       <div className="w-4 h-4 border-2 border-zinc-600 rounded-full" />
                     )}
-                    <span className={step.done ? "text-zinc-300" : "text-zinc-500"}>{step.label}</span>
+                    <span className={step.done ? "text-zinc-200" : "text-zinc-400"}>{step.label}</span>
                   </div>
                 ))}
               </div>
@@ -382,13 +382,13 @@ export default function Home() {
                         {item.status ? (
                           <CheckCircle className="w-4 h-4 text-green-500" />
                         ) : (
-                          <AlertTriangle className="w-4 h-4 text-zinc-500" />
+                          <AlertTriangle className="w-4 h-4 text-zinc-400" />
                         )}
                         <span className={`text-sm font-medium ${item.status ? "text-green-400" : "text-zinc-400"}`}>
                           {item.label}
                         </span>
                       </div>
-                      <p className="text-xs text-zinc-500 mt-1 ml-6">{item.description}</p>
+                      <p className="text-xs text-zinc-400 mt-1 ml-6">{item.description}</p>
                     </div>
                   ))}
                 </div>
@@ -408,7 +408,7 @@ export default function Home() {
                       </span>
                       <div className="flex-1">
                         <p className="text-white">{issue.description}</p>
-                        <p className="text-zinc-500 text-sm mt-1">{issue.count} instances found</p>
+                        <p className="text-zinc-400 text-sm mt-1">{issue.count} instances found</p>
                       </div>
                     </div>
                   ))}
@@ -434,8 +434,8 @@ export default function Home() {
                     </div>
                     <div className="absolute inset-0 flex items-center justify-center">
                       <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800 rounded-full">
-                        <Lock className="w-4 h-4 text-zinc-500" />
-                        <span className="text-zinc-400 text-sm">+{result.topIssues.length - 3} more issues in full report</span>
+                        <Lock className="w-4 h-4 text-zinc-400" />
+                        <span className="text-zinc-300 text-sm">+{result.topIssues.length - 3} more issues in full report</span>
                       </div>
                     </div>
                   </div>
@@ -474,7 +474,7 @@ export default function Home() {
                           onChange={(e) => setEmail(e.target.value)}
                           placeholder="you@company.com"
                           required
-                          className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-500 focus:outline-none focus:border-indigo-500 text-base"
+                          className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 text-base"
                         />
                         <button
                           type="submit"
@@ -483,7 +483,7 @@ export default function Home() {
                           Send My Report
                         </button>
                       </form>
-                      <p className="text-zinc-500 text-xs mt-2">No spam. Unsubscribe anytime.</p>
+                      <p className="text-zinc-400 text-xs mt-2">No spam. Unsubscribe anytime.</p>
                     </div>
                   </div>
                 </div>
@@ -554,10 +554,10 @@ export default function Home() {
 
         {/* Platform Support */}
         <div className="mt-16 text-center">
-          <p className="text-zinc-500 text-sm mb-6">Works with any website or platform</p>
+          <p className="text-zinc-300 text-sm mb-6">Works with any website or platform</p>
           <div className="flex items-center justify-center gap-8 flex-wrap">
             {["WordPress", "Shopify", "WooCommerce", "Webflow", "Squarespace", "React", "Next.js", "Custom"].map((name) => (
-              <div key={name} className="text-zinc-500 hover:text-zinc-300 transition-colors font-medium">{name}</div>
+              <div key={name} className="text-zinc-300 hover:text-white transition-colors font-medium">{name}</div>
             ))}
           </div>
         </div>
