@@ -15,8 +15,16 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Google Analytics Measurement ID - Replace with your actual ID
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXX";
+// Google Analytics Measurement ID
+// TODO: Set NEXT_PUBLIC_GA_ID environment variable with your GA4 Measurement ID
+// To get your GA4 ID:
+// 1. Go to https://analytics.google.com/
+// 2. Create a new GA4 property for tryinclusiv.com (or use existing)
+// 3. Go to Admin > Data Streams > Web > Add stream
+// 4. Enter "tryinclusiv.com" as the website URL
+// 5. Copy the Measurement ID (format: G-XXXXXXXXXX)
+// 6. Add to .env.local: NEXT_PUBLIC_GA_ID=G-YOUR_ID_HERE
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tryinclusiv.com'),
@@ -70,45 +78,49 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-        {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: true,
-              cookie_flags: 'SameSite=None;Secure',
-              // Enhanced measurement
-              enhanced_conversions: true,
-              // Custom dimensions
-              custom_map: {
-                'dimension1': 'user_type',
-                'dimension2': 'scan_score',
-                'dimension3': 'platform_detected'
-              }
-            });
-
-            // Track page visibility
-            document.addEventListener('visibilitychange', function() {
-              if (document.visibilityState === 'hidden') {
-                gtag('event', 'page_hidden', {
+        {/* Google Analytics 4 - Only loads when GA_MEASUREMENT_ID is set */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}', {
                   page_title: document.title,
-                  time_on_page: Math.round(performance.now() / 1000)
+                  page_location: window.location.href,
+                  send_page_view: true,
+                  cookie_flags: 'SameSite=None;Secure',
+                  // Enhanced measurement
+                  enhanced_conversions: true,
+                  // Custom dimensions
+                  custom_map: {
+                    'dimension1': 'user_type',
+                    'dimension2': 'scan_score',
+                    'dimension3': 'platform_detected'
+                  }
                 });
-              }
-            });
-          `}
-        </Script>
+
+                // Track page visibility
+                document.addEventListener('visibilitychange', function() {
+                  if (document.visibilityState === 'hidden') {
+                    gtag('event', 'page_hidden', {
+                      page_title: document.title,
+                      time_on_page: Math.round(performance.now() / 1000)
+                    });
+                  }
+                });
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Plausible Analytics - Privacy-friendly, no cookies */}
-        <script defer data-domain="inclusiv.app" src="https://plausible.io/js/script.js"></script>
+        <script defer data-domain="tryinclusiv.com" src="https://plausible.io/js/script.js"></script>
 
         {/* Custom event tracking utilities */}
         <Script id="custom-analytics" strategy="afterInteractive">
