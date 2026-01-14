@@ -503,19 +503,18 @@ export default function Home() {
                       </div>
                     </div>
                     <a
-                      href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => trackCtaClick("upgrade_cta", "Get Full Compliance", "scan_results")}
+                      href="/pricing"
+                      onClick={() => trackCtaClick("upgrade_cta", "View Compliance Plans", "scan_results")}
                       className="flex items-center justify-center gap-2 w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 whitespace-nowrap"
                     >
                       <Zap className="w-4 h-4" />
-                      Get Full Compliance - €499/mo
+                      Get Full Compliance
                     </a>
                   </div>
                   <div className="mt-4 pt-4 border-t border-green-500/20">
                     <p className="text-zinc-400 text-sm">
-                      <span className="text-white font-medium">Want us to fix everything?</span> Our team handles full WCAG 2.1 AA compliance - audits, fixes, and ongoing monitoring.
+                      <span className="text-white font-medium">Want us to fix everything?</span> Our team handles full WCAG 2.1 AA compliance - audits, fixes, and ongoing monitoring.{" "}
+                      <a href="/pricing" className="text-indigo-400 hover:text-indigo-300 underline">View all plans →</a>
                     </p>
                   </div>
                 </div>
@@ -632,16 +631,17 @@ export default function Home() {
                   <ArrowRight className="w-5 h-5" />
                 </button>
                 <a
-                  href="https://buy.stripe.com/9B64gB1segodg1Oae7cjS00"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => trackCtaClick("buy_now_cta", "Get Full Service", "footer_cta")}
+                  href="/pricing"
+                  onClick={() => trackCtaClick("pricing_cta", "View All Plans", "footer_cta")}
                   className="px-6 py-4 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-all inline-flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25"
                 >
                   <Zap className="w-5 h-5" />
-                  Get Full Service - €499/mo
+                  View Plans from €49/mo
                 </a>
               </div>
+              <p className="text-zinc-500 text-sm mt-4">
+                Plans from €49/mo for self-service to €499/mo for done-for-you compliance
+              </p>
             </div>
           </div>
         </div>
