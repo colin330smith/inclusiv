@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { promises as fs } from 'fs';
 import path from 'path';
+import { supabaseAdmin } from '@/lib/supabase';
 
 const getStripe = () => {
   if (!process.env.STRIPE_SECRET_KEY) {
@@ -249,6 +250,24 @@ export async function POST(request: NextRequest) {
           updatedAt: new Date().toISOString(),
         });
 
+        // Update user in Supabase
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: updateError } = await (supabaseAdmin as any)
+          .from('users')
+          .update({
+            subscription_tier: plan as 'starter' | 'professional' | 'enterprise',
+            subscription_status: 'active',
+            stripe_customer_id: session.customer as string,
+            subscription_id: session.subscription as string,
+          })
+          .eq('email', email.toLowerCase());
+
+        if (updateError) {
+          console.error('Failed to update user subscription in Supabase:', updateError);
+        } else {
+          console.log('User subscription updated in Supabase:', email);
+        }
+
         // Send welcome email
         await sendWelcomeEmail(email, plan);
       }
@@ -264,6 +283,20 @@ export async function POST(request: NextRequest) {
     case 'customer.subscription.deleted': {
       const subscription = event.data.object as Stripe.Subscription;
       console.log('Subscription cancelled:', subscription.id);
+
+      // Update user in Supabase
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const { error: cancelError } = await (supabaseAdmin as any)
+        .from('users')
+        .update({
+          subscription_status: 'canceled',
+          subscription_tier: 'free',
+        })
+        .eq('subscription_id', subscription.id);
+
+      if (cancelError) {
+        console.error('Failed to update cancelled subscription in Supabase:', cancelError);
+      }
       break;
     }
 
@@ -280,8 +313,21 @@ export async function POST(request: NextRequest) {
       const invoice = event.data.object as Stripe.Invoice;
       console.log('Payment failed:', invoice.customer_email);
 
-      // Send dunning email
+      // Update user status in Supabase
       if (invoice.customer_email) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const { error: failError } = await (supabaseAdmin as any)
+          .from('users')
+          .update({
+            subscription_status: 'past_due',
+          })
+          .eq('email', invoice.customer_email.toLowerCase());
+
+        if (failError) {
+          console.error('Failed to update past_due status in Supabase:', failError);
+        }
+
+        // Send dunning email
         await sendPaymentFailedEmail(invoice.customer_email);
       }
       break;

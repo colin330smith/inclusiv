@@ -350,5 +350,29 @@ export class EmailScheduler {
   }
 }
 
-// Export singleton instance
-export const emailScheduler = new EmailScheduler();
+// Export singleton instance with Supabase adapter for production
+// Import dynamically to avoid circular dependencies
+let _emailScheduler: EmailScheduler | null = null;
+
+export function getEmailScheduler(): EmailScheduler {
+  if (!_emailScheduler) {
+    // Only use Supabase adapter if environment variables are set
+    if (process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.SUPABASE_SERVICE_ROLE_KEY) {
+      // Dynamic import to avoid issues during build
+      const { supabaseEmailAdapter } = require('./db/email-db-adapter');
+      _emailScheduler = new EmailScheduler(supabaseEmailAdapter);
+    } else {
+      // Fallback to in-memory for development without Supabase
+      console.warn('⚠️ Using in-memory email storage - data will be lost on restart');
+      _emailScheduler = new EmailScheduler();
+    }
+  }
+  return _emailScheduler;
+}
+
+// For backwards compatibility - lazy initialization
+export const emailScheduler = new Proxy({} as EmailScheduler, {
+  get(_, prop) {
+    return (getEmailScheduler() as unknown as Record<string | symbol, unknown>)[prop];
+  },
+});
