@@ -11,6 +11,7 @@ import {
   HelpCircle,
   FileText,
   TrendingUp,
+  Gift,
 } from 'lucide-react';
 
 interface DashboardSidebarProps {
@@ -30,6 +31,7 @@ const navigation = [
 ];
 
 const secondaryNavigation = [
+  { name: 'Referrals', href: '/dashboard/referrals', icon: Gift, highlight: true },
   { name: 'Billing', href: '/dashboard/billing', icon: CreditCard },
   { name: 'Settings', href: '/dashboard/settings', icon: Settings },
   { name: 'Help', href: '/dashboard/help', icon: HelpCircle },
@@ -103,6 +105,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           {secondaryNavigation.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
+            const highlight = 'highlight' in item && item.highlight;
 
             return (
               <Link
@@ -111,11 +114,18 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
                 className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   active
                     ? 'bg-indigo-500/10 text-indigo-400'
+                    : highlight
+                    ? 'text-green-400 hover:text-green-300 hover:bg-green-500/10'
                     : 'text-zinc-400 hover:text-white hover:bg-zinc-800'
                 }`}
               >
                 <Icon className="w-5 h-5" />
                 {item.name}
+                {highlight && !active && (
+                  <span className="ml-auto text-[10px] bg-green-500/20 text-green-400 px-1.5 py-0.5 rounded-full">
+                    Earn
+                  </span>
+                )}
               </Link>
             );
           })}

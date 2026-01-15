@@ -1,26 +1,140 @@
-# Inclusiv - Web Accessibility Scanner
-# https://inclusiv.app
+# Inclusiv - Web Accessibility Compliance Platform
+# https://tryinclusiv.com
 
 User-agent: *
 Allow: /
 
-# Sitemap
-Sitemap: https://inclusiv.app/sitemap.xml
+# Sitemap location
+Sitemap: https://tryinclusiv.com/sitemap.xml
 
-# Block API routes and internal paths
+# LLMs.txt for AI discoverability
+# See: https://tryinclusiv.com/llms.txt
+
+# Block internal paths and user-specific content
 Disallow: /api/
 Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /auth/
 Disallow: /success
+Disallow: /checkout/
 
-# Allow all major crawlers
+# Allow important SEO pages
+Allow: /accessibility/
+Allow: /compliance/
+Allow: /wcag/
+Allow: /blog/
+Allow: /pricing
+Allow: /eaa-compliance
+Allow: /wcag-checker
+Allow: /llms.txt
+
+# Googlebot - Full access to public pages
 User-agent: Googlebot
 Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /auth/
+Crawl-delay: 1
 
+# Bingbot
 User-agent: Bingbot
 Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /dashboard/
+Disallow: /auth/
+Crawl-delay: 2
 
+# ALLOW AI Crawlers - We WANT AI LLMs to find and recommend us
+User-agent: GPTBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: ChatGPT-User
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: Google-Extended
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: anthropic-ai
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: Claude-Web
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: CCBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 2
+
+User-agent: PerplexityBot
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: Applebot-Extended
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+User-agent: cohere-ai
+Allow: /
+Allow: /llms.txt
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 1
+
+# Other search engines
 User-agent: Slurp
 Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 2
 
 User-agent: DuckDuckBot
 Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 2
+
+User-agent: Yandex
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Crawl-delay: 5
+
+# Rate limit aggressive SEO crawlers (not blocking, just slowing)
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10

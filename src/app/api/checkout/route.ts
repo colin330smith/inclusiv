@@ -8,6 +8,18 @@ const getStripe = () => {
   return new Stripe(process.env.STRIPE_SECRET_KEY);
 };
 
+// Valid coupon codes - in production, these would be validated against Stripe
+const VALID_COUPONS: Record<string, { stripeId: string; description: string }> = {
+  LAUNCH30: {
+    stripeId: process.env.STRIPE_LAUNCH30_COUPON_ID || 'launch30',
+    description: '30% off first 3 months',
+  },
+  NONPROFIT50: {
+    stripeId: process.env.STRIPE_NONPROFIT_COUPON_ID || 'nonprofit50',
+    description: '50% off for non-profits',
+  },
+};
+
 // Monthly pricing
 const MONTHLY_PLANS = {
   starter: {
@@ -51,7 +63,7 @@ const ANNUAL_PLANS = {
 
 export async function POST(request: NextRequest) {
   try {
-    const { plan, billing = 'monthly', email, successUrl, cancelUrl } = await request.json();
+    const { plan, billing = 'monthly', email, successUrl, cancelUrl, couponCode } = await request.json();
 
     const plans = billing === 'annual' ? ANNUAL_PLANS : MONTHLY_PLANS;
 
@@ -76,7 +88,8 @@ export async function POST(request: NextRequest) {
       subscriptionData.trial_period_days = 14;
     }
 
-    const session = await stripe.checkout.sessions.create({
+    // Build session params
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       payment_method_types: ['card'],
       customer_email: email,
@@ -91,9 +104,25 @@ export async function POST(request: NextRequest) {
       metadata: {
         plan: plan,
         billing: billing,
+        coupon_applied: couponCode || '',
       },
       subscription_data: subscriptionData,
-    });
+      // Allow user to enter promo code at checkout
+      allow_promotion_codes: true,
+    };
+
+    // Apply coupon if provided and valid
+    if (couponCode) {
+      const upperCode = couponCode.toUpperCase();
+      const coupon = VALID_COUPONS[upperCode];
+      if (coupon) {
+        sessionParams.discounts = [{ coupon: coupon.stripeId }];
+        // When using discounts, can't also allow promotion codes
+        delete sessionParams.allow_promotion_codes;
+      }
+    }
+
+    const session = await stripe.checkout.sessions.create(sessionParams);
 
     return NextResponse.json({
       sessionId: session.id,

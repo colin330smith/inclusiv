@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { Bell, Menu, User, LogOut, Settings, CreditCard, ChevronDown } from 'lucide-react';
+import { Bell, Menu, User, LogOut, Settings, CreditCard, ChevronDown, Search } from 'lucide-react';
 
 interface DashboardHeaderProps {
   user: {
@@ -56,6 +56,24 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
 
         {/* Right Side Actions */}
         <div className="flex items-center gap-4">
+          {/* Search / Command Palette Trigger */}
+          <button
+            onClick={() => {
+              // Trigger command palette via keyboard event
+              const event = new KeyboardEvent('keydown', {
+                key: 'k',
+                metaKey: true,
+                bubbles: true,
+              });
+              document.dispatchEvent(event);
+            }}
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 text-sm text-zinc-500 bg-zinc-800/50 hover:bg-zinc-800 border border-zinc-700 rounded-lg transition-colors"
+          >
+            <Search className="w-4 h-4" />
+            <span>Search...</span>
+            <kbd className="ml-2 px-1.5 py-0.5 text-xs bg-zinc-700 rounded">⌘K</kbd>
+          </button>
+
           {/* Notifications */}
           <button className="relative p-2 text-zinc-400 hover:text-white transition-colors">
             <Bell className="w-5 h-5" />

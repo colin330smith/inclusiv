@@ -4,6 +4,12 @@ import Script from "next/script";
 import "./globals.css";
 import LeadCaptureProvider from "@/components/LeadCaptureProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
+import { MainPageJsonLd } from "@/components/JsonLd";
+import { Suspense } from "react";
+import ReferralTracker from "@/components/ReferralTracker";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import StickyPricingCta from "@/components/StickyPricingCta";
+import TrackingPixels from "@/components/TrackingPixels";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -47,12 +53,21 @@ export const metadata: Metadata = {
     siteName: "Inclusiv",
     locale: "en_US",
     url: "https://tryinclusiv.com",
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Inclusiv - Free EAA Accessibility Scanner',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free EAA Accessibility Scanner",
     description: "Check your website's EAA compliance in 30 seconds. Free scan, no signup required.",
     creator: "@inclusivapp",
+    images: ['/twitter-image'],
   },
   alternates: {
     canonical: "https://tryinclusiv.com",
@@ -70,6 +85,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* JSON-LD Structured Data for SEO */}
+        <MainPageJsonLd />
+
         {/* Google Analytics 4 */}
         <Script
           src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
@@ -157,7 +175,20 @@ export default function RootLayout({
       >
         <SessionProvider>
           <LeadCaptureProvider>
+            {/* Track referral codes from URL */}
+            <Suspense fallback={null}>
+              <ReferralTracker />
+            </Suspense>
+            {/* Urgency announcement bar */}
+            <AnnouncementBar />
             {children}
+            {/* Sticky pricing CTA */}
+            <StickyPricingCta />
+            {/* Lead capture components (SocialProofToast, LiveChatWidget, ExitIntent) are rendered by LeadCaptureProvider */}
+            {/* Retargeting pixels for Facebook, Google Ads, LinkedIn, TikTok */}
+            <Suspense fallback={null}>
+              <TrackingPixels />
+            </Suspense>
           </LeadCaptureProvider>
         </SessionProvider>
       </body>

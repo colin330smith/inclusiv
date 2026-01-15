@@ -155,11 +155,97 @@ async function sendWelcomeEmail(email: string, plan: string) {
   }
 }
 
+async function sendAbandonedCheckoutEmail(email: string, plan: string) {
+  const resend = getResend();
+  if (!resend) return;
+
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://tryinclusiv.com';
+
+  // Calculate savings with launch discount
+  const prices: Record<string, { monthly: number; discounted: number }> = {
+    starter: { monthly: 49, discounted: 34 },
+    professional: { monthly: 149, discounted: 104 },
+    enterprise: { monthly: 499, discounted: 349 },
+  };
+
+  const planPrices = prices[plan] || prices.professional;
+  const savings = (planPrices.monthly - planPrices.discounted) * 3;
+
+  try {
+    await resend.emails.send({
+      from: 'Inclusiv <hello@tryinclusiv.com>',
+      to: email,
+      subject: 'You left something behind (+ a special offer)',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <style>
+            body { font-family: system-ui, -apple-system, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px; }
+            h1 { color: #6366f1; }
+            .cta { display: inline-block; padding: 16px 32px; background: #6366f1; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; }
+            .highlight { background: #f0f9ff; border-left: 4px solid #6366f1; padding: 16px; margin: 20px 0; }
+            .urgency { background: #fef3c7; border-left: 4px solid #f59e0b; padding: 16px; margin: 20px 0; }
+            .discount { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; padding: 20px; border-radius: 12px; text-align: center; margin: 20px 0; }
+            .discount code { background: rgba(255,255,255,0.2); padding: 4px 12px; border-radius: 4px; font-size: 18px; }
+            .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; color: #666; font-size: 14px; }
+          </style>
+        </head>
+        <body>
+          <h1>Almost there! 🛒</h1>
+
+          <p>Hi there,</p>
+
+          <p>I noticed you were checking out the <strong>${plan.charAt(0).toUpperCase() + plan.slice(1)}</strong> plan but didn't complete your purchase. No worries—I wanted to make sure nothing went wrong.</p>
+
+          <div class="urgency">
+            <strong>⚠️ EAA Deadline Alert:</strong> The European Accessibility Act enforcement deadline has passed (June 28, 2025). Non-compliant businesses now face fines up to €100,000.
+          </div>
+
+          <div class="discount">
+            <p style="margin:0 0 10px 0; font-size: 14px; opacity: 0.9;">EXCLUSIVE LAUNCH OFFER</p>
+            <p style="margin:0 0 10px 0; font-size: 28px; font-weight: bold;">30% OFF First 3 Months</p>
+            <p style="margin:0;">Use code: <code>LAUNCH30</code></p>
+            <p style="margin:10px 0 0 0; font-size: 14px;">Save €${savings} on your subscription</p>
+          </div>
+
+          <p style="text-align: center; margin: 30px 0;">
+            <a href="${appUrl}/pricing?coupon=LAUNCH30" class="cta">Complete Your Purchase →</a>
+          </p>
+
+          <div class="highlight">
+            <strong>Why businesses choose Inclusiv:</strong>
+            <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+              <li>Full WCAG 2.1 AA compliance scanning</li>
+              <li>AI-powered fix suggestions with exact code</li>
+              <li>Compliance certificates for regulators</li>
+              <li>30-day money-back guarantee</li>
+            </ul>
+          </div>
+
+          <p>If you have any questions or ran into an issue, just reply to this email. I'm here to help.</p>
+
+          <div class="footer">
+            <p>Best,<br><strong>The Inclusiv Team</strong></p>
+            <p style="color: #999; font-size: 12px;">
+              <a href="${appUrl}/unsubscribe?email=${encodeURIComponent(email)}" style="color: #999;">Unsubscribe</a>
+            </p>
+          </div>
+        </body>
+        </html>
+      `,
+    });
+    console.log('Abandoned checkout email sent to:', email);
+  } catch (error) {
+    console.error('Failed to send abandoned checkout email:', error);
+  }
+}
+
 async function sendPaymentFailedEmail(email: string) {
   const resend = getResend();
   if (!resend) return;
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://inclusiv-xi.vercel.app';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://tryinclusiv.com';
 
   try {
     await resend.emails.send({
@@ -329,6 +415,25 @@ export async function POST(request: NextRequest) {
 
         // Send dunning email
         await sendPaymentFailedEmail(invoice.customer_email);
+      }
+      break;
+    }
+
+    case 'checkout.session.expired': {
+      // Abandoned checkout - session expired without completing
+      const session = event.data.object as Stripe.Checkout.Session;
+      const email = session.customer_email;
+      const plan = session.metadata?.plan || 'professional';
+
+      console.log('ABANDONED CHECKOUT:', {
+        email,
+        plan,
+        sessionId: session.id,
+      });
+
+      // Send recovery email with discount
+      if (email) {
+        await sendAbandonedCheckoutEmail(email, plan);
       }
       break;
     }
