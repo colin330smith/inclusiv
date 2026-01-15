@@ -19,7 +19,7 @@ export async function GET() {
       <description><![CDATA[${post.excerpt}]]></description>
       <pubDate>${pubDate}</pubDate>
       <category><![CDATA[${post.category}]]></category>
-      <author>hello@inclusiv.dev (${post.author.name})</author>
+      <author>hello@tryinclusiv.com (${post.author.name})</author>
     </item>`;
     })
     .join('');
@@ -39,8 +39,8 @@ export async function GET() {
       <link>${baseUrl}/blog</link>
     </image>
     <copyright>© ${new Date().getFullYear()} Inclusiv. All rights reserved.</copyright>
-    <webMaster>hello@inclusiv.dev (Inclusiv Team)</webMaster>
-    <managingEditor>hello@inclusiv.dev (Inclusiv Team)</managingEditor>
+    <webMaster>hello@tryinclusiv.com (Inclusiv Team)</webMaster>
+    <managingEditor>hello@tryinclusiv.com (Inclusiv Team)</managingEditor>
     <category>Web Accessibility</category>
     <category>WCAG Compliance</category>
     <category>European Accessibility Act</category>

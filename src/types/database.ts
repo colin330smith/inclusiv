@@ -221,6 +221,7 @@ export interface Database {
           last_scan_score: number | null;
           last_scanned_at: string | null;
           scan_frequency: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled: boolean;
           alert_on_score_change: boolean;
           alert_threshold: number;
           created_at: string;
@@ -235,6 +236,7 @@ export interface Database {
           last_scan_score?: number | null;
           last_scanned_at?: string | null;
           scan_frequency?: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled?: boolean;
           alert_on_score_change?: boolean;
           alert_threshold?: number;
           created_at?: string;
@@ -249,6 +251,7 @@ export interface Database {
           last_scan_score?: number | null;
           last_scanned_at?: string | null;
           scan_frequency?: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled?: boolean;
           alert_on_score_change?: boolean;
           alert_threshold?: number;
           created_at?: string;

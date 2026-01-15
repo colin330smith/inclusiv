@@ -29,11 +29,12 @@ export interface GeoPricing {
   discountPercent: number;
 }
 
-// Base prices in EUR
+// Base prices in EUR - Updated for sustainable B2B SaaS economics
+// These prices reflect the value of EAA compliance and support sustainable CAC
 const BASE_PRICES = {
-  starter: { monthly: 49, annual: 39 },
-  professional: { monthly: 149, annual: 119 },
-  enterprise: { monthly: 499, annual: 399 },
+  starter: { monthly: 99, annual: 79 },        // Was €49 - too low for CAC recovery
+  professional: { monthly: 299, annual: 239 }, // Was €149 - professional compliance needs premium pricing
+  enterprise: { monthly: 899, annual: 719 },   // Was €499 - enterprise deals support higher pricing
 };
 
 // Currency symbols and exchange rates (approximate - update regularly)

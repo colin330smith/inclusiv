@@ -84,7 +84,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
               <span>Inclusiv</span>
             </div>
             <p className="text-zinc-600 text-sm mt-2">
-              Need help? Contact support@inclusiv.eu
+              Need help? Contact support@tryinclusiv.com
             </p>
           </div>
         </div>
@@ -167,7 +167,7 @@ export default async function SuccessPage({ searchParams }: SuccessPageProps) {
             <span>Inclusiv</span>
           </div>
           <p className="text-zinc-600 text-sm mt-2">
-            Questions? Reply to any email from us or contact support@inclusiv.eu
+            Questions? Reply to any email from us or contact support@tryinclusiv.com
           </p>
         </div>
       </div>

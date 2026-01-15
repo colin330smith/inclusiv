@@ -5,6 +5,8 @@ import PricingTracker from "./PricingTracker";
 import PricingCards from "./PricingCards";
 import { SiteFooter } from "@/components/seo/SiteFooter";
 import LaunchDiscountBanner from "@/components/LaunchDiscountBanner";
+import { EAACountdown } from "@/components/EAACountdown";
+import { SocialProofTicker } from "@/components/SocialProofTicker";
 import FineCalculator from "@/components/FineCalculator";
 
 export const metadata: Metadata = {
@@ -105,18 +107,13 @@ export default function PricingPage() {
         </div>
       </header>
 
+      {/* EAA Deadline Urgency Banner */}
+      <EAACountdown variant="banner" showCTA={false} />
+
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Urgency Banner */}
-        <div className="mb-8 p-4 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 border border-red-500/20 rounded-2xl">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <span className="font-semibold text-red-400">EAA Deadline: June 28, 2025</span>
-            </div>
-            <span className="hidden sm:inline text-zinc-600">|</span>
-            <span className="text-zinc-400 text-sm sm:text-base">Non-compliant sites face fines up to €100,000</span>
-          </div>
-        </div>
 
         {/* Info Banner */}
         <div className="mb-12 p-4 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-2xl">

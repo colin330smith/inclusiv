@@ -5,6 +5,7 @@ import "./globals.css";
 import LeadCaptureProvider from "@/components/LeadCaptureProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
 import { MainPageJsonLd } from "@/components/JsonLd";
+import { ToastProvider } from "@/components/Toast";
 import { Suspense } from "react";
 import ReferralTracker from "@/components/ReferralTracker";
 import AnnouncementBar from "@/components/AnnouncementBar";
@@ -174,6 +175,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
+          <ToastProvider>
           <LeadCaptureProvider>
             {/* Track referral codes from URL */}
             <Suspense fallback={null}>
@@ -190,6 +192,7 @@ export default function RootLayout({
               <TrackingPixels />
             </Suspense>
           </LeadCaptureProvider>
+          </ToastProvider>
         </SessionProvider>
       </body>
     </html>

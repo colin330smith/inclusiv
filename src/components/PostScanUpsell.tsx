@@ -191,7 +191,7 @@ export default function PostScanUpsell({
               className="flex items-center justify-center gap-2 w-full py-4 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg"
             >
               <Zap className="w-5 h-5" />
-              Get Full Compliance from €49/mo
+              Get Full Compliance from €99/mo
               <ArrowRight className="w-5 h-5" />
             </Link>
 

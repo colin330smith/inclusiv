@@ -119,10 +119,34 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: '/resources/email-templates', priority: 0.8, changeFrequency: 'monthly' as const },
     { url: '/resources/social-media-content', priority: 0.8, changeFrequency: 'monthly' as const },
     { url: '/tools/contrast-checker', priority: 0.8, changeFrequency: 'monthly' as const },
-    { url: '/tools/heading-checker', priority: 0.75, changeFrequency: 'monthly' as const },
-    { url: '/tools/alt-text-checker', priority: 0.75, changeFrequency: 'monthly' as const },
-    { url: '/roi-calculator', priority: 0.8, changeFrequency: 'monthly' as const },
+    { url: '/tools/heading-checker', priority: 0.8, changeFrequency: 'monthly' as const },
+    { url: '/tools/aria-checker', priority: 0.8, changeFrequency: 'monthly' as const },
+    { url: '/tools/alt-text-generator', priority: 0.8, changeFrequency: 'monthly' as const },
+    { url: '/roi-calculator', priority: 0.85, changeFrequency: 'monthly' as const },
     { url: '/lp/eaa-compliance', priority: 0.9, changeFrequency: 'weekly' as const },
+    { url: '/tools', priority: 0.85, changeFrequency: 'weekly' as const },
+  ]
+
+  // Viral/Growth pages
+  const viralPages = [
+    { url: '/leaderboard', priority: 0.75, changeFrequency: 'daily' as const },
+    { url: '/widget', priority: 0.75, changeFrequency: 'monthly' as const },
+    { url: '/compare', priority: 0.8, changeFrequency: 'weekly' as const },
+    { url: '/benchmarks', priority: 0.8, changeFrequency: 'weekly' as const },
+    { url: '/referral', priority: 0.6, changeFrequency: 'monthly' as const },
+  ]
+
+  // Integration pages
+  const integrationPages = [
+    { url: '/integrations', priority: 0.8, changeFrequency: 'weekly' as const },
+    { url: '/integrations/github-action', priority: 0.75, changeFrequency: 'monthly' as const },
+    { url: '/extension', priority: 0.75, changeFrequency: 'monthly' as const },
+    { url: '/api-docs', priority: 0.8, changeFrequency: 'weekly' as const },
+  ]
+
+  // Partner pages
+  const partnerPages = [
+    { url: '/partners', priority: 0.75, changeFrequency: 'monthly' as const },
   ]
 
   // Blog/content hub pages
@@ -199,6 +223,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...geoPages,
     ...wcagPages,
     ...resourcePages,
+    ...viralPages,
+    ...integrationPages,
+    ...partnerPages,
     ...blogPages,
     ...dynamicBlogPosts,
     ...blogCategoryPages,

@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Shield } from 'lucide-react';
+import { SocialProofTicker } from '@/components/SocialProofTicker';
 
 export const metadata: Metadata = {
   title: 'EU Accessibility Requirements 2025 | Complete Guide',
@@ -15,6 +16,9 @@ export const metadata: Metadata = {
 export default function EUAccessibilityPage() {
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
       <div className="max-w-4xl mx-auto px-6 py-16">
         <h1 className="text-4xl md:text-5xl font-bold mb-6">
           EU Accessibility Requirements 2025

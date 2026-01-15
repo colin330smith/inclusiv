@@ -144,7 +144,7 @@ export function baseTemplate(content: string, previewText?: string): string {
                   <td align="center" style="padding-bottom: 16px;">
                     <a href="https://inclusiv.app" style="color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; margin: 0 12px;">Website</a>
                     <a href="https://inclusiv.app/pricing" style="color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; margin: 0 12px;">Pricing</a>
-                    <a href="mailto:support@inclusiv.app" style="color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; margin: 0 12px;">Support</a>
+                    <a href="mailto:support@tryinclusiv.com" style="color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; margin: 0 12px;">Support</a>
                   </td>
                 </tr>
                 <tr>

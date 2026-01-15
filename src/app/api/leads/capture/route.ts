@@ -222,7 +222,7 @@ async function sendWelcomeEmail(email: string, leadMagnet: string, url?: string)
 
   try {
     await resend.emails.send({
-      from: "Inclusiv <hello@inclusiv.dev>",
+      from: "Inclusiv <hello@tryinclusiv.com>",
       to: email,
       subject: template.subject,
       html: `

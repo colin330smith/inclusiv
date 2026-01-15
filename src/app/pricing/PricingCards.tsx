@@ -102,16 +102,16 @@ const plans = [
   },
 ];
 
-// Default EUR pricing
+// Default EUR pricing - Updated for sustainable B2B SaaS
 const defaultPricing: GeoPricing = {
   currency: 'EUR',
   currencySymbol: '€',
   exchangeRate: 1,
   pppMultiplier: 1,
   prices: {
-    starter: { monthly: 49, annual: 39 },
-    professional: { monthly: 149, annual: 119 },
-    enterprise: { monthly: 499, annual: 399 },
+    starter: { monthly: 99, annual: 79 },
+    professional: { monthly: 299, annual: 239 },
+    enterprise: { monthly: 899, annual: 719 },
   },
   showOriginalPrices: false,
   discountPercent: 0,

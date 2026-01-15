@@ -20,22 +20,22 @@ const VALID_COUPONS: Record<string, { stripeId: string; description: string }> =
   },
 };
 
-// Monthly pricing
+// Monthly pricing - Updated for sustainable B2B economics
 const MONTHLY_PLANS = {
   starter: {
     priceId: process.env.STRIPE_STARTER_PRICE_ID!,
     name: 'Starter',
-    amount: 4900, // €49
+    amount: 9900, // €99 (was €49)
   },
   professional: {
     priceId: process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
     name: 'Professional',
-    amount: 14900, // €149
+    amount: 29900, // €299 (was €149)
   },
   enterprise: {
     priceId: process.env.STRIPE_ENTERPRISE_PRICE_ID!,
     name: 'Enterprise',
-    amount: 49900, // €499
+    amount: 89900, // €899 (was €499)
   },
 };
 
@@ -44,19 +44,19 @@ const ANNUAL_PLANS = {
   starter: {
     priceId: process.env.STRIPE_STARTER_ANNUAL_PRICE_ID || process.env.STRIPE_STARTER_PRICE_ID!,
     name: 'Starter Annual',
-    amount: 47000, // €470/year (~€39/mo)
+    amount: 94800, // €948/year (~€79/mo)
     fallback: !process.env.STRIPE_STARTER_ANNUAL_PRICE_ID,
   },
   professional: {
     priceId: process.env.STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID || process.env.STRIPE_PROFESSIONAL_PRICE_ID!,
     name: 'Professional Annual',
-    amount: 143000, // €1,430/year (~€119/mo)
+    amount: 286800, // €2,868/year (~€239/mo)
     fallback: !process.env.STRIPE_PROFESSIONAL_ANNUAL_PRICE_ID,
   },
   enterprise: {
     priceId: process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID || process.env.STRIPE_ENTERPRISE_PRICE_ID!,
     name: 'Enterprise Annual',
-    amount: 479000, // €4,790/year (~€399/mo)
+    amount: 862800, // €8,628/year (~€719/mo)
     fallback: !process.env.STRIPE_ENTERPRISE_ANNUAL_PRICE_ID,
   },
 };

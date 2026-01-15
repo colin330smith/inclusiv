@@ -175,7 +175,7 @@ const faqCategories = [
       {
         id: "contact-support",
         question: "How do I contact support?",
-        answer: "You can reach our support team via: Email at support@inclusiv.eu (response within 24 hours for all users, 4 hours for Professional, 1 hour for Enterprise). Our Help Center at /help has guides and tutorials. Professional and Enterprise customers have access to priority support queues and dedicated Slack channels. Enterprise customers have a dedicated account manager available by phone."
+        answer: "You can reach our support team via: Email at support@tryinclusiv.com (response within 24 hours for all users, 4 hours for Professional, 1 hour for Enterprise). Our Help Center at /help has guides and tutorials. Professional and Enterprise customers have access to priority support queues and dedicated Slack channels. Enterprise customers have a dedicated account manager available by phone."
       },
       {
         id: "refund-policy",

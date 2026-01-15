@@ -117,7 +117,7 @@ export async function POST(request: NextRequest) {
 
       try {
         await resend.emails.send({
-          from: 'Inclusiv <hello@inclusiv.dev>',
+          from: 'Inclusiv <hello@tryinclusiv.com>',
           to: email,
           subject: `${referrerName} thinks you should check out Inclusiv (+ 20% off inside)`,
           html: `
@@ -177,7 +177,7 @@ export async function POST(request: NextRequest) {
 
         // Also notify the referrer
         await resend.emails.send({
-          from: 'Inclusiv <hello@inclusiv.dev>',
+          from: 'Inclusiv <hello@tryinclusiv.com>',
           to: user.email,
           subject: `Invite sent to ${email}!`,
           html: `

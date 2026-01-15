@@ -18,6 +18,9 @@ import { AB_TESTS, trackConversion } from "@/lib/ab-testing";
 import { getFixForIssue, getPlatformFix, accessibilityFixes } from "@/lib/accessibility-fixes";
 import { downloadPDFReport } from "@/components/PDFReport";
 import ShareResults from "@/components/ShareResults";
+import RealtimeSocialProof from "@/components/RealtimeSocialProof";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
+import { SocialProofTicker } from "@/components/SocialProofTicker";
 
 type ScanResult = {
   score: number;
@@ -311,6 +314,9 @@ export default function Home() {
           </div>
         </div>
       </header>
+
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
 
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6 py-16">
@@ -931,6 +937,12 @@ export default function Home() {
           delay={3000}
         />
       )}
+
+      {/* Real-time social proof notifications */}
+      <RealtimeSocialProof />
+
+      {/* Exit intent popup for lead capture */}
+      <ExitIntentPopup />
     </div>
   );
 }

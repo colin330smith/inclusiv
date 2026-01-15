@@ -1,5 +1,9 @@
 import { NextResponse } from "next/server";
 import { chromium, Browser } from "playwright-core";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { getSupabaseAdmin, isSupabaseConfigured } from "@/lib/supabase";
+import type { ScanInsert } from "@/types/database";
 
 // Platform detection patterns
 const platformPatterns = {
@@ -64,7 +68,7 @@ const issueDescriptions: Record<string, string> = {
   "tabindex": "Elements have a tabindex greater than 0",
 };
 
-// Simple in-memory rate limiting (per IP)
+// Simple in-memory rate limiting (per IP) - will be upgraded to Redis for multi-instance
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 const RATE_LIMIT = 10;
 const RATE_WINDOW = 60 * 1000;
@@ -122,6 +126,91 @@ async function connectWithRetry(endpoint: string, maxRetries: number = 3): Promi
   throw lastError || new Error("Connection failed after retries");
 }
 
+// JSON type compatible with Supabase
+type JsonValue = string | number | boolean | null | JsonValue[] | { [key: string]: JsonValue };
+
+// Save scan to database
+async function saveScanToDatabase(scanData: {
+  url: string;
+  userId?: string | null;
+  siteId?: string | null;
+  score: number;
+  totalIssues: number;
+  criticalIssues: number;
+  seriousIssues: number;
+  moderateIssues: number;
+  minorIssues: number;
+  platform: string;
+  scanResults: JsonValue;
+  ipAddress: string;
+  isAnonymous: boolean;
+}): Promise<string | null> {
+  if (!isSupabaseConfigured()) {
+    console.log("Supabase not configured, skipping scan persistence");
+    return null;
+  }
+
+  try {
+    const supabase = getSupabaseAdmin();
+
+    const scanInsert: ScanInsert = {
+      url: scanData.url,
+      user_id: scanData.userId || null,
+      site_id: scanData.siteId || null,
+      status: 'completed',
+      scan_type: 'quick',
+      score: scanData.score,
+      total_issues: scanData.totalIssues,
+      critical_issues: scanData.criticalIssues,
+      serious_issues: scanData.seriousIssues,
+      moderate_issues: scanData.moderateIssues,
+      minor_issues: scanData.minorIssues,
+      platform_detected: scanData.platform,
+      scan_results: scanData.scanResults,
+      ip_address: scanData.ipAddress,
+      is_anonymous: scanData.isAnonymous,
+      completed_at: new Date().toISOString(),
+    };
+
+    // Type assertion to work around Supabase proxy type inference during build
+    const { data, error } = await (supabase
+      .from('scans') as ReturnType<typeof supabase.from>)
+      .insert(scanInsert as Record<string, unknown>)
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error("Failed to save scan:", error);
+      return null;
+    }
+
+    console.log("Scan saved successfully:", data.id);
+    return data.id;
+  } catch (error) {
+    console.error("Error saving scan to database:", error);
+    return null;
+  }
+}
+
+// Update site's last scan info
+async function updateSiteLastScan(siteId: string, scanId: string, score: number): Promise<void> {
+  if (!isSupabaseConfigured()) return;
+
+  try {
+    const supabase = getSupabaseAdmin();
+    await (supabase
+      .from('sites') as ReturnType<typeof supabase.from>)
+      .update({
+        last_scan_id: scanId,
+        last_scan_score: score,
+        last_scanned_at: new Date().toISOString(),
+      } as Record<string, unknown>)
+      .eq('id', siteId);
+  } catch (error) {
+    console.error("Error updating site last scan:", error);
+  }
+}
+
 export async function POST(request: Request) {
   let browser: Browser | null = null;
   const startTime = Date.now();
@@ -136,8 +225,21 @@ export async function POST(request: Request) {
     );
   }
 
+  // Check for authenticated user
+  let userId: string | null = null;
+  let siteId: string | null = null;
+
   try {
-    const { url } = await request.json();
+    const session = await getServerSession(authOptions);
+    userId = session?.user?.id || null;
+  } catch {
+    // Not authenticated, continue as anonymous scan
+  }
+
+  try {
+    const body = await request.json();
+    const { url, site_id } = body;
+    siteId = site_id || null;
 
     if (!url) {
       return NextResponse.json({ error: "URL is required" }, { status: 400 });
@@ -218,20 +320,34 @@ export async function POST(request: Request) {
       });
     });
 
-    const issueMap = new Map<string, { id: string; impact: string; description: string; count: number }>();
+    const issueMap = new Map<string, { id: string; impact: string; description: string; count: number; wcagTags: string[] }>();
+
+    // Count issues by severity
+    let seriousCount = 0;
+    let moderateCount = 0;
+    let minorCount = 0;
+    let criticalCount = 0;
 
     for (const violation of axeResults.violations) {
       const existing = issueMap.get(violation.id);
       const count = violation.nodes.length;
+      const impact = violation.impact || "moderate";
+
+      // Track severity counts
+      if (impact === "critical") criticalCount += count;
+      else if (impact === "serious") seriousCount += count;
+      else if (impact === "moderate") moderateCount += count;
+      else minorCount += count;
 
       if (existing) {
         existing.count += count;
       } else {
         issueMap.set(violation.id, {
           id: violation.id,
-          impact: violation.impact || "moderate",
+          impact,
           description: issueDescriptions[violation.id] || violation.help || violation.description,
           count,
+          wcagTags: violation.tags?.filter((t: string) => t.startsWith('wcag')) || [],
         });
       }
     }
@@ -248,9 +364,7 @@ export async function POST(request: Request) {
       .slice(0, 10);
 
     const totalIssues = Array.from(issueMap.values()).reduce((sum, i) => sum + i.count, 0);
-    const criticalIssues = Array.from(issueMap.values())
-      .filter((i) => i.impact === "critical" || i.impact === "serious")
-      .reduce((sum, i) => sum + i.count, 0);
+    const criticalIssues = criticalCount + seriousCount; // Combined for backward compatibility
 
     let score = 100;
     for (const issue of issueMap.values()) {
@@ -262,14 +376,56 @@ export async function POST(request: Request) {
 
     await browser.close();
 
+    // Prepare full scan results for storage
+    const fullScanResults = {
+      axeViolations: axeResults.violations,
+      axePasses: axeResults.passes?.length || 0,
+      axeIncomplete: axeResults.incomplete?.length || 0,
+      topIssues,
+      allIssues: Array.from(issueMap.values()),
+      scanDuration: Date.now() - startTime,
+      wcagVersion: "2.1",
+      conformanceLevel: "AA",
+    };
+
+    // CRITICAL: Save scan to database
+    const scanId = await saveScanToDatabase({
+      url: validatedUrl.toString(),
+      userId,
+      siteId,
+      score,
+      totalIssues,
+      criticalIssues: criticalCount,
+      seriousIssues: seriousCount,
+      moderateIssues: moderateCount,
+      minorIssues: minorCount,
+      platform,
+      scanResults: fullScanResults as JsonValue,
+      ipAddress: clientIP,
+      isAnonymous: !userId,
+    });
+
+    // Update site's last scan if this was for a specific site
+    if (siteId && scanId) {
+      await updateSiteLastScan(siteId, scanId, score);
+    }
+
     return NextResponse.json({
+      id: scanId, // Return scan ID so frontend can reference it
       score,
       totalIssues,
       criticalIssues,
+      seriousIssues: seriousCount,
+      moderateIssues: moderateCount,
+      minorIssues: minorCount,
       platform,
       topIssues,
       scannedAt: new Date().toISOString(),
-      _meta: { scanDuration: Date.now() - startTime },
+      _meta: {
+        scanDuration: Date.now() - startTime,
+        persisted: !!scanId,
+        authenticated: !!userId,
+      },
     });
   } catch (error) {
     if (browser) {

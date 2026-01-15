@@ -1,5 +1,8 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
+import { Shield, AlertTriangle, CheckCircle, FileText, Scale, Clock, Zap, ArrowRight, Globe, Users, Euro, Building } from 'lucide-react';
+import { EAACountdown } from '@/components/EAACountdown';
+import { SiteFooter } from '@/components/seo/SiteFooter';
 
 export const metadata: Metadata = {
   title: 'EAA Compliance Checker | European Accessibility Act 2025',
@@ -13,19 +16,45 @@ export const metadata: Metadata = {
 
 export default function EAACompliancePage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <h1 className="text-4xl md:text-5xl font-bold mb-6">
-          European Accessibility Act (EAA) Compliance Checker
-        </h1>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Header */}
+      <header className="border-b border-zinc-800">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-indigo-500" />
+            <span className="text-xl font-bold text-white">Inclusiv</span>
+          </Link>
+          <Link
+            href="/#scanner"
+            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-500 text-white font-medium rounded-lg transition-colors text-sm"
+          >
+            Free Compliance Scan
+          </Link>
+        </div>
+      </header>
 
-        <div className="bg-red-500/20 border border-red-500 rounded-lg p-6 mb-8">
-          <p className="text-xl font-semibold text-red-300">
-            ⚠️ Deadline: June 28, 2025
+      {/* Countdown Banner */}
+      <EAACountdown variant="banner" showCTA={true} />
+
+      <main className="max-w-5xl mx-auto px-6 py-12">
+        {/* Hero */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-red-500/10 border border-red-500/30 rounded-full text-red-400 text-sm mb-6">
+            <AlertTriangle className="w-4 h-4" />
+            EAA Enforcement Active Since June 2025
+          </div>
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
+            European Accessibility Act (EAA) <span className="text-indigo-400">Compliance Checker</span>
+          </h1>
+          <p className="text-xl text-zinc-400 max-w-2xl mx-auto">
+            Check if your website meets the legal requirements of the European Accessibility Act.
+            Free scan, instant results, actionable fixes.
           </p>
-          <p className="text-red-200 mt-2">
-            Non-compliant websites face fines up to €100,000 per violation.
-          </p>
+        </div>
+
+        {/* Urgency Card */}
+        <div className="mb-12">
+          <EAACountdown variant="card" showCTA={true} />
         </div>
 
         <section className="mb-12">
@@ -73,19 +102,21 @@ export default function EAACompliancePage() {
           </div>
         </section>
 
-        <div className="bg-blue-600 rounded-xl p-8 text-center">
-          <h2 className="text-2xl font-bold mb-4">Check Your Site Now - Free</h2>
-          <p className="text-blue-100 mb-6">
+        <div className="bg-gradient-to-r from-indigo-600 to-indigo-500 rounded-xl p-8 text-center">
+          <h2 className="text-2xl font-bold text-white mb-4">Check Your Site Now - Free</h2>
+          <p className="text-indigo-100 mb-6">
             Get an instant compliance score and see exactly what needs to be fixed.
           </p>
           <Link
-            href="/"
-            className="inline-block bg-white text-blue-600 font-bold px-8 py-4 rounded-lg hover:bg-blue-50 transition"
+            href="/#scanner"
+            className="inline-block bg-white text-indigo-600 font-bold px-8 py-4 rounded-lg hover:bg-indigo-50 transition"
           >
             Free EAA Compliance Scan →
           </Link>
         </div>
-      </div>
-    </main>
+      </main>
+
+      <SiteFooter />
+    </div>
   );
 }

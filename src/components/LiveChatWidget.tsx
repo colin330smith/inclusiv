@@ -83,7 +83,7 @@ export default function LiveChatWidget() {
     // Simulate bot response
     setTimeout(() => {
       const response = botResponses[content] ||
-        "Thanks for your message! For personalized help, please email hello@inclusiv.dev or start a free scan to check your site's accessibility. Our team typically responds within a few hours during business hours.";
+        "Thanks for your message! For personalized help, please email hello@tryinclusiv.com or start a free scan to check your site's accessibility. Our team typically responds within a few hours during business hours.";
       addMessage(response, "bot");
       setIsTyping(false);
     }, 1500);

@@ -4,10 +4,17 @@ import { Shield, Mail, Twitter, Linkedin, Github } from "lucide-react";
 const footerLinks = {
   product: [
     { label: "Free Scanner", href: "/#scanner" },
-    { label: "WCAG Checker", href: "/wcag-checker" },
-    { label: "Statement Generator", href: "/accessibility-statement-generator" },
-    { label: "EAA Checklist", href: "/eaa-compliance-checklist" },
-    { label: "WCAG 2.1 Checklist", href: "/wcag-21-aa-checklist" },
+    { label: "Compare Sites", href: "/compare-sites" },
+    { label: "Challenge Competitor", href: "/challenge" },
+    { label: "Leaderboard", href: "/leaderboard" },
+    { label: "Wall of Fame", href: "/wall-of-fame" },
+    { label: "Industry Benchmarks", href: "/benchmark" },
+    { label: "Competitor Monitor", href: "/monitor" },
+    { label: "Fine Calculator", href: "/fine-calculator" },
+    { label: "Free Widget", href: "/widget" },
+    { label: "Verify Badge", href: "/verify" },
+    { label: "Referral Program", href: "/referrals" },
+    { label: "All Free Tools", href: "/tools" },
     { label: "Pricing", href: "/pricing" },
   ],
   guides: [
@@ -15,7 +22,7 @@ const footerLinks = {
     { label: "EAA Guide", href: "/eaa-guide" },
     { label: "ADA Compliance", href: "/ada-compliance" },
     { label: "EU Directive", href: "/eu-web-accessibility-directive" },
-    { label: "EU Accessibility", href: "/eu-accessibility" },
+    { label: "Free Course", href: "/learn" },
     { label: "Blog", href: "/blog" },
   ],
   platforms: [
@@ -28,9 +35,14 @@ const footerLinks = {
   ],
   resources: [
     { label: "Help Center", href: "/help" },
-    { label: "Getting Started", href: "/help/getting-started" },
-    { label: "Understanding Results", href: "/help/understanding-results" },
-    { label: "Fixing Issues", href: "/help/fixing-issues" },
+    { label: "API Documentation", href: "/api-docs" },
+    { label: "All Integrations", href: "/integrations" },
+    { label: "Browser Extension", href: "/extension" },
+    { label: "GitHub Action", href: "/integrations/github-action" },
+    { label: "ROI Calculator", href: "/roi-calculator" },
+    { label: "Partner Program", href: "/partners" },
+    { label: "Request an Audit", href: "/audit" },
+    { label: "Accessibility Report", href: "/report" },
     { label: "FAQ", href: "/faq" },
     { label: "Contact", href: "/contact" },
   ],
@@ -143,19 +155,19 @@ export function SiteFooter() {
 
         {/* Quick Links - SEO */}
         <div className="mt-12 pt-8 border-t border-zinc-800">
-          <h3 className="text-white font-semibold mb-4">Quick Links</h3>
+          <h3 className="text-white font-semibold mb-4">Free Accessibility Tools</h3>
           <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
-            <Link href="/blog/eaa-compliance-guide-2025" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              EAA Compliance Guide
+            <Link href="/tools" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              All Free Tools
             </Link>
-            <Link href="/blog/eaa-vs-ada-comparison" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              EAA vs ADA
+            <Link href="/compare-sites" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Compare Sites
             </Link>
-            <Link href="/blog/eu-ecommerce-accessibility-study" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              EU E-commerce Study
+            <Link href="/tools/contrast-checker" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Color Contrast Checker
             </Link>
-            <Link href="/blog/shopify-wcag-violations" className="text-zinc-400 hover:text-indigo-400 transition-colors">
-              Shopify WCAG Issues
+            <Link href="/tools/alt-text-generator" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Alt Text Generator
             </Link>
             <Link href="/wcag-checker" className="text-zinc-400 hover:text-indigo-400 transition-colors">
               WCAG Checker
@@ -165,6 +177,36 @@ export function SiteFooter() {
             </Link>
             <Link href="/website-accessibility-audit" className="text-zinc-400 hover:text-indigo-400 transition-colors">
               Website Audit
+            </Link>
+            <Link href="/leaderboard" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Accessibility Leaderboard
+            </Link>
+            <Link href="/wall-of-fame" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Wall of Fame
+            </Link>
+            <Link href="/challenge" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Challenge Competitor
+            </Link>
+            <Link href="/benchmark" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Industry Benchmarks
+            </Link>
+            <Link href="/monitor" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Competitor Monitor
+            </Link>
+            <Link href="/fine-calculator" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Fine Calculator
+            </Link>
+            <Link href="/referrals" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Referral Program
+            </Link>
+            <Link href="/audit" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Request Audit
+            </Link>
+            <Link href="/quiz" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Accessibility Quiz
+            </Link>
+            <Link href="/learn" className="text-zinc-400 hover:text-indigo-400 transition-colors">
+              Free Course
             </Link>
           </div>
         </div>

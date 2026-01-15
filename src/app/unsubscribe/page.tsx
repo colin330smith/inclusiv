@@ -120,8 +120,8 @@ function UnsubscribeContent() {
 
       <p className="mt-8 text-zinc-500 text-sm">
         If you&apos;re having issues or this was a mistake, contact us at{" "}
-        <a href="mailto:support@inclusiv.eu" className="text-indigo-400 hover:text-indigo-300">
-          support@inclusiv.eu
+        <a href="mailto:support@tryinclusiv.com" className="text-indigo-400 hover:text-indigo-300">
+          support@tryinclusiv.com
         </a>
       </p>
     </div>

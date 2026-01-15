@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ArrowRight, Loader2, Tag } from 'lucide-react';
+import { useToast } from '@/components/Toast';
 
 interface CheckoutButtonProps {
   plan: 'starter' | 'professional' | 'enterprise';
@@ -13,6 +14,7 @@ interface CheckoutButtonProps {
 export default function CheckoutButton({ plan, label, highlight, billing = 'monthly' }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const toast = useToast();
 
   // Check for coupon in URL or localStorage on mount
   useEffect(() => {
@@ -47,16 +49,22 @@ export default function CheckoutButton({ plan, label, highlight, billing = 'mont
         }),
       });
 
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Checkout failed (${response.status})`);
+      }
+
       const data = await response.json();
 
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error('No checkout URL returned:', data);
-        setIsLoading(false);
+        throw new Error('Unable to create checkout session. Please try again.');
       }
     } catch (error) {
       console.error('Checkout error:', error);
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      toast.error(message);
       setIsLoading(false);
     }
   };

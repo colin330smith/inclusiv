@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
-import { Shield, AlertTriangle, CheckCircle, ArrowRight, Zap, Globe, ExternalLink } from 'lucide-react';
+import { Shield, AlertTriangle, CheckCircle, ArrowRight, Zap, Globe, ExternalLink, Share2, Twitter, Linkedin, Copy, Code, Trophy } from 'lucide-react';
 import Link from 'next/link';
+import ViralSharePanel from '@/components/ViralSharePanel';
 
 interface ScanPageProps {
   searchParams: Promise<{
@@ -271,6 +272,36 @@ export default async function ScanResultsPage({ searchParams }: ScanPageProps) {
           </div>
         </div>
 
+        {/* Viral Share Panel */}
+        <div className="mt-6">
+          <ViralSharePanel
+            score={score}
+            url={url}
+            totalIssues={issues}
+            criticalIssues={critical}
+            platform={platform}
+          />
+        </div>
+
+        {/* Compare with Competitor CTA */}
+        <div className="mt-6 p-4 bg-gradient-to-r from-orange-500/10 to-amber-500/10 border border-orange-500/20 rounded-xl">
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="flex-1 text-center sm:text-left">
+              <h3 className="text-white font-semibold mb-1">How does your competitor compare?</h3>
+              <p className="text-zinc-400 text-sm">
+                See how your website stacks up against any competitor&apos;s accessibility.
+              </p>
+            </div>
+            <Link
+              href={`/compare-sites?url1=${encodeURIComponent(url)}`}
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-400 hover:to-amber-400 text-white font-semibold rounded-xl transition-all whitespace-nowrap"
+            >
+              <Trophy className="w-4 h-4" />
+              Compare Sites
+            </Link>
+          </div>
+        </div>
+
         {/* Legal Notice */}
         {score < 70 && (
           <div className="mt-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl">
@@ -294,9 +325,15 @@ export default async function ScanResultsPage({ searchParams }: ScanPageProps) {
           <p className="text-zinc-400 text-sm">
             © {new Date().getFullYear()} Inclusiv. Free accessibility scanner powered by axe-core.
           </p>
-          <div className="flex items-center justify-center gap-4 mt-4 text-sm">
+          <div className="flex items-center justify-center gap-6 mt-4 text-sm flex-wrap">
             <Link href="/" className="text-zinc-400 hover:text-white transition-colors">
               Home
+            </Link>
+            <Link href="/tools" className="text-zinc-400 hover:text-white transition-colors">
+              Free Tools
+            </Link>
+            <Link href="/compare-sites" className="text-zinc-400 hover:text-white transition-colors">
+              Compare Sites
             </Link>
             <Link href="/pricing" className="text-zinc-400 hover:text-white transition-colors">
               Pricing

@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: "Inclusiv <hello@inclusiv.dev>",
+          from: "Inclusiv <hello@tryinclusiv.com>",
           to: email,
           subject: `Your Accessibility Report - Score: ${score}/100`,
           html: `

@@ -333,7 +333,7 @@ async function sendAbandonedCheckoutEmail(email: string, plan: string, billing: 
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Inclusiv <hello@inclusiv.eu>',
+        from: 'Inclusiv <hello@tryinclusiv.com>',
         to: [email],
         subject: `Complete your ${planName} checkout - 20% off inside`,
         html,
@@ -400,7 +400,7 @@ async function sendCancellationEmail(email: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Inclusiv <hello@inclusiv.eu>',
+        from: 'Inclusiv <hello@tryinclusiv.com>',
         to: [email],
         subject: "Before you go - here's 50% off",
         html,
@@ -475,7 +475,7 @@ async function sendWinBackEmail(email: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Inclusiv <hello@inclusiv.eu>',
+        from: 'Inclusiv <hello@tryinclusiv.com>',
         to: [email],
         subject: '⚠️ Your site may be at risk - 60% off to return',
         html,
@@ -544,7 +544,7 @@ async function sendPaymentFailedEmail(email: string, invoiceUrl: string) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        from: 'Inclusiv <hello@inclusiv.eu>',
+        from: 'Inclusiv <hello@tryinclusiv.com>',
         to: [email],
         subject: '⚠️ Action Required: Payment failed',
         html,

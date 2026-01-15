@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Shield } from 'lucide-react';
+import { SiteFooter } from '@/components/seo/SiteFooter';
+import { EAACountdown } from '@/components/EAACountdown';
+import { SocialProofTicker } from '@/components/SocialProofTicker';
 
 export const metadata: Metadata = {
   title: 'WordPress Accessibility Checker | WCAG Compliance Scanner',
@@ -14,8 +17,32 @@ export const metadata: Metadata = {
 
 export default function WordPressAccessibilityPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      <div className="max-w-4xl mx-auto px-6 py-16">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Header */}
+      <header className="border-b border-zinc-800">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-indigo-500" />
+            <span className="text-xl font-bold text-white">Inclusiv</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/tools" className="text-zinc-300 hover:text-white transition-colors text-sm font-medium">
+              Free Tools
+            </Link>
+            <Link href="/pricing" className="text-zinc-300 hover:text-white transition-colors text-sm font-medium">
+              Pricing
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* EAA Deadline Urgency Banner */}
+      <EAACountdown variant="banner" showCTA={true} />
+
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
+      <main className="max-w-4xl mx-auto px-6 py-16">
         <div className="flex items-center gap-4 mb-6">
           <div className="bg-[#21759b] p-3 rounded-lg">
             <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -27,7 +54,7 @@ export default function WordPressAccessibilityPage() {
           </h1>
         </div>
 
-        <p className="text-xl text-slate-300 mb-8">
+        <p className="text-xl text-zinc-300 mb-8">
           Make your WordPress site accessible to everyone. Scan for WCAG 2.1 issues
           and get fixes that work with any theme or page builder.
         </p>
@@ -48,38 +75,38 @@ export default function WordPressAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Common WordPress Accessibility Issues</h2>
           <div className="space-y-4">
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-red-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-red-500">
               <h3 className="font-semibold text-lg mb-1">Theme Accessibility Problems</h3>
-              <p className="text-slate-300 text-sm">Many popular themes have contrast issues, missing focus states, and poor heading structure</p>
+              <p className="text-zinc-300 text-sm">Many popular themes have contrast issues, missing focus states, and poor heading structure</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-red-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-red-500">
               <h3 className="font-semibold text-lg mb-1">Slider & Carousel Issues</h3>
-              <p className="text-slate-300 text-sm">Auto-playing sliders without pause controls violate WCAG guidelines</p>
+              <p className="text-zinc-300 text-sm">Auto-playing sliders without pause controls violate WCAG guidelines</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-amber-500">
               <h3 className="font-semibold text-lg mb-1">Page Builder Problems</h3>
-              <p className="text-slate-300 text-sm">Elementor, Divi, and WPBakery often generate inaccessible HTML</p>
+              <p className="text-zinc-300 text-sm">Elementor, Divi, and WPBakery often generate inaccessible HTML</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-amber-500">
               <h3 className="font-semibold text-lg mb-1">Plugin Conflicts</h3>
-              <p className="text-slate-300 text-sm">Contact forms, popups, and social plugins frequently lack accessibility</p>
+              <p className="text-zinc-300 text-sm">Contact forms, popups, and social plugins frequently lack accessibility</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
               <h3 className="font-semibold text-lg mb-1">Media Library Issues</h3>
-              <p className="text-slate-300 text-sm">Images uploaded without alt text remain permanently inaccessible</p>
+              <p className="text-zinc-300 text-sm">Images uploaded without alt text remain permanently inaccessible</p>
             </div>
           </div>
         </section>
 
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">WordPress Theme Compatibility</h2>
-          <p className="text-slate-300 mb-4">
+          <p className="text-zinc-300 mb-4">
             Our scanner works with all WordPress themes, including:
           </p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {['Astra', 'Divi', 'Elementor', 'OceanWP', 'GeneratePress', 'Kadence', 'Neve', 'Avada', 'Enfold', 'flavflavor Theme', 'Twenty Twenty-Four', 'Starter Templates'].map((theme) => (
-              <div key={theme} className="bg-slate-700/30 rounded-lg p-3 text-center">
-                <span className="text-slate-200 text-sm">{theme}</span>
+              <div key={theme} className="bg-zinc-700/30 rounded-lg p-3 text-center">
+                <span className="text-zinc-200 text-sm">{theme}</span>
               </div>
             ))}
           </div>
@@ -88,20 +115,20 @@ export default function WordPressAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Page Builder Support</h2>
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <div className="text-3xl mb-2">🔧</div>
               <h3 className="font-semibold text-lg mb-2">Elementor</h3>
-              <p className="text-slate-300 text-sm">Full support for Elementor Pro and Free</p>
+              <p className="text-zinc-300 text-sm">Full support for Elementor Pro and Free</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <div className="text-3xl mb-2">🎨</div>
               <h3 className="font-semibold text-lg mb-2">Divi</h3>
-              <p className="text-slate-300 text-sm">Compatible with Divi Builder and theme</p>
+              <p className="text-zinc-300 text-sm">Compatible with Divi Builder and theme</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <div className="text-3xl mb-2">📝</div>
               <h3 className="font-semibold text-lg mb-2">Gutenberg</h3>
-              <p className="text-slate-300 text-sm">Native block editor fully supported</p>
+              <p className="text-zinc-300 text-sm">Native block editor fully supported</p>
             </div>
           </div>
         </section>
@@ -109,30 +136,30 @@ export default function WordPressAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Why WordPress Sites Need Accessibility</h2>
           <div className="grid md:grid-cols-2 gap-6">
-            <div className="bg-slate-700/50 rounded-lg p-6">
+            <div className="bg-zinc-700/50 rounded-lg p-6">
               <h3 className="font-semibold text-lg text-blue-400 mb-2">43% of the Web</h3>
-              <p className="text-slate-300 text-sm">
+              <p className="text-zinc-300 text-sm">
                 WordPress powers 43% of all websites. Most have accessibility issues
                 that put businesses at legal and reputational risk.
               </p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6">
+            <div className="bg-zinc-700/50 rounded-lg p-6">
               <h3 className="font-semibold text-lg text-red-400 mb-2">EAA Deadline</h3>
-              <p className="text-slate-300 text-sm">
+              <p className="text-zinc-300 text-sm">
                 By June 28, 2025, all EU business websites must be WCAG 2.1 AA
                 compliant. Fines up to €100,000.
               </p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6">
+            <div className="bg-zinc-700/50 rounded-lg p-6">
               <h3 className="font-semibold text-lg text-amber-400 mb-2">ADA Lawsuits</h3>
-              <p className="text-slate-300 text-sm">
+              <p className="text-zinc-300 text-sm">
                 WordPress sites are frequent targets for ADA lawsuits.
                 Average settlement: $25,000-$100,000.
               </p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6">
+            <div className="bg-zinc-700/50 rounded-lg p-6">
               <h3 className="font-semibold text-lg text-green-400 mb-2">Better SEO</h3>
-              <p className="text-slate-300 text-sm">
+              <p className="text-zinc-300 text-sm">
                 Accessible WordPress sites rank higher. Google rewards proper
                 headings, alt text, and semantic HTML.
               </p>
@@ -152,27 +179,9 @@ export default function WordPressAccessibilityPage() {
             Scan My WordPress Site →
           </Link>
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-700 mt-24">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-slate-400">
-              <Shield className="w-5 h-5" />
-              <span>Inclusiv © 2025</span>
-              <span className="text-slate-600">|</span>
-              <span>Powered by axe-core</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-slate-400 text-sm">
-              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
-              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </main>
+      <SiteFooter />
+    </div>
   );
 }
