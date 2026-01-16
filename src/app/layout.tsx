@@ -22,8 +22,8 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Google Analytics Measurement ID - Replace with your actual ID
-const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "G-XXXXXXX";
+// Google Analytics Measurement ID
+const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "";
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://tryinclusiv.com'),
@@ -89,55 +89,54 @@ export default function RootLayout({
         {/* JSON-LD Structured Data for SEO */}
         <MainPageJsonLd />
 
-        {/* Google Analytics 4 */}
-        <Script
-          src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
-          strategy="afterInteractive"
-        />
-        <Script id="google-analytics" strategy="afterInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_MEASUREMENT_ID}', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: true,
-              cookie_flags: 'SameSite=None;Secure',
-              // Enhanced measurement
-              enhanced_conversions: true,
-              // Custom dimensions
-              custom_map: {
-                'dimension1': 'user_type',
-                'dimension2': 'scan_score',
-                'dimension3': 'platform_detected'
-              }
-            });
-
-            // Track page visibility
-            document.addEventListener('visibilitychange', function() {
-              if (document.visibilityState === 'hidden') {
-                gtag('event', 'page_hidden', {
+        {/* Google Analytics 4 - Only loads when GA_MEASUREMENT_ID is set */}
+        {GA_MEASUREMENT_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_MEASUREMENT_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', '${GA_MEASUREMENT_ID}', {
                   page_title: document.title,
-                  time_on_page: Math.round(performance.now() / 1000)
+                  page_location: window.location.href,
+                  send_page_view: true,
+                  cookie_flags: 'SameSite=None;Secure',
+                  enhanced_conversions: true,
+                  custom_map: {
+                    'dimension1': 'user_type',
+                    'dimension2': 'scan_score',
+                    'dimension3': 'platform_detected'
+                  }
                 });
-              }
-            });
-          `}
-        </Script>
+
+                document.addEventListener('visibilitychange', function() {
+                  if (document.visibilityState === 'hidden') {
+                    gtag('event', 'page_hidden', {
+                      page_title: document.title,
+                      time_on_page: Math.round(performance.now() / 1000)
+                    });
+                  }
+                });
+              `}
+            </Script>
+          </>
+        )}
 
         {/* Plausible Analytics - Privacy-friendly, no cookies */}
-        <script defer data-domain="inclusiv.app" src="https://plausible.io/js/script.js"></script>
+        <script defer data-domain="tryinclusiv.com" src="https://plausible.io/js/script.js"></script>
 
         {/* Custom event tracking utilities */}
         <Script id="custom-analytics" strategy="afterInteractive">
           {`
-            // Plausible helper
             window.plausible = window.plausible || function() {
               (window.plausible.q = window.plausible.q || []).push(arguments)
             };
 
-            // Track scans (legacy support)
             window.trackScan = function(url, score) {
               plausible('Scan', {props: {url: url, score: score}});
               if (window.gtag) {
@@ -150,7 +149,6 @@ export default function RootLayout({
               }
             };
 
-            // Track signups (legacy support)
             window.trackSignup = function(email) {
               plausible('Signup', {props: {email: email}});
               if (window.gtag) {
@@ -161,7 +159,6 @@ export default function RootLayout({
               }
             };
 
-            // Conversion tracking helper
             window.trackConversion = function(eventName, properties) {
               plausible(eventName, {props: properties || {}});
               if (window.gtag) {
@@ -177,17 +174,12 @@ export default function RootLayout({
         <SessionProvider>
           <ToastProvider>
           <LeadCaptureProvider>
-            {/* Track referral codes from URL */}
             <Suspense fallback={null}>
               <ReferralTracker />
             </Suspense>
-            {/* Urgency announcement bar */}
             <AnnouncementBar />
             {children}
-            {/* Sticky pricing CTA */}
             <StickyPricingCta />
-            {/* Lead capture components (SocialProofToast, LiveChatWidget, ExitIntent) are rendered by LeadCaptureProvider */}
-            {/* Retargeting pixels for Facebook, Google Ads, LinkedIn, TikTok */}
             <Suspense fallback={null}>
               <TrackingPixels />
             </Suspense>
