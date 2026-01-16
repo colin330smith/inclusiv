@@ -1,4 +1,5 @@
 import { getServerSession } from 'next-auth';
+import { redirect } from 'next/navigation';
 import { authOptions } from '@/lib/auth';
 import { supabaseAdmin } from '@/lib/supabase';
 
@@ -21,7 +22,7 @@ export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    return null;
+    redirect('/api/auth/signin?callbackUrl=/dashboard');
   }
 
   // Fetch user's sites and recent scans

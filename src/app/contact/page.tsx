@@ -29,7 +29,7 @@ const contactMethods = [
     icon: Mail,
     title: "Email Support",
     description: "Get help with technical issues, billing questions, or compliance guidance.",
-    contact: "support@inclusiv.dev",
+    contact: "support@tryinclusiv.com",
     responseTime: "Within 24 hours",
   },
   {

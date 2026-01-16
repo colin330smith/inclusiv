@@ -4,6 +4,8 @@ import { usePathname } from "next/navigation";
 import LeadCapturePopup from "./LeadCapturePopup";
 import FloatingCTA from "./FloatingCTA";
 import ExitIntentPopup from "./ExitIntentPopup";
+import SocialProofToast from "./SocialProofToast";
+import LiveChatWidget from "./LiveChatWidget";
 
 interface LeadCaptureProviderProps {
   children: React.ReactNode;
@@ -39,6 +41,12 @@ export default function LeadCaptureProvider({ children }: LeadCaptureProviderPro
 
           {/* Floating CTA bar appears after 5 seconds and scroll */}
           <FloatingCTA showDelay={5000} scrollThreshold={300} />
+
+          {/* Social proof notifications */}
+          <SocialProofToast minDelay={20000} maxDelay={60000} duration={6000} />
+
+          {/* Live chat widget for sales */}
+          <LiveChatWidget />
         </>
       )}
     </>

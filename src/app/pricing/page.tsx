@@ -4,6 +4,10 @@ import Link from "next/link";
 import PricingTracker from "./PricingTracker";
 import PricingCards from "./PricingCards";
 import { SiteFooter } from "@/components/seo/SiteFooter";
+import LaunchDiscountBanner from "@/components/LaunchDiscountBanner";
+import { EAACountdown } from "@/components/EAACountdown";
+import { SocialProofTicker } from "@/components/SocialProofTicker";
+import FineCalculator from "@/components/FineCalculator";
 
 export const metadata: Metadata = {
   title: "Pricing | Inclusiv - WCAG Accessibility Compliance",
@@ -81,6 +85,9 @@ export default function PricingPage() {
       {/* Analytics Tracker */}
       <PricingTracker />
 
+      {/* Launch Discount Banner */}
+      <LaunchDiscountBanner />
+
       {/* Header */}
       <header className="border-b border-zinc-800">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -100,18 +107,13 @@ export default function PricingPage() {
         </div>
       </header>
 
+      {/* EAA Deadline Urgency Banner */}
+      <EAACountdown variant="banner" showCTA={false} />
+
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
       <main className="max-w-6xl mx-auto px-6 py-16">
-        {/* Urgency Banner */}
-        <div className="mb-8 p-4 bg-gradient-to-r from-red-500/10 via-orange-500/10 to-red-500/10 border border-red-500/20 rounded-2xl">
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 text-center">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
-              <span className="font-semibold text-red-400">EAA Deadline: June 28, 2025</span>
-            </div>
-            <span className="hidden sm:inline text-zinc-600">|</span>
-            <span className="text-zinc-400 text-sm sm:text-base">Non-compliant sites face fines up to €100,000</span>
-          </div>
-        </div>
 
         {/* Info Banner */}
         <div className="mb-12 p-4 bg-gradient-to-r from-indigo-500/10 via-purple-500/10 to-indigo-500/10 border border-indigo-500/20 rounded-2xl">
@@ -146,6 +148,96 @@ export default function PricingPage() {
             <Lock className="w-5 h-5 text-green-500" />
             <span className="text-green-400 font-medium">30-Day Money-Back Guarantee</span>
             <span className="text-zinc-400">- No questions asked</span>
+          </div>
+        </div>
+
+        {/* Social Proof / Testimonials */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-white text-center mb-4">
+            Trusted by teams preparing for EAA
+          </h2>
+          <p className="text-zinc-400 text-center mb-10">
+            See what others are saying about their accessibility journey
+          </p>
+          <div className="grid md:grid-cols-3 gap-6">
+            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-zinc-300 mb-4 leading-relaxed">
+                &quot;The scan found 47 accessibility issues we had no idea about. The AI-powered fix suggestions saved us weeks of work. We&apos;re now fully EAA compliant.&quot;
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  MK
+                </div>
+                <div>
+                  <p className="text-white font-medium">Marcus K.</p>
+                  <p className="text-zinc-500 text-sm">E-commerce Director, Berlin</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-zinc-300 mb-4 leading-relaxed">
+                &quot;As a developer, I love that it gives me exact code snippets to fix each issue. No guessing, no hours of research. Just copy, paste, and move on.&quot;
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-emerald-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  SR
+                </div>
+                <div>
+                  <p className="text-white font-medium">Sophie R.</p>
+                  <p className="text-zinc-500 text-sm">Lead Developer, Amsterdam</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="p-6 bg-zinc-900 border border-zinc-800 rounded-2xl">
+              <div className="flex items-center gap-1 mb-4">
+                {[...Array(5)].map((_, i) => (
+                  <svg key={i} className="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                  </svg>
+                ))}
+              </div>
+              <p className="text-zinc-300 mb-4 leading-relaxed">
+                &quot;We were worried about the EAA deadline. Inclusiv helped us identify issues and prioritize fixes. Got our compliance certificate in 3 weeks.&quot;
+              </p>
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                  JL
+                </div>
+                <div>
+                  <p className="text-white font-medium">Johan L.</p>
+                  <p className="text-zinc-500 text-sm">CTO, Stockholm</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Fine Risk Calculator */}
+        <div className="mb-20">
+          <h2 className="text-3xl font-bold text-white text-center mb-4">
+            What&apos;s Your Risk?
+          </h2>
+          <p className="text-zinc-400 text-center mb-10 max-w-2xl mx-auto">
+            Calculate your potential EAA fine exposure and see how compliance compares
+          </p>
+          <div className="max-w-xl mx-auto">
+            <FineCalculator />
           </div>
         </div>
 

@@ -19,7 +19,7 @@ export const organizationSchema = {
   ],
   "contactPoint": {
     "@type": "ContactPoint",
-    "email": "hello@inclusiv.app",
+    "email": "hello@tryinclusiv.com",
     "contactType": "customer support",
     "availableLanguage": ["English", "German", "French", "Spanish", "Italian"]
   },

@@ -1,14 +1,23 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 
 const getResend = () => {
   if (!process.env.RESEND_API_KEY) return null;
   return new Resend(process.env.RESEND_API_KEY);
 };
 
+const getSupabase = () => {
+  if (!process.env.NEXT_PUBLIC_SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) return null;
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY
+  );
+};
+
 export async function POST(request: Request) {
   try {
-    const { email, source = 'website' } = await request.json();
+    const { email, source = 'website', listType = 'general' } = await request.json();
 
     if (!email) {
       return NextResponse.json({ error: "Email is required" }, { status: 400 });
@@ -20,10 +29,32 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }
 
+    // Store subscriber in database
+    const supabase = getSupabase();
+    if (supabase) {
+      try {
+        await supabase
+          .from('newsletter_subscribers')
+          .upsert({
+            email,
+            source,
+            list_type: listType,
+            subscribed_at: new Date().toISOString(),
+            status: 'active',
+          }, {
+            onConflict: 'email',
+          });
+      } catch (dbError) {
+        console.error("Database insert error:", dbError);
+        // Don't fail the request if DB fails
+      }
+    }
+
     // Log subscriber
     console.log("New newsletter subscriber:", {
       email,
       source,
+      listType,
       timestamp: new Date().toISOString(),
     });
 
@@ -32,7 +63,7 @@ export async function POST(request: Request) {
     if (resend) {
       try {
         await resend.emails.send({
-          from: "Inclusiv <hello@inclusiv.dev>",
+          from: "Inclusiv <hello@tryinclusiv.com>",
           to: email,
           subject: "Welcome to the Inclusiv Newsletter",
           html: `

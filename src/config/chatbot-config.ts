@@ -240,7 +240,7 @@ export const chatbotConfig: ChatbotConfig = {
       id: "contact-support",
       keywords: ["contact", "support", "help", "human", "speak", "talk", "email"],
       question: "How do I contact support?",
-      answer: "You can reach us at support@inclusiv.dev. For general inquiries, we respond within 24 hours. Professional plan users get priority support with 4-hour response times. Enterprise users have dedicated support with 1-hour response times. You can also use our contact form at /contact.",
+      answer: "You can reach us at support@tryinclusiv.com. For general inquiries, we respond within 24 hours. Professional plan users get priority support with 4-hour response times. Enterprise users have dedicated support with 1-hour response times. You can also use our contact form at /contact.",
       followUp: ["What are your business hours?", "Do you offer phone support?"],
       links: [{ text: "Contact us", href: "/contact" }],
       category: "support",

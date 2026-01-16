@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap } from "lucide-react";
+import { Shield, AlertTriangle, CheckCircle, Clock, Globe, Lock, ArrowRight, Zap, ChevronDown, ChevronUp, Copy, Check, Download, Code, Wrench } from "lucide-react";
 import {
   trackScanStarted,
   trackScanCompleted,
@@ -12,6 +12,15 @@ import {
   initAnalytics,
 } from "@/lib/analytics";
 import { SiteFooter } from "@/components/seo/SiteFooter";
+import PostScanUpsell from "@/components/PostScanUpsell";
+import { useABTest } from "@/components/ABTest";
+import { AB_TESTS, trackConversion } from "@/lib/ab-testing";
+import { getFixForIssue, getPlatformFix, accessibilityFixes } from "@/lib/accessibility-fixes";
+import { downloadPDFReport } from "@/components/PDFReport";
+import ShareResults from "@/components/ShareResults";
+import RealtimeSocialProof from "@/components/RealtimeSocialProof";
+import ExitIntentPopup from "@/components/ExitIntentPopup";
+import { SocialProofTicker } from "@/components/SocialProofTicker";
 
 type ScanResult = {
   score: number;
@@ -45,12 +54,65 @@ export default function Home() {
   const [emailSubmitted, setEmailSubmitted] = useState(false);
   const [error, setError] = useState("");
   const [scanProgress, setScanProgress] = useState(0);
+  const [showUpsell, setShowUpsell] = useState(false);
+  const [expandedIssues, setExpandedIssues] = useState<Set<string>>(new Set());
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+  const [generatingPdf, setGeneratingPdf] = useState(false);
+  const [pdfDownloaded, setPdfDownloaded] = useState(false);
   const deadlineInfo = getDeadlineInfo();
+
+  // A/B Testing hooks
+  const headlineTest = useABTest(AB_TESTS.homepage_headline);
+  const ctaTest = useABTest(AB_TESTS.cta_button);
+
+  // Get headline based on variant
+  const getHeadline = () => {
+    switch (headlineTest.variant) {
+      case 'urgency':
+        return {
+          main: 'EAA Deadline Passed',
+          highlight: 'Check Compliance Now',
+        };
+      case 'benefit':
+        return {
+          main: 'Avoid €100K Fines',
+          highlight: 'Free Compliance Scan',
+        };
+      default:
+        return {
+          main: 'Is Your Website',
+          highlight: 'EAA Compliant?',
+        };
+    }
+  };
+
+  // Get CTA button text based on variant
+  const getCtaText = () => {
+    switch (ctaTest.variant) {
+      case 'check_free':
+        return 'Check Free';
+      case 'start_scan':
+        return 'Start Free Scan';
+      case 'get_report':
+        return 'Get Free Report';
+      default:
+        return 'Check My Website Free';
+    }
+  };
+
+  const headline = getHeadline();
 
   // Initialize analytics on mount
   useEffect(() => {
     initAnalytics();
   }, []);
+
+  // Show upsell modal when scan results are available
+  useEffect(() => {
+    if (result && !scanning) {
+      setShowUpsell(true);
+    }
+  }, [result, scanning]);
 
   // Scan progress animation
   useEffect(() => {
@@ -124,6 +186,10 @@ export default function Home() {
 
       setResult(data);
       setShowEmailCapture(true);
+
+      // Track A/B test conversions
+      trackConversion(AB_TESTS.homepage_headline.id, 'scan_completed');
+      trackConversion(AB_TESTS.cta_button.id, 'scan_completed');
     } catch (err) {
       setError(err instanceof Error ? err.message : "Scan failed. Please try again.");
     } finally {
@@ -175,6 +241,55 @@ export default function Home() {
     }
   };
 
+  const toggleIssue = (issueId: string) => {
+    setExpandedIssues(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(issueId)) {
+        newSet.delete(issueId);
+      } else {
+        newSet.add(issueId);
+      }
+      return newSet;
+    });
+    trackFeatureClick(`expand_issue_${issueId}`, "scan_results");
+  };
+
+  const copyCode = async (code: string, issueId: string) => {
+    await navigator.clipboard.writeText(code);
+    setCopiedCode(issueId);
+    trackFeatureClick(`copy_fix_${issueId}`, "scan_results");
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  // Handle instant PDF download
+  const handlePdfDownload = async () => {
+    if (!result) return;
+
+    setGeneratingPdf(true);
+    trackFeatureClick("pdf_download_instant", "scan_results");
+
+    try {
+      // Build fixes object for the PDF
+      const fixes: Record<string, typeof accessibilityFixes[string]> = {};
+      result.topIssues.forEach(issue => {
+        const fix = getFixForIssue(issue.id);
+        if (fix) {
+          fixes[issue.id] = fix;
+        }
+      });
+
+      await downloadPDFReport(result, url, fixes);
+      setPdfDownloaded(true);
+
+      // Track successful download
+      trackConversion(AB_TESTS.homepage_headline.id, 'pdf_downloaded');
+    } catch (err) {
+      console.error('PDF generation failed:', err);
+    } finally {
+      setGeneratingPdf(false);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
       {/* Header */}
@@ -200,6 +315,9 @@ export default function Home() {
         </div>
       </header>
 
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
       {/* Hero */}
       <main className="max-w-6xl mx-auto px-6 py-16">
         <div className="text-center mb-12">
@@ -208,7 +326,7 @@ export default function Home() {
             Free accessibility scanner powered by axe-core
           </div>
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
-            Is Your Website <span className="text-indigo-400">EAA Compliant?</span>
+            {headline.main} <span className="text-indigo-400">{headline.highlight}</span>
           </h1>
           <p className="text-xl text-zinc-400 max-w-2xl mx-auto mb-4">
             Check in 30 seconds. The EAA deadline passed {deadlineInfo.daysSince} days ago - non-compliant sites <span className="text-red-400 font-semibold">now face €100,000 fines</span>.
@@ -245,7 +363,7 @@ export default function Home() {
                   </>
                 ) : (
                   <>
-                    Check My Website Free
+                    {getCtaText()}
                     <ArrowRight className="w-5 h-5" />
                   </>
                 )}
@@ -358,11 +476,18 @@ export default function Home() {
                       <span className="text-red-400"> ({result.criticalIssues} critical)</span>
                     )}
                   </p>
-                  <div className="flex items-center justify-center sm:justify-start gap-3">
+                  <div className="flex items-center justify-center sm:justify-start gap-3 flex-wrap">
                     <div className="inline-flex items-center gap-2 px-3 py-1 bg-zinc-800 rounded-full text-sm text-zinc-300">
                       <Globe className="w-4 h-4" />
                       {result.platform}
                     </div>
+                    <ShareResults
+                      score={result.score}
+                      issues={result.totalIssues}
+                      criticalIssues={result.criticalIssues}
+                      url={url}
+                      platform={result.platform}
+                    />
                   </div>
                 </div>
               </div>
@@ -394,96 +519,247 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Top Issues Preview */}
+              {/* Issues with Instant Fixes */}
               <div className="p-6">
-                <h4 className="text-lg font-semibold text-white mb-4">Issues Found</h4>
-                <div className="space-y-3">
-                  {result.topIssues.slice(0, 3).map((issue, i) => (
-                    <div
-                      key={i}
-                      className="flex items-start gap-3 p-4 bg-zinc-800/50 rounded-xl"
-                    >
-                      <span className={`px-2 py-1 rounded text-xs font-medium uppercase ${getImpactColor(issue.impact)}`}>
-                        {issue.impact}
-                      </span>
-                      <div className="flex-1">
-                        <p className="text-white">{issue.description}</p>
-                        <p className="text-zinc-400 text-sm mt-1">{issue.count} instances found</p>
-                      </div>
-                    </div>
-                  ))}
+                <div className="flex items-center justify-between mb-4">
+                  <h4 className="text-lg font-semibold text-white flex items-center gap-2">
+                    <Wrench className="w-5 h-5 text-indigo-400" />
+                    Issues with Instant Fixes
+                  </h4>
+                  <span className="text-sm text-zinc-400">{result.topIssues.length} issues • Click to expand fixes</span>
                 </div>
+                <div className="space-y-3">
+                  {result.topIssues.map((issue, i) => {
+                    const fix = getFixForIssue(issue.id);
+                    const platformFix = fix ? getPlatformFix(issue.id, result.platform) : null;
+                    const isExpanded = expandedIssues.has(issue.id);
 
-                {/* More Issues */}
-                {result.topIssues.length > 3 && (
-                  <div className="relative mt-3">
-                    <div className="space-y-3 blur-sm pointer-events-none">
-                      {result.topIssues.slice(3, 5).map((issue, i) => (
-                        <div
-                          key={i}
-                          className="flex items-start gap-3 p-4 bg-zinc-800/50 rounded-xl"
+                    return (
+                      <div
+                        key={i}
+                        className="bg-zinc-800/50 rounded-xl overflow-hidden border border-zinc-700/50 hover:border-zinc-600/50 transition-colors"
+                      >
+                        {/* Issue Header - Clickable */}
+                        <button
+                          onClick={() => toggleIssue(issue.id)}
+                          className="w-full flex items-start gap-3 p-4 text-left"
                         >
-                          <span className={`px-2 py-1 rounded text-xs font-medium uppercase ${getImpactColor(issue.impact)}`}>
+                          <span className={`px-2 py-1 rounded text-xs font-medium uppercase flex-shrink-0 ${getImpactColor(issue.impact)}`}>
                             {issue.impact}
                           </span>
-                          <div className="flex-1">
-                            <p className="text-white">{issue.description}</p>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-white font-medium">{issue.description}</p>
+                            <p className="text-zinc-400 text-sm mt-1">{issue.count} instances found</p>
                           </div>
-                        </div>
-                      ))}
-                    </div>
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="flex items-center gap-2 px-4 py-2 bg-zinc-800 rounded-full">
-                        <Lock className="w-4 h-4 text-zinc-400" />
-                        <span className="text-zinc-300 text-sm">+{result.topIssues.length - 3} more issues in full report</span>
+                          <div className="flex items-center gap-2 flex-shrink-0">
+                            {fix && (
+                              <span className="px-2 py-1 bg-green-500/10 text-green-400 text-xs rounded-full">
+                                Fix available
+                              </span>
+                            )}
+                            {isExpanded ? (
+                              <ChevronUp className="w-5 h-5 text-zinc-400" />
+                            ) : (
+                              <ChevronDown className="w-5 h-5 text-zinc-400" />
+                            )}
+                          </div>
+                        </button>
+
+                        {/* Expanded Fix Content */}
+                        {isExpanded && fix && (
+                          <div className="px-4 pb-4 border-t border-zinc-700/50">
+                            {/* Quick Info */}
+                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 py-4">
+                              <div className="text-center p-2 bg-zinc-900/50 rounded-lg">
+                                <p className="text-xs text-zinc-400 mb-1">WCAG</p>
+                                <p className="text-sm text-white font-medium">{fix.wcagCriteria}</p>
+                              </div>
+                              <div className="text-center p-2 bg-zinc-900/50 rounded-lg">
+                                <p className="text-xs text-zinc-400 mb-1">Legal Risk</p>
+                                <p className={`text-sm font-medium capitalize ${fix.legalRisk === 'high' ? 'text-red-400' : fix.legalRisk === 'medium' ? 'text-yellow-400' : 'text-green-400'}`}>
+                                  {fix.legalRisk}
+                                </p>
+                              </div>
+                              <div className="text-center p-2 bg-zinc-900/50 rounded-lg">
+                                <p className="text-xs text-zinc-400 mb-1">Fix Time</p>
+                                <p className="text-sm text-white font-medium">{fix.estimatedTime}</p>
+                              </div>
+                              <div className="text-center p-2 bg-zinc-900/50 rounded-lg">
+                                <p className="text-xs text-zinc-400 mb-1">Priority</p>
+                                <p className="text-sm text-indigo-400 font-medium">{fix.priorityScore}/100</p>
+                              </div>
+                            </div>
+
+                            {/* General Fix Instructions */}
+                            <div className="mb-4">
+                              <h5 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
+                                <CheckCircle className="w-4 h-4 text-green-500" />
+                                How to Fix
+                              </h5>
+                              <p className="text-sm text-zinc-300">{fix.fixInstructions.general}</p>
+                            </div>
+
+                            {/* Code Example */}
+                            {fix.fixInstructions.code && (
+                              <div className="mb-4">
+                                <div className="flex items-center justify-between mb-2">
+                                  <h5 className="text-sm font-semibold text-white flex items-center gap-2">
+                                    <Code className="w-4 h-4 text-indigo-400" />
+                                    Code Fix
+                                  </h5>
+                                  <button
+                                    onClick={() => copyCode(fix.fixInstructions.code!, issue.id)}
+                                    className="flex items-center gap-1 px-2 py-1 text-xs bg-zinc-700 hover:bg-zinc-600 rounded text-zinc-300 transition-colors"
+                                  >
+                                    {copiedCode === issue.id ? (
+                                      <>
+                                        <Check className="w-3 h-3 text-green-500" />
+                                        Copied!
+                                      </>
+                                    ) : (
+                                      <>
+                                        <Copy className="w-3 h-3" />
+                                        Copy
+                                      </>
+                                    )}
+                                  </button>
+                                </div>
+                                <pre className="p-3 bg-zinc-900 rounded-lg text-xs text-zinc-300 overflow-x-auto">
+                                  <code>{fix.fixInstructions.code}</code>
+                                </pre>
+                              </div>
+                            )}
+
+                            {/* Platform-Specific Fix */}
+                            {platformFix && (
+                              <div className="p-3 bg-indigo-500/10 border border-indigo-500/20 rounded-lg">
+                                <h5 className="text-sm font-semibold text-indigo-400 mb-2 flex items-center gap-2">
+                                  <Globe className="w-4 h-4" />
+                                  {result.platform} Specific Fix
+                                </h5>
+                                <p className="text-sm text-zinc-300">{platformFix}</p>
+                              </div>
+                            )}
+                          </div>
+                        )}
                       </div>
-                    </div>
-                  </div>
+                    );
+                  })}
+                </div>
+
+                {/* Expand All Button */}
+                {result.topIssues.length > 3 && (
+                  <button
+                    onClick={() => {
+                      const allIds = result.topIssues.map(i => i.id);
+                      if (expandedIssues.size === allIds.length) {
+                        setExpandedIssues(new Set());
+                      } else {
+                        setExpandedIssues(new Set(allIds));
+                      }
+                    }}
+                    className="mt-4 w-full py-3 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-sm font-medium rounded-xl transition-colors flex items-center justify-center gap-2"
+                  >
+                    {expandedIssues.size === result.topIssues.length ? (
+                      <>
+                        <ChevronUp className="w-4 h-4" />
+                        Collapse All Fixes
+                      </>
+                    ) : (
+                      <>
+                        <ChevronDown className="w-4 h-4" />
+                        Expand All {result.topIssues.length} Fixes
+                      </>
+                    )}
+                  </button>
                 )}
+
+                {/* Value Upgrade CTA */}
+                <div className="mt-6 p-4 bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border border-indigo-500/20 rounded-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                    <div className="flex-1">
+                      <p className="text-white font-medium mb-1">
+                        {result.score < 70 ? "Need help fixing these issues?" : "Want ongoing compliance monitoring?"}
+                      </p>
+                      <p className="text-zinc-400 text-sm">
+                        {result.score < 70
+                          ? "Our team can fix all issues and ensure full EAA compliance in days, not months."
+                          : "Keep your site compliant with automated scans, alerts, and expert support."}
+                      </p>
+                    </div>
+                    <a
+                      href="/pricing"
+                      onClick={() => trackCtaClick("inline_upgrade", "View Plans", "scan_results")}
+                      className="flex items-center justify-center gap-2 px-5 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 whitespace-nowrap"
+                    >
+                      <Zap className="w-4 h-4" />
+                      View Plans from €49/mo
+                    </a>
+                  </div>
+                </div>
               </div>
 
-              {/* Email Capture */}
+              {/* PDF Download Section - Primary action is instant download */}
               {showEmailCapture && !emailSubmitted && (
-                <div className="p-6 bg-gradient-to-r from-indigo-600/20 to-purple-600/20 border-t border-indigo-500/30">
-                  <div className="flex items-start gap-4">
-                    <div className="flex-1">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h4 className="text-base sm:text-lg font-semibold text-white">
-                          Get Your Full Report + Fix Guide
-                        </h4>
-                        <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded-full">FREE</span>
+                <div className="p-6 bg-gradient-to-r from-indigo-600/10 to-purple-600/10 border-t border-indigo-500/20">
+                  <div className="flex flex-col gap-4">
+                    {/* Instant Download - Primary */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <Download className="w-5 h-5 text-indigo-400" />
+                          <h4 className="text-base font-semibold text-white">
+                            Download Your Report
+                          </h4>
+                          <span className="px-2 py-0.5 bg-green-500/20 text-green-400 text-xs font-medium rounded-full">FREE</span>
+                        </div>
+                        <p className="text-zinc-400 text-sm">Get a professional PDF report instantly - no email required.</p>
                       </div>
-                      <ul className="text-zinc-400 text-sm space-y-1 mb-4">
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          All {result.totalIssues} issues with code-level details
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          Copy-paste fixes for {result.platform}
-                        </li>
-                        <li className="flex items-center gap-2">
-                          <CheckCircle className="w-3 h-3 text-green-500" />
-                          EAA compliance checklist (PDF)
-                        </li>
-                      </ul>
-                      <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-3">
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={(e) => setEmail(e.target.value)}
-                          placeholder="you@company.com"
-                          required
-                          className="flex-1 px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 text-base"
-                        />
-                        <button
-                          type="submit"
-                          className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-indigo-500/25"
-                        >
-                          Send My Report
-                        </button>
-                      </form>
-                      <p className="text-zinc-400 text-xs mt-2">No spam. Unsubscribe anytime.</p>
+                      <button
+                        onClick={handlePdfDownload}
+                        disabled={generatingPdf}
+                        className="flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-indigo-500 hover:from-indigo-500 hover:to-indigo-400 disabled:from-zinc-700 disabled:to-zinc-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/25 whitespace-nowrap"
+                      >
+                        {generatingPdf ? (
+                          <>
+                            <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                            Generating...
+                          </>
+                        ) : pdfDownloaded ? (
+                          <>
+                            <CheckCircle className="w-4 h-4" />
+                            Downloaded!
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4" />
+                            Download PDF Now
+                          </>
+                        )}
+                      </button>
+                    </div>
+
+                    {/* Email Option - Secondary */}
+                    <div className="pt-4 border-t border-zinc-700/50">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                        <p className="text-zinc-400 text-sm">Or get it emailed for easy sharing:</p>
+                        <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-2 sm:items-center">
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="you@company.com"
+                            required
+                            className="px-3 py-2 bg-zinc-900 border border-zinc-600 rounded-lg text-white placeholder-zinc-400 focus:outline-none focus:border-indigo-500 text-sm w-full sm:w-48"
+                          />
+                          <button
+                            type="submit"
+                            className="px-4 py-2 bg-zinc-700 hover:bg-zinc-600 text-white font-medium rounded-lg transition-colors text-sm whitespace-nowrap"
+                          >
+                            Email PDF
+                          </button>
+                        </form>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -649,6 +925,24 @@ export default function Home() {
 
       {/* Footer */}
       <SiteFooter />
+
+      {/* Post-scan upsell modal */}
+      {showUpsell && result && (
+        <PostScanUpsell
+          score={result.score}
+          totalIssues={result.totalIssues}
+          criticalIssues={result.criticalIssues}
+          url={url}
+          onClose={() => setShowUpsell(false)}
+          delay={3000}
+        />
+      )}
+
+      {/* Real-time social proof notifications */}
+      <RealtimeSocialProof />
+
+      {/* Exit intent popup for lead capture */}
+      <ExitIntentPopup />
     </div>
   );
 }

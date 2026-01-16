@@ -221,6 +221,7 @@ export interface Database {
           last_scan_score: number | null;
           last_scanned_at: string | null;
           scan_frequency: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled: boolean;
           alert_on_score_change: boolean;
           alert_threshold: number;
           created_at: string;
@@ -235,6 +236,7 @@ export interface Database {
           last_scan_score?: number | null;
           last_scanned_at?: string | null;
           scan_frequency?: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled?: boolean;
           alert_on_score_change?: boolean;
           alert_threshold?: number;
           created_at?: string;
@@ -249,8 +251,59 @@ export interface Database {
           last_scan_score?: number | null;
           last_scanned_at?: string | null;
           scan_frequency?: 'manual' | 'daily' | 'weekly' | 'monthly';
+          monitoring_enabled?: boolean;
           alert_on_score_change?: boolean;
           alert_threshold?: number;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
+      outreach_prospects: {
+        Row: {
+          id: string;
+          domain: string;
+          company_name: string | null;
+          country: string | null;
+          industry: string | null;
+          accessibility_score: number | null;
+          issues_count: number | null;
+          contact_email: string | null;
+          source: string;
+          status: string;
+          outreach_count: number;
+          last_contacted_at: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          domain: string;
+          company_name?: string | null;
+          country?: string | null;
+          industry?: string | null;
+          accessibility_score?: number | null;
+          issues_count?: number | null;
+          contact_email?: string | null;
+          source?: string;
+          status?: string;
+          outreach_count?: number;
+          last_contacted_at?: string | null;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          domain?: string;
+          company_name?: string | null;
+          country?: string | null;
+          industry?: string | null;
+          accessibility_score?: number | null;
+          issues_count?: number | null;
+          contact_email?: string | null;
+          source?: string;
+          status?: string;
+          outreach_count?: number;
+          last_contacted_at?: string | null;
           created_at?: string;
           updated_at?: string;
         };
@@ -292,6 +345,10 @@ export type ScheduledEmailUpdate = Database['public']['Tables']['scheduled_email
 export type Site = Database['public']['Tables']['sites']['Row'];
 export type SiteInsert = Database['public']['Tables']['sites']['Insert'];
 export type SiteUpdate = Database['public']['Tables']['sites']['Update'];
+
+export type OutreachProspect = Database['public']['Tables']['outreach_prospects']['Row'];
+export type OutreachProspectInsert = Database['public']['Tables']['outreach_prospects']['Insert'];
+export type OutreachProspectUpdate = Database['public']['Tables']['outreach_prospects']['Update'];
 
 export type SubscriptionStatus = Database['public']['Enums']['subscription_status'];
 export type SubscriptionTier = Database['public']['Enums']['subscription_tier'];

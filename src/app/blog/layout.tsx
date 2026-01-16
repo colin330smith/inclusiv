@@ -31,6 +31,12 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    types: {
+      'application/rss+xml': 'https://tryinclusiv.com/blog/rss.xml',
+      'application/feed+json': 'https://tryinclusiv.com/blog/feed.json',
+    },
+  },
 };
 
 export default function BlogLayout({

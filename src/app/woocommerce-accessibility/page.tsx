@@ -1,6 +1,9 @@
 import { Metadata } from 'next';
 import Link from 'next/link';
 import { Shield } from 'lucide-react';
+import { SiteFooter } from '@/components/seo/SiteFooter';
+import { EAACountdown } from '@/components/EAACountdown';
+import { SocialProofTicker } from '@/components/SocialProofTicker';
 
 export const metadata: Metadata = {
   title: 'WooCommerce Accessibility Checker | WCAG Compliance for Online Stores',
@@ -14,8 +17,32 @@ export const metadata: Metadata = {
 
 export default function WooCommerceAccessibilityPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-slate-900 to-slate-800 text-white">
-      <div className="max-w-4xl mx-auto px-6 py-16">
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Header */}
+      <header className="border-b border-zinc-800">
+        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+          <Link href="/" className="flex items-center gap-2">
+            <Shield className="w-8 h-8 text-indigo-500" />
+            <span className="text-xl font-bold text-white">Inclusiv</span>
+          </Link>
+          <div className="flex items-center gap-4">
+            <Link href="/tools" className="text-zinc-300 hover:text-white transition-colors text-sm font-medium">
+              Free Tools
+            </Link>
+            <Link href="/pricing" className="text-zinc-300 hover:text-white transition-colors text-sm font-medium">
+              Pricing
+            </Link>
+          </div>
+        </div>
+      </header>
+
+      {/* EAA Deadline Urgency Banner */}
+      <EAACountdown variant="banner" showCTA={true} />
+
+      {/* Live Activity Ticker */}
+      <SocialProofTicker />
+
+      <main className="max-w-4xl mx-auto px-6 py-16">
         <div className="flex items-center gap-4 mb-6">
           <div className="bg-[#96588a] p-3 rounded-lg">
             <svg className="w-8 h-8 text-white" viewBox="0 0 24 24" fill="currentColor">
@@ -27,7 +54,7 @@ export default function WooCommerceAccessibilityPage() {
           </h1>
         </div>
 
-        <p className="text-xl text-slate-300 mb-8">
+        <p className="text-xl text-zinc-300 mb-8">
           Make your WooCommerce store accessible to all customers. Scan for WCAG issues
           in your product pages, cart, and checkout process.
         </p>
@@ -57,29 +84,29 @@ export default function WooCommerceAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Critical WooCommerce Accessibility Issues</h2>
           <div className="space-y-4">
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-red-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-red-500">
               <h3 className="font-semibold text-lg mb-1">Checkout Form Problems</h3>
-              <p className="text-slate-300 text-sm">Missing labels, unclear error messages, and inaccessible payment forms</p>
+              <p className="text-zinc-300 text-sm">Missing labels, unclear error messages, and inaccessible payment forms</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-red-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-red-500">
               <h3 className="font-semibold text-lg mb-1">Product Image Gallery</h3>
-              <p className="text-slate-300 text-sm">Lightboxes and zoom features often trap keyboard users</p>
+              <p className="text-zinc-300 text-sm">Lightboxes and zoom features often trap keyboard users</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-amber-500">
               <h3 className="font-semibold text-lg mb-1">Add to Cart Buttons</h3>
-              <p className="text-slate-300 text-sm">AJAX cart updates without screen reader announcements</p>
+              <p className="text-zinc-300 text-sm">AJAX cart updates without screen reader announcements</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-amber-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-amber-500">
               <h3 className="font-semibold text-lg mb-1">Variable Product Selectors</h3>
-              <p className="text-slate-300 text-sm">Size/color pickers without proper ARIA labels</p>
+              <p className="text-zinc-300 text-sm">Size/color pickers without proper ARIA labels</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
               <h3 className="font-semibold text-lg mb-1">Mini Cart Widget</h3>
-              <p className="text-slate-300 text-sm">Dropdown carts that can't be accessed by keyboard</p>
+              <p className="text-zinc-300 text-sm">Dropdown carts that can't be accessed by keyboard</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
+            <div className="bg-zinc-700/50 rounded-lg p-4 border-l-4 border-yellow-500">
               <h3 className="font-semibold text-lg mb-1">Product Filtering</h3>
-              <p className="text-slate-300 text-sm">AJAX filters without proper focus management</p>
+              <p className="text-zinc-300 text-sm">AJAX filters without proper focus management</p>
             </div>
           </div>
         </section>
@@ -87,36 +114,36 @@ export default function WooCommerceAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">Pages We Scan</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">Shop Page</h3>
-              <p className="text-slate-300 text-sm">Product grid, filtering, sorting, pagination</p>
+              <p className="text-zinc-300 text-sm">Product grid, filtering, sorting, pagination</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">Product Pages</h3>
-              <p className="text-slate-300 text-sm">Images, variations, reviews, add to cart</p>
+              <p className="text-zinc-300 text-sm">Images, variations, reviews, add to cart</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">Cart Page</h3>
-              <p className="text-slate-300 text-sm">Quantity updates, coupon codes, totals</p>
+              <p className="text-zinc-300 text-sm">Quantity updates, coupon codes, totals</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">Checkout</h3>
-              <p className="text-slate-300 text-sm">Forms, payment, shipping, order review</p>
+              <p className="text-zinc-300 text-sm">Forms, payment, shipping, order review</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">My Account</h3>
-              <p className="text-slate-300 text-sm">Login, registration, order history</p>
+              <p className="text-zinc-300 text-sm">Login, registration, order history</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-4">
+            <div className="bg-zinc-700/50 rounded-lg p-4">
               <h3 className="font-semibold text-purple-400 mb-2">Search Results</h3>
-              <p className="text-slate-300 text-sm">Search form, results display, no results</p>
+              <p className="text-zinc-300 text-sm">Search form, results display, no results</p>
             </div>
           </div>
         </section>
 
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">WooCommerce Plugin Compatibility</h2>
-          <p className="text-slate-300 mb-4">
+          <p className="text-zinc-300 mb-4">
             We check accessibility for popular WooCommerce extensions:
           </p>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
@@ -131,8 +158,8 @@ export default function WooCommerceAccessibilityPage() {
               'Product Bundles',
               'Checkout Field Editor'
             ].map((plugin) => (
-              <div key={plugin} className="bg-slate-700/30 rounded-lg p-3 text-center">
-                <span className="text-slate-200 text-sm">{plugin}</span>
+              <div key={plugin} className="bg-zinc-700/30 rounded-lg p-3 text-center">
+                <span className="text-zinc-200 text-sm">{plugin}</span>
               </div>
             ))}
           </div>
@@ -141,17 +168,17 @@ export default function WooCommerceAccessibilityPage() {
         <section className="mb-12">
           <h2 className="text-2xl font-bold mb-4">The Cost of Inaccessible E-commerce</h2>
           <div className="grid md:grid-cols-3 gap-4">
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <p className="text-4xl font-bold text-red-400">$6.9B</p>
-              <p className="text-slate-300 text-sm mt-2">Lost annually by UK retailers due to inaccessibility</p>
+              <p className="text-zinc-300 text-sm mt-2">Lost annually by UK retailers due to inaccessibility</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <p className="text-4xl font-bold text-amber-400">71%</p>
-              <p className="text-slate-300 text-sm mt-2">Of disabled users leave inaccessible sites</p>
+              <p className="text-zinc-300 text-sm mt-2">Of disabled users leave inaccessible sites</p>
             </div>
-            <div className="bg-slate-700/50 rounded-lg p-6 text-center">
+            <div className="bg-zinc-700/50 rounded-lg p-6 text-center">
               <p className="text-4xl font-bold text-green-400">$8T</p>
-              <p className="text-slate-300 text-sm mt-2">Global spending power of disabled people</p>
+              <p className="text-zinc-300 text-sm mt-2">Global spending power of disabled people</p>
             </div>
           </div>
         </section>
@@ -168,27 +195,9 @@ export default function WooCommerceAccessibilityPage() {
             Scan My WooCommerce Store →
           </Link>
         </div>
-      </div>
+      </main>
 
-      {/* Footer */}
-      <footer className="border-t border-slate-700 mt-24">
-        <div className="max-w-6xl mx-auto px-6 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 text-slate-400">
-              <Shield className="w-5 h-5" />
-              <span>Inclusiv © 2025</span>
-              <span className="text-slate-600">|</span>
-              <span>Powered by axe-core</span>
-            </div>
-            <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-slate-400 text-sm">
-              <Link href="/" className="hover:text-white transition-colors">Scanner</Link>
-              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
-              <Link href="/privacy" className="hover:text-white transition-colors">Privacy</Link>
-              <Link href="/terms" className="hover:text-white transition-colors">Terms</Link>
-            </div>
-          </div>
-        </div>
-      </footer>
-    </main>
+      <SiteFooter />
+    </div>
   );
 }

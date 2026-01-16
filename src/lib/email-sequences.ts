@@ -20,8 +20,8 @@ function getResendClient(): Resend {
 }
 
 // Email sender configuration
-const FROM_EMAIL = process.env.FROM_EMAIL || 'Inclusiv <hello@inclusiv.app>';
-const REPLY_TO = process.env.REPLY_TO || 'support@inclusiv.app';
+const FROM_EMAIL = process.env.FROM_EMAIL || 'Inclusiv <hello@tryinclusiv.com>';
+const REPLY_TO = process.env.REPLY_TO || 'support@tryinclusiv.com';
 
 // Sequence Types
 export type SequenceType = 'welcome' | 'cold_lead';

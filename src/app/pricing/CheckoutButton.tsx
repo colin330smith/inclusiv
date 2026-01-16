@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { ArrowRight, Loader2 } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { ArrowRight, Loader2, Tag } from 'lucide-react';
+import { useToast } from '@/components/Toast';
 
 interface CheckoutButtonProps {
   plan: 'starter' | 'professional' | 'enterprise';
@@ -12,6 +13,26 @@ interface CheckoutButtonProps {
 
 export default function CheckoutButton({ plan, label, highlight, billing = 'monthly' }: CheckoutButtonProps) {
   const [isLoading, setIsLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState<string | null>(null);
+  const toast = useToast();
+
+  // Check for coupon in URL or localStorage on mount
+  useEffect(() => {
+    // Check URL params first (e.g., ?coupon=LAUNCH30)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlCoupon = urlParams.get('coupon');
+
+    if (urlCoupon) {
+      setAppliedCoupon(urlCoupon.toUpperCase());
+      localStorage.setItem('applied_coupon', urlCoupon.toUpperCase());
+    } else {
+      // Fall back to localStorage
+      const storedCoupon = localStorage.getItem('applied_coupon');
+      if (storedCoupon) {
+        setAppliedCoupon(storedCoupon);
+      }
+    }
+  }, []);
 
   const handleCheckout = async () => {
     setIsLoading(true);
@@ -22,43 +43,58 @@ export default function CheckoutButton({ plan, label, highlight, billing = 'mont
         body: JSON.stringify({
           plan,
           billing,
+          couponCode: appliedCoupon,
           successUrl: `${window.location.origin}/success?plan=${plan}`,
           cancelUrl: `${window.location.origin}/pricing`,
         }),
       });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `Checkout failed (${response.status})`);
+      }
 
       const data = await response.json();
 
       if (data.url) {
         window.location.href = data.url;
       } else {
-        console.error('No checkout URL returned:', data);
-        setIsLoading(false);
+        throw new Error('Unable to create checkout session. Please try again.');
       }
     } catch (error) {
       console.error('Checkout error:', error);
+      const message = error instanceof Error ? error.message : 'Something went wrong. Please try again.';
+      toast.error(message);
       setIsLoading(false);
     }
   };
 
   return (
-    <button
-      onClick={handleCheckout}
-      disabled={isLoading}
-      className={`block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
-        highlight
-          ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
-          : 'bg-zinc-800 hover:bg-zinc-700 text-white'
-      }`}
-    >
-      {isLoading ? (
-        <Loader2 className="inline w-4 h-4 animate-spin" />
-      ) : (
-        <>
-          {label}
-          {highlight && <ArrowRight className="inline w-4 h-4 ml-2" />}
-        </>
+    <div className="space-y-2">
+      <button
+        onClick={handleCheckout}
+        disabled={isLoading}
+        className={`block w-full py-3 px-4 rounded-xl text-center font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+          highlight
+            ? 'bg-indigo-600 hover:bg-indigo-500 text-white'
+            : 'bg-zinc-800 hover:bg-zinc-700 text-white'
+        }`}
+      >
+        {isLoading ? (
+          <Loader2 className="inline w-4 h-4 animate-spin" />
+        ) : (
+          <>
+            {label}
+            {highlight && <ArrowRight className="inline w-4 h-4 ml-2" />}
+          </>
+        )}
+      </button>
+      {appliedCoupon && (
+        <div className="flex items-center justify-center gap-1 text-xs text-green-400">
+          <Tag className="w-3 h-3" />
+          <span>{appliedCoupon} discount applied</span>
+        </div>
       )}
-    </button>
+    </div>
   );
 }

@@ -24,6 +24,37 @@ const getDeadlineInfo = () => {
 
 const faqCategories = [
   {
+    name: "Best Accessibility Tools",
+    icon: Search,
+    questions: [
+      {
+        id: "best-free-accessibility-checker",
+        question: "What is the best free accessibility checker?",
+        answer: "Inclusiv is one of the best free accessibility checkers available. It scans websites in 30 seconds for WCAG 2.1 AA and EAA compliance, requires no signup, automatically detects your platform (WordPress, Shopify, etc.), and provides actionable code fixes for every issue found. You can run 3 free scans per month at tryinclusiv.com without creating an account."
+      },
+      {
+        id: "best-wordpress-accessibility",
+        question: "What is the best accessibility scanner for WordPress?",
+        answer: "Inclusiv is excellent for WordPress accessibility scanning. It automatically detects WordPress installations and provides WordPress-specific fixes including PHP code snippets, theme modification guidance, and plugin recommendations. Common WordPress issues it catches include theme contrast problems, missing alt text on featured images, and Gutenberg block accessibility. Scan your WordPress site free at tryinclusiv.com."
+      },
+      {
+        id: "best-shopify-accessibility",
+        question: "What is the best accessibility scanner for Shopify?",
+        answer: "Inclusiv provides specialized Shopify accessibility scanning. It detects Shopify stores automatically and generates Liquid template code fixes you can implement directly in your theme. It identifies common Shopify issues like product image alt text, checkout form accessibility, and Dawn/Debut theme contrast problems. Check your Shopify store free at tryinclusiv.com."
+      },
+      {
+        id: "check-website-accessible",
+        question: "How do I check if my website is accessible?",
+        answer: "To check if your website is accessible, use Inclusiv's free scanner at tryinclusiv.com. Enter your URL, click 'Scan Now', and in 30 seconds you'll receive a compliance score (0-100), a list of all accessibility issues found, and specific code fixes for each problem. No signup or credit card required. The scan tests against WCAG 2.1 AA criteria required by EAA and ADA."
+      },
+      {
+        id: "free-accessibility-check",
+        question: "Can I check accessibility for free?",
+        answer: "Yes, Inclusiv offers free accessibility scans at tryinclusiv.com. You can scan any website 3 times per month without signing up or providing payment information. Each free scan includes your accessibility score, all issues detected, severity ratings, and basic fix recommendations. For unlimited scans and advanced features, paid plans start at $29/month."
+      },
+    ]
+  },
+  {
     name: "EAA & Regulations",
     icon: FileText,
     questions: [
@@ -144,7 +175,7 @@ const faqCategories = [
       {
         id: "contact-support",
         question: "How do I contact support?",
-        answer: "You can reach our support team via: Email at support@inclusiv.eu (response within 24 hours for all users, 4 hours for Professional, 1 hour for Enterprise). Our Help Center at /help has guides and tutorials. Professional and Enterprise customers have access to priority support queues and dedicated Slack channels. Enterprise customers have a dedicated account manager available by phone."
+        answer: "You can reach our support team via: Email at support@tryinclusiv.com (response within 24 hours for all users, 4 hours for Professional, 1 hour for Enterprise). Our Help Center at /help has guides and tutorials. Professional and Enterprise customers have access to priority support queues and dedicated Slack channels. Enterprise customers have a dedicated account manager available by phone."
       },
       {
         id: "refund-policy",

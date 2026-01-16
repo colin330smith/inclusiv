@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
     // Send notification email to support team
     await resend.emails.send({
       from: 'Inclusiv Contact Form <noreply@inclusiv.dev>',
-      to: ['support@inclusiv.dev'],
+      to: ['support@tryinclusiv.com'],
       replyTo: data.email,
       subject: `[${topicLabels[data.topic] || data.topic}] Contact from ${data.name}`,
       html: `
@@ -100,7 +100,7 @@ export async function POST(request: NextRequest) {
 
     // Send confirmation email to user
     await resend.emails.send({
-      from: 'Inclusiv <support@inclusiv.dev>',
+      from: 'Inclusiv <support@tryinclusiv.com>',
       to: [data.email],
       subject: 'We received your message - Inclusiv',
       html: `

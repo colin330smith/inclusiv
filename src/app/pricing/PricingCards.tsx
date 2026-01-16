@@ -1,24 +1,22 @@
 'use client';
 
-import { useState } from 'react';
-import { Check, X } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Check, X, MapPin, Sparkles } from 'lucide-react';
 import Link from 'next/link';
 import BillingToggle from './BillingToggle';
 import CheckoutButton from './CheckoutButton';
+import CountdownTimer from '@/components/CountdownTimer';
+import { GeoPricing, formatPrice } from '@/lib/geo-pricing';
 
-// Monthly pricing
-const monthlyPrices = {
-  starter: { eur: '€49', usd: '$54' },
-  professional: { eur: '€149', usd: '$164' },
-  enterprise: { eur: '€499', usd: '$549' },
-};
-
-// Annual pricing (20% discount = ~2 months free)
-const annualPrices = {
-  starter: { eur: '€39', usd: '$43', yearlyTotal: '€470' },
-  professional: { eur: '€119', usd: '$131', yearlyTotal: '€1,430' },
-  enterprise: { eur: '€399', usd: '$439', yearlyTotal: '€4,790' },
-};
+interface GeoResponse {
+  location: {
+    country: string;
+    countryCode: string;
+    currency: string;
+  } | null;
+  pricing: GeoPricing;
+  detected: boolean;
+}
 
 const plans = [
   {
@@ -104,30 +102,73 @@ const plans = [
   },
 ];
 
+// Default EUR pricing - Updated for sustainable B2B SaaS
+const defaultPricing: GeoPricing = {
+  currency: 'EUR',
+  currencySymbol: '€',
+  exchangeRate: 1,
+  pppMultiplier: 1,
+  prices: {
+    starter: { monthly: 99, annual: 79 },
+    professional: { monthly: 299, annual: 239 },
+    enterprise: { monthly: 899, annual: 719 },
+  },
+  showOriginalPrices: false,
+  discountPercent: 0,
+};
+
 export default function PricingCards() {
   const [billing, setBilling] = useState<'monthly' | 'annual'>('annual');
+  const [geoPricing, setGeoPricing] = useState<GeoPricing>(defaultPricing);
+  const [geoLocation, setGeoLocation] = useState<GeoResponse['location']>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchGeoPricing() {
+      try {
+        const res = await fetch('/api/geo');
+        if (res.ok) {
+          const data: GeoResponse = await res.json();
+          setGeoPricing(data.pricing);
+          setGeoLocation(data.location);
+        }
+      } catch (error) {
+        console.error('Failed to fetch geo pricing:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGeoPricing();
+  }, []);
 
   const getPrice = (planKey: string) => {
     if (planKey === 'free') {
-      return { eur: '€0', usd: '$0', period: '' };
+      return {
+        display: formatPrice(0, geoPricing.currencySymbol),
+        period: '',
+        yearlyTotal: '',
+        isAnnual: false,
+      };
     }
 
     const key = planKey as 'starter' | 'professional' | 'enterprise';
+    const planPrices = geoPricing.prices[key];
 
     if (billing === 'annual') {
+      const yearlyTotal = Math.round(planPrices.annual * 12);
       return {
-        eur: annualPrices[key].eur,
-        usd: annualPrices[key].usd,
+        display: formatPrice(planPrices.annual, geoPricing.currencySymbol),
         period: '/month',
-        yearlyTotal: annualPrices[key].yearlyTotal,
+        yearlyTotal: formatPrice(yearlyTotal, geoPricing.currencySymbol),
         isAnnual: true,
       };
     }
 
     return {
-      eur: monthlyPrices[key].eur,
-      usd: monthlyPrices[key].usd,
+      display: formatPrice(planPrices.monthly, geoPricing.currencySymbol),
       period: '/month',
+      yearlyTotal: '',
       isAnnual: false,
     };
   };
@@ -139,15 +180,42 @@ export default function PricingCards() {
     return 'Start 14-Day Trial';
   };
 
+  // Show regional pricing badge if PPP discount is applied
+  const showRegionalBadge = geoPricing.showOriginalPrices && geoPricing.discountPercent > 0;
+
   return (
     <div className="space-y-8">
+      {/* Regional Pricing Banner */}
+      {showRegionalBadge && geoLocation && (
+        <div className="flex justify-center">
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full">
+            <MapPin className="w-4 h-4 text-green-400" />
+            <span className="text-sm text-green-300">
+              Regional pricing for <strong>{geoLocation.country}</strong> —
+              <span className="ml-1 text-green-400 font-semibold">
+                Save {geoPricing.discountPercent}%
+              </span>
+            </span>
+            <Sparkles className="w-4 h-4 text-green-400" />
+          </div>
+        </div>
+      )}
+
       {/* Billing Toggle */}
       <div className="flex justify-center">
         <BillingToggle onChange={setBilling} defaultValue="annual" />
       </div>
 
+      {/* Limited Time Offer Countdown */}
+      <div className="flex justify-center">
+        <div className="inline-flex items-center gap-3 px-4 py-2 bg-orange-500/10 border border-orange-500/20 rounded-full">
+          <span className="text-sm text-orange-300 font-medium">Launch pricing ends soon</span>
+          <CountdownTimer compact label="" />
+        </div>
+      </div>
+
       {/* Pricing Cards */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className={`grid md:grid-cols-2 lg:grid-cols-4 gap-6 transition-opacity duration-300 ${loading ? 'opacity-50' : 'opacity-100'}`}>
         {plans.map((plan) => {
           const price = getPrice(plan.key);
 
@@ -173,13 +241,15 @@ export default function PricingCards() {
                 <p className="text-zinc-400 text-sm mb-4">{plan.description}</p>
                 <div className="space-y-1">
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl font-bold text-white">{price.eur}</span>
+                    <span className="text-3xl font-bold text-white">{price.display}</span>
                     <span className="text-zinc-500">{price.period}</span>
                   </div>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-lg text-zinc-400">{price.usd}</span>
-                    <span className="text-zinc-600 text-sm">{price.period} USD</span>
-                  </div>
+                  {/* Show currency indicator if non-EUR */}
+                  {geoPricing.currency !== 'EUR' && plan.key !== 'free' && (
+                    <div className="text-sm text-zinc-500">
+                      in {geoPricing.currency}
+                    </div>
+                  )}
                   {price.isAnnual && price.yearlyTotal && (
                     <div className="mt-2">
                       <span className="text-sm text-green-400">
@@ -224,6 +294,13 @@ export default function PricingCards() {
           );
         })}
       </div>
+
+      {/* Currency Note */}
+      {geoLocation && geoPricing.currency !== 'EUR' && (
+        <p className="text-center text-sm text-zinc-500">
+          Prices shown in {geoPricing.currency}. You&apos;ll be charged in {geoPricing.currency} at checkout.
+        </p>
+      )}
     </div>
   );
 }

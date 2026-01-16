@@ -412,7 +412,7 @@ export function welcomeLastChance(lead: Lead): string {
     </p>
 
     <p style="margin: 0; color: ${EMAIL_STYLES.colors.textMuted}; font-size: 14px; font-style: italic;">
-      This is the last email in this sequence. If you need help in the future, you can always reach out at support@inclusiv.app.
+      This is the last email in this sequence. If you need help in the future, you can always reach out at support@tryinclusiv.com.
     </p>
   `;
 

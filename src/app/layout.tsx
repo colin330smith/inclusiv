@@ -4,6 +4,13 @@ import Script from "next/script";
 import "./globals.css";
 import LeadCaptureProvider from "@/components/LeadCaptureProvider";
 import SessionProvider from "@/components/providers/SessionProvider";
+import { MainPageJsonLd } from "@/components/JsonLd";
+import { ToastProvider } from "@/components/Toast";
+import { Suspense } from "react";
+import ReferralTracker from "@/components/ReferralTracker";
+import AnnouncementBar from "@/components/AnnouncementBar";
+import StickyPricingCta from "@/components/StickyPricingCta";
+import TrackingPixels from "@/components/TrackingPixels";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,14 +23,6 @@ const geistMono = Geist_Mono({
 });
 
 // Google Analytics Measurement ID
-// TODO: Set NEXT_PUBLIC_GA_ID environment variable with your GA4 Measurement ID
-// To get your GA4 ID:
-// 1. Go to https://analytics.google.com/
-// 2. Create a new GA4 property for tryinclusiv.com (or use existing)
-// 3. Go to Admin > Data Streams > Web > Add stream
-// 4. Enter "tryinclusiv.com" as the website URL
-// 5. Copy the Measurement ID (format: G-XXXXXXXXXX)
-// 6. Add to .env.local: NEXT_PUBLIC_GA_ID=G-YOUR_ID_HERE
 const GA_MEASUREMENT_ID = process.env.NEXT_PUBLIC_GA_ID || "";
 
 export const metadata: Metadata = {
@@ -55,12 +54,21 @@ export const metadata: Metadata = {
     siteName: "Inclusiv",
     locale: "en_US",
     url: "https://tryinclusiv.com",
+    images: [
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'Inclusiv - Free EAA Accessibility Scanner',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Free EAA Accessibility Scanner",
     description: "Check your website's EAA compliance in 30 seconds. Free scan, no signup required.",
     creator: "@inclusivapp",
+    images: ['/twitter-image'],
   },
   alternates: {
     canonical: "https://tryinclusiv.com",
@@ -78,6 +86,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+        {/* JSON-LD Structured Data for SEO */}
+        <MainPageJsonLd />
+
         {/* Google Analytics 4 - Only loads when GA_MEASUREMENT_ID is set */}
         {GA_MEASUREMENT_ID && (
           <>
@@ -95,9 +106,7 @@ export default function RootLayout({
                   page_location: window.location.href,
                   send_page_view: true,
                   cookie_flags: 'SameSite=None;Secure',
-                  // Enhanced measurement
                   enhanced_conversions: true,
-                  // Custom dimensions
                   custom_map: {
                     'dimension1': 'user_type',
                     'dimension2': 'scan_score',
@@ -105,7 +114,6 @@ export default function RootLayout({
                   }
                 });
 
-                // Track page visibility
                 document.addEventListener('visibilitychange', function() {
                   if (document.visibilityState === 'hidden') {
                     gtag('event', 'page_hidden', {
@@ -125,12 +133,10 @@ export default function RootLayout({
         {/* Custom event tracking utilities */}
         <Script id="custom-analytics" strategy="afterInteractive">
           {`
-            // Plausible helper
             window.plausible = window.plausible || function() {
               (window.plausible.q = window.plausible.q || []).push(arguments)
             };
 
-            // Track scans (legacy support)
             window.trackScan = function(url, score) {
               plausible('Scan', {props: {url: url, score: score}});
               if (window.gtag) {
@@ -143,7 +149,6 @@ export default function RootLayout({
               }
             };
 
-            // Track signups (legacy support)
             window.trackSignup = function(email) {
               plausible('Signup', {props: {email: email}});
               if (window.gtag) {
@@ -154,7 +159,6 @@ export default function RootLayout({
               }
             };
 
-            // Conversion tracking helper
             window.trackConversion = function(eventName, properties) {
               plausible(eventName, {props: properties || {}});
               if (window.gtag) {
@@ -168,9 +172,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <SessionProvider>
+          <ToastProvider>
           <LeadCaptureProvider>
+            <Suspense fallback={null}>
+              <ReferralTracker />
+            </Suspense>
+            <AnnouncementBar />
             {children}
+            <StickyPricingCta />
+            <Suspense fallback={null}>
+              <TrackingPixels />
+            </Suspense>
           </LeadCaptureProvider>
+          </ToastProvider>
         </SessionProvider>
       </body>
     </html>
